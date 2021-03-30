@@ -7,15 +7,8 @@ using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.WorldItems;
 using InnerNet;
 using UnityEngine;
-
-//Get random item positions for Mira and Skeld
-//Make the snitch float around and bounce off walls
-//Finish making game-settings work (set up Order of Imps)
-//Finishing importing textures (mainly curses and item buttons)
-//Comms and deluminator break the task list text for Impostors
-//Add durations, cooldowns, and the player's role in the task list
-//Change colors and introstrings for Hermione, Harry, and Ron
-//Various small visual changes
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 namespace HarryPotter.Classes
 {
@@ -30,8 +23,8 @@ namespace HarryPotter.Classes
         public int CurrentStage { get; set; }
         private GameObject CurseObject { get; set; }
         private GameObject CrucioObject { get; set; }
-
-        public List<Tuple<ShipStatus.MapType, Vector2>> PossibleItemPositions { get; } = new List<Tuple<ShipStatus.MapType, Vector2>>
+        public List<Tuple<ShipStatus.MapType, Vector2>> PossibleItemPositions { get; set; }
+        public List<Tuple<ShipStatus.MapType, Vector2>> DefaultItemPositons { get; } = new List<Tuple<ShipStatus.MapType, Vector2>>
         {
             new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Pb, new Vector2(18.58625f, -21.96028f)),
             new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Pb, new Vector2(17.26129f, -19.21864f)),
@@ -70,8 +63,63 @@ namespace HarryPotter.Classes
             new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Pb, new Vector2(4.66598f, -4.429569f)),
             new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Pb, new Vector2(11.46261f, -7.265319f)),
             new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Pb, new Vector2(16.66492f, -2.420291f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-4.182233f, 1.07599f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-0.7304592f, -2.823687f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(2.807524f, 0.9642968f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-0.930865f, 4.924871f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(9.511244f, -0.3346088f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(6.474998f, -3.704194f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(16.74196f, -4.494635f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(11.9279f, -6.496367f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(9.137466f, -12.28679f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(7.774953f, -14.2921f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(4.006791f, -15.55052f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-0.5833896f, -15.77747f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-3.692864f, -14.83466f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-9.448769f, -14.59895f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-8.734068f, -11.36326f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-9.266067f, -8.41872f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-12.16772f, -11.86919f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-17.45776f, -13.38308f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-13.52165f, -5.388005f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-20.25068f, -5.388005f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-21.6893f, -7.326626f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-21.79704f, -3.05468f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-16.86277f, -1.031248f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-17.02352f, 2.37704f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-9.174051f, 0.764464f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-9.0562f, -2.353384f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(-9.0562f, -4.770045f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(6.228173f, -7.598089f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Ship, new Vector2(2.062296f, -7.244535f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(25.60198f, -1.924499f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(22.01862f, -1.924499f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(19.5472f, 0.2135701f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(19.26237f, 4.432643f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(22.10624f, 2.365375f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(25.37229f, 4.71474f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(23.33011f, 6.756915f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(17.85176f, 11.23526f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(12.27656f, 6.639064f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(6.114027f, 0.9975319f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(9.414569f, 1.145713f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(6.087941f, 6.03428f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(2.498136f, 10.72081f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(6.086607f, 12.19221f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(8.707928f, 12.92791f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(15.20495f, 4.131007f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(14.62f, 0.3439525f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(12.28571f, -1.344667f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(8.014729f, -1.344667f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(-4.464246f, -1.344667f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(-4.464246f, 2.071996f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(17.84423f, 17.16991f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(14.76334f, 20.16747f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(19.75764f, 20.30775f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(17.82509f, 22.0234f)),
+            new Tuple<ShipStatus.MapType, Vector2>(ShipStatus.MapType.Hq, new Vector2(16.16338f, 24.20611f)),
         };
-
+        
         public List<Vector2> GetAllApplicableItemPositions()
         {
             List<Vector2> positions = new List<Vector2>();
@@ -91,15 +139,24 @@ namespace HarryPotter.Classes
         {
             DateTime now = DateTime.UtcNow;
             Vector2 startPosition = player.transform.position;
+            ImportantTextTask durationText = new ImportantTextTask();
+            ModdedPlayerById(player.PlayerId).CanSeeAllRolesOveridden = true;
+            if (player.AmOwner)
+                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(player)}Time Turner will activate in {Config.HourglassTimer}s");
             while (true)
             {
                 if (player.AmOwner)
+                {
+                    durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(player)}Time Turner will activate in {Math.Ceiling(Config.HourglassTimer - (float) (DateTime.UtcNow - now).TotalSeconds)}s";
                     GetLocalModdedPlayer().Role?.ResetCooldowns();
+                }
                 
                 if (MeetingHud.Instance ||
                     AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
                     now.AddSeconds(Config.HourglassTimer) < DateTime.UtcNow)
                 {
+                    TaskInfoHandler.Instance.RemoveItem(durationText);
+                    
                     if (ModdedPlayerById(player.PlayerId).KilledByCurse)
                         yield break;
 
@@ -110,6 +167,7 @@ namespace HarryPotter.Classes
                         yield break;
 
                     RpcTeleportPlayer(player, startPosition);
+                    ModdedPlayerById(player.PlayerId).CanSeeAllRolesOveridden = false;
                     yield break;
                 }
 
@@ -117,7 +175,7 @@ namespace HarryPotter.Classes
             }
         }
         
-        public void SpawnItem(int id, Vector2 pos)
+        public void SpawnItem(int id, Vector2 pos, Vector2? vel = null)
         {
             switch (id)
             {
@@ -134,7 +192,7 @@ namespace HarryPotter.Classes
                     AllItems.Add(key);
                     break;
                 case 3:
-                    TheGoldenSnitchWorld snitch = new TheGoldenSnitchWorld(pos);
+                    TheGoldenSnitchWorld snitch = new TheGoldenSnitchWorld(pos, vel.Value);
                     AllItems.Add(snitch);
                     break;
             }
@@ -164,12 +222,20 @@ namespace HarryPotter.Classes
         
         public void RpcSpawnItem(int id, Vector2 pos)
         {
-            SpawnItem(id, pos);
+            float x = UnityEngine.Random.Range(-1.2f, 1.2f);
+            float y = UnityEngine.Random.Range(-1.2f, 1.2f);
+            Vector2 velocity = new Vector2(x, y);
+            if (id == 3)
+                SpawnItem(id, pos, velocity);
+            else
+                SpawnItem(id, pos);
             
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.SpawnItem, SendOption.Reliable);
             writer.Write(id);
             writer.Write(pos.x);
             writer.Write(pos.y);
+            writer.Write(velocity.x);
+            writer.Write(velocity.y);
             writer.EndMessage();
         }
 
@@ -206,23 +272,29 @@ namespace HarryPotter.Classes
         public System.Collections.IEnumerator CoDefensiveDuelist(PlayerControl player)
         {
             DateTime now = DateTime.UtcNow;
+            Vector3 startingPosition = player.transform.position;
             ModdedPlayerById(player.PlayerId).Immortal = true;
-            player.MyPhysics.body.velocity = new Vector2(0, 0);
-            player.moveable = false;
+            ImportantTextTask durationText = new ImportantTextTask();
+            if (player.AmOwner)
+                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(player)}Defensive Duelist: {Config.DefensiveDuelistDuration}s remaining");
             while (true)
             {
-                if (player.AmOwner)
-                    GetLocalModdedPlayer().Role?.ResetCooldowns();
-                
                 if (MeetingHud.Instance ||
                     AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
                     now.AddSeconds(Config.DefensiveDuelistDuration) < DateTime.UtcNow ||
                     ModdedPlayerById(player.PlayerId).ControllerOverride != null)
                 {
                     ModdedPlayerById(player.PlayerId).Immortal = false;
-                    player.moveable = true;
-                    
+                    TaskInfoHandler.Instance.RemoveItem(durationText);
                     yield break;
+                }
+                
+                if (player.AmOwner)
+                {
+                    player.transform.position = startingPosition;
+                    player.MyPhysics.body.velocity = new Vector2(0, 0);
+                    durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(player)}Defensive Duelist: {Math.Ceiling(Config.DefensiveDuelistDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining";
+                    GetLocalModdedPlayer().Role?.ResetCooldowns();
                 }
 
                 yield return null;
@@ -245,11 +317,17 @@ namespace HarryPotter.Classes
         public System.Collections.IEnumerator CoInvisPlayer(PlayerControl target)
         {
             DateTime now = DateTime.UtcNow;
+            ImportantTextTask durationText = new ImportantTextTask();
+            if (target.AmOwner)
+                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}Invisibility Cloak: {Config.InvisCloakDuration}s remaining");
             while (true)
             {
                 if (target.AmOwner)
+                {
+                    durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}Invisibility Cloak: {Math.Ceiling(Config.InvisCloakDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining";
                     GetLocalModdedPlayer().Role?.ResetCooldowns();
-
+                }
+                
                 target.Visible = false;
                 
                 if (MeetingHud.Instance || 
@@ -258,6 +336,7 @@ namespace HarryPotter.Classes
                     ModdedPlayerById(target.PlayerId).ControllerOverride != null)
                 {
                     target.Visible = true;
+                    TaskInfoHandler.Instance.RemoveItem(durationText);
                     yield break;
                 }
 
@@ -270,10 +349,14 @@ namespace HarryPotter.Classes
             DateTime now = DateTime.UtcNow;
             float num = 0f;
             target.MyPhysics.body.velocity = new Vector2(0, 0);
+            ImportantTextTask durationText = new ImportantTextTask();
+            if (target.AmOwner)
+                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}You are blinded and frozen! {Config.CrucioDuration}s remaining");
             while (true)
             {
-                if (target == PlayerControl.LocalPlayer)
+                if (target.AmOwner)
                 {
+                    durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}You are blinded and frozen! {Math.Ceiling(Config.CrucioDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining";
                     target.myLight.LightRadius = Mathf.Lerp(ShipStatus.Instance.MinLightRadius, ShipStatus.Instance.MaxLightRadius, num) * PlayerControl.GameOptions.CrewLightMod;
                     target.moveable = false;
                 }
@@ -283,6 +366,7 @@ namespace HarryPotter.Classes
                     ModdedPlayerById(target.PlayerId).ControllerOverride != null)
                 {
                     target.moveable = true;
+                    TaskInfoHandler.Instance.RemoveItem(durationText);
                     yield break;
                 }
 
@@ -302,9 +386,13 @@ namespace HarryPotter.Classes
             ((Bellatrix) Instance.ModdedPlayerById(controller.PlayerId).Role).MindControlledPlayer =
                 Instance.ModdedPlayerById(target.PlayerId);
 
+            ImportantTextTask durationText = new ImportantTextTask();
             if (controller.AmOwner)
+            {
+                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Config.ImperioDuration}s remaining");
                 Camera.main.GetComponent<FollowerCamera>().Target = target;
-
+            }
+            
             target.moveable = true;
             controller.moveable = true;
             
@@ -316,12 +404,13 @@ namespace HarryPotter.Classes
                 if (target.Data.IsDead || 
                     MeetingHud.Instance || 
                     AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
-                    now.AddSeconds(Config.CrucioDuration) < DateTime.UtcNow)
+                    now.AddSeconds(Config.ImperioDuration) < DateTime.UtcNow)
                 {
                     if (target.AmOwner)
                         target.moveable = true;
                     else if (controller.AmOwner)
                     {
+                        TaskInfoHandler.Instance.RemoveItem(durationText);
                         controller.moveable = true;
                         Camera.main.GetComponent<FollowerCamera>().Target = controller;
                         controller.myLight.transform.position = controller.transform.position;
@@ -339,6 +428,8 @@ namespace HarryPotter.Classes
                     PlayerControl.LocalPlayer.moveable = false;
                     if (controller.AmOwner)
                     {
+                        durationText.Text =
+                            $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Math.Ceiling(Config.ImperioDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining";
                         controller.myLight.transform.position = target.transform.position;
                         HudManager.Instance.KillButton.SetCoolDown(0f, PlayerControl.GameOptions.KillCooldown);
                         if (ControlKillUsed)
@@ -418,16 +509,14 @@ namespace HarryPotter.Classes
             if (ModdedPlayerById(target.PlayerId).Immortal)
                 return;
 
-            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId || 
-                killer.PlayerId == PlayerControl.LocalPlayer.PlayerId || 
-                ModdedPlayerById(killer.PlayerId).ControllerOverride?._Object.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            if (target.AmOwner || killer.AmOwner || ModdedPlayerById(killer.PlayerId).ControllerOverride?._Object.AmOwner == true)
             {  
                 System.Console.WriteLine("Trying to play the kill sound!");
                 SoundManager.Instance.StopSound(PlayerControl.LocalPlayer.KillSfx);
                 SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 0.8f);
             }
 
-            if (target == PlayerControl.LocalPlayer)
+            if (target.AmOwner)
             {
                 HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
                 AmongUsClient.Instance.gameObject.layer = LayerMask.NameToLayer("Ghost");
@@ -440,8 +529,12 @@ namespace HarryPotter.Classes
             if (!isCurseKill)
                 killer.MyPhysics.body.transform.position = target.transform.position;
             else
+            {
                 ModdedPlayerById(target.PlayerId).KilledByCurse = true;
-            
+                if (target.AmOwner && killer.AmOwner)
+                    HudManager.Instance.KillOverlay.ShowOne(killer.Data, killer.Data);
+            }
+
             DeadBody deadBody = DeadBody.Instantiate(target.KillAnimations[0].bodyPrefab);
             Vector3 vector = target.transform.position + target.KillAnimations[0].BodyOffset;
             vector.z = vector.y / 1000f;
@@ -449,7 +542,7 @@ namespace HarryPotter.Classes
             deadBody.ParentId = target.PlayerId;
             target.SetPlayerMaterialColors(deadBody.GetComponent<Renderer>());
         }
-        
+
         public void RpcForceAllVotes(sbyte playerId)
         {
             GetLocalModdedPlayer().Inventory.Find(x => x.Id == 3).Delete();
@@ -511,9 +604,10 @@ namespace HarryPotter.Classes
             return false;
         }
 
-        public System.Collections.IEnumerator CoCastCrucio(Vector3 direction, ModdedPlayerClass Owner)
+        public System.Collections.IEnumerator CoCastCrucio(Vector3 mousePosition, ModdedPlayerClass Owner)
         {
             DateTime now = DateTime.UtcNow;
+            int crucioIndex = 0;
             
             CrucioObject?.Destroy();
             CrucioObject = new GameObject();
@@ -522,15 +616,19 @@ namespace HarryPotter.Classes
             CrucioObject.SetActive(true);
             BoxCollider2D crucioCollider = CrucioObject.AddComponent<BoxCollider2D>();
             crucioRender.enabled = true;
-            crucioRender.sprite = Assets.CurseSprite;
-            crucioRender.color = Color.red;
-            crucioRigid.transform.position = new Vector3(Owner._Object.myRend.bounds.center.x, Owner._Object.myRend.bounds.center.y, -50f);
-            crucioRender.transform.localScale = new Vector2(0.5f, 0.5f);
+            crucioRigid.transform.position = Owner._Object.myRend.bounds.center;
+            crucioRender.transform.localScale = new Vector2(1f, 1f);
+
+            Vector3 v = mousePosition - Owner._Object.myRend.bounds.center;
+            float dist = Vector2.Distance(mousePosition, Owner._Object.myRend.bounds.center);
+            Vector3 d = v * 3f * (2f / dist);
+            float AngleRad = Mathf.Atan2(mousePosition.y - Owner._Object.myRend.bounds.center.y, mousePosition.x - Owner._Object.myRend.bounds.center.x);
+            float AngleDeg = (180 / (float)Math.PI) * AngleRad;
 
             crucioCollider.autoTiling = false;
             crucioCollider.edgeRadius = 0;
             crucioCollider.size = Owner._Object.Collider.bounds.size * 2;
-            crucioRigid.velocity = new Vector2(direction.x, direction.y);
+            crucioRigid.velocity = new Vector2(d.x, d.y);
             CrucioObject.layer = 8;
 
             while (true)
@@ -538,7 +636,17 @@ namespace HarryPotter.Classes
                 if (CrucioObject == null)
                     yield break;
                 
-                crucioRigid.fixedAngle = true;
+                if (crucioIndex <= 5)
+                    crucioRender.sprite = Assets.CrucioSprite[0];
+                else
+                    crucioRender.sprite = Assets.CrucioSprite[1];
+
+                if (crucioIndex >= 10)
+                    crucioIndex = 0;
+
+                crucioIndex++;
+                
+                crucioRigid.rotation = AngleDeg;
                 crucioRigid.drag = 0;
                 crucioRigid.angularDrag = 0;
                 crucioRigid.inertia = 0;
@@ -562,16 +670,9 @@ namespace HarryPotter.Classes
                     if (player.Data.IsDead || player.Data.Disconnected || Owner._Object == player || player.Data.IsImpostor)
                         continue;
 
-                    Vector2 screenMin = Camera.main.WorldToScreenPoint(player.myRend.bounds.min);
-                    Vector2 screenMax = Camera.main.WorldToScreenPoint(player.myRend.bounds.max);
-                    Vector2 rigidScreen = Camera.main.WorldToScreenPoint(crucioRigid.transform.position);
+                    if (!player.myRend.bounds.Intersects(crucioRender.bounds))
+                        continue;
 
-                    if (rigidScreen.x <= screenMin.x || rigidScreen.x >= screenMax.x)
-                        continue;
-                
-                    if (rigidScreen.y <= screenMin.y || rigidScreen.y >= screenMax.y)
-                        continue;
-                    
                     if (!Owner._Object.AmOwner)
                         yield break;
                     
@@ -607,25 +708,26 @@ namespace HarryPotter.Classes
             writer.EndMessage();
         }
         
-        public void CreateCrucio(Vector2 d, ModdedPlayerClass Owner)
+        public void CreateCrucio(Vector2 pos, ModdedPlayerClass Owner)
         {
-            Reactor.Coroutines.Start(CoCastCrucio(d, Owner));
+            Reactor.Coroutines.Start(CoCastCrucio(pos, Owner));
         }
         
-        public void RpcCreateCrucio(Vector2 d, ModdedPlayerClass Owner)
+        public void RpcCreateCrucio(Vector2 pos, ModdedPlayerClass Owner)
         {
-            CreateCrucio(d, Owner);
+            CreateCrucio(pos, Owner);
 
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCrucio, SendOption.Reliable);
             writer.Write(Owner._Object.PlayerId);
-            writer.Write(d.x);
-            writer.Write(d.y);
+            writer.Write(pos.x);
+            writer.Write(pos.y);
             writer.EndMessage();
         }
         
-        public System.Collections.IEnumerator CoCastCurse(Vector3 direction, ModdedPlayerClass Owner)
+        public System.Collections.IEnumerator CoCastCurse(Vector3 mousePosition, ModdedPlayerClass Owner)
         {
             DateTime now = DateTime.UtcNow;
+            int curseindex = 0;
             
             CurseObject?.Destroy();
             CurseObject = new GameObject();
@@ -634,23 +736,37 @@ namespace HarryPotter.Classes
             CurseObject.SetActive(true);
             BoxCollider2D curseCollider = CurseObject.AddComponent<BoxCollider2D>();
             curseRender.enabled = true;
-            curseRender.sprite = Assets.CurseSprite;
-            curseRender.color = Color.green;
-            curseRigid.transform.position = new Vector3(Owner._Object.myRend.bounds.center.x, Owner._Object.myRend.bounds.center.y, -50f);
-            curseRender.transform.localScale = new Vector2(0.5f, 0.5f);
+            curseRigid.transform.position = Owner._Object.myRend.bounds.center;
+            curseRender.transform.localScale = new Vector2(1f, 1f);
 
+            Vector3 v = mousePosition - Owner._Object.myRend.bounds.center;
+            float dist = Vector2.Distance(mousePosition, Owner._Object.myRend.bounds.center);
+            Vector3 d = v * 3f * (2f / dist);
+            float AngleRad = Mathf.Atan2(mousePosition.y - Owner._Object.myRend.bounds.center.y, mousePosition.x - Owner._Object.myRend.bounds.center.x);
+            float AngleDeg = (180 / (float)Math.PI) * AngleRad;
+            
             curseCollider.autoTiling = false;
             curseCollider.edgeRadius = 0;
             curseCollider.size = Owner._Object.Collider.bounds.size * 2;
-            curseRigid.velocity = new Vector2(direction.x, direction.y);
+            curseRigid.velocity = new Vector2(d.x, d.y);
             CurseObject.layer = 8;
 
             while (true)
             {
                 if (CurseObject == null)
                     yield break;
+
+                if (curseindex <= 5)
+                    curseRender.sprite = Assets.CurseSprite[0];
+                else
+                    curseRender.sprite = Assets.CurseSprite[1];
+
+                if (curseindex >= 10)
+                    curseindex = 0;
+
+                curseindex++;
                 
-                curseRigid.fixedAngle = true;
+                curseRigid.rotation = AngleDeg;
                 curseRigid.drag = 0;
                 curseRigid.angularDrag = 0;
                 curseRigid.inertia = 0;
@@ -674,16 +790,9 @@ namespace HarryPotter.Classes
                     if (player.Data.IsDead || player.Data.Disconnected || Owner._Object == player || player.Data.IsImpostor)
                         continue;
 
-                    Vector2 screenMin = Camera.main.WorldToScreenPoint(player.myRend.bounds.min);
-                    Vector2 screenMax = Camera.main.WorldToScreenPoint(player.myRend.bounds.max);
-                    Vector2 rigidScreen = Camera.main.WorldToScreenPoint(curseRigid.transform.position);
+                    if (!player.myRend.bounds.Intersects(curseRender.bounds))
+                        continue;
 
-                    if (rigidScreen.x <= screenMin.x || rigidScreen.x >= screenMax.x)
-                        continue;
-                
-                    if (rigidScreen.y <= screenMin.y || rigidScreen.y >= screenMax.y)
-                        continue;
-                    
                     if (!Owner._Object.AmOwner)
                         yield break;
                     
@@ -722,20 +831,20 @@ namespace HarryPotter.Classes
             writer.EndMessage();
         }
         
-        public void CreateCurse(Vector2 d, ModdedPlayerClass Owner)
+        public void CreateCurse(Vector2 pos, ModdedPlayerClass Owner)
         {
-            Reactor.Coroutines.Start(CoCastCurse(d, Owner));
+            Reactor.Coroutines.Start(CoCastCurse(pos, Owner));
             Owner._Object.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
         }
         
-        public void RpcCreateCurse(Vector2 d, ModdedPlayerClass Owner)
+        public void RpcCreateCurse(Vector2 pos, ModdedPlayerClass Owner)
         {
-            CreateCurse(d, Owner);
+            CreateCurse(pos, Owner);
 
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCurse, SendOption.Reliable);
             writer.Write(Owner._Object.PlayerId);
-            writer.Write(d.x);
-            writer.Write(d.y);
+            writer.Write(pos.x);
+            writer.Write(pos.y);
             writer.EndMessage();
         }
         

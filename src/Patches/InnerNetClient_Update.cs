@@ -1,4 +1,5 @@
-﻿﻿﻿using HarmonyLib;
+﻿﻿﻿using System;
+  using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using HarryPotter.Classes;
@@ -10,16 +11,13 @@ using HarryPotter.Classes;
   namespace HarryPotter.Patches
 {
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.Update))]
-    class InnerNetClient_FixedUpdate
+    class InnerNetClient_Update
     {
         static void Postfix(InnerNetClient __instance)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha8))
-                System.Console.WriteLine($"new Tuple<string, Vector2>(ShipStatus.MapType.{ShipStatus.Instance.Type}, new Vector2({PlayerControl.LocalPlayer.myRend.bounds.center.x}f, {PlayerControl.LocalPlayer.myRend.bounds.center.y}f)),");
+            Main.Instance?.Config?.ReloadSettings();
             
-            Main.Instance.Config.ReloadSettings();
-            
-            if (__instance.GameState != InnerNetClient.GameStates.Started || PlayerControl.LocalPlayer == null)
+            if ((__instance.GameState != InnerNetClient.GameStates.Started || PlayerControl.LocalPlayer == null) && Main.Instance != null)
             {
                 foreach (WorldItem wItem in Main.Instance.AllItems)
                     wItem.Delete();
@@ -30,14 +28,16 @@ using HarryPotter.Classes;
                 Main.Instance.CurrentStage = 0;
                 Main.Instance.AllItems.Clear();
                 Main.Instance.AllPlayers.Clear();
+                Main.Instance.PossibleItemPositions = Main.Instance.DefaultItemPositons;
+                TaskInfoHandler.Instance.AllInfo.Clear();
                 return;
             }
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                if (Main.Instance.AllPlayers.Where(x => x._Object == player).ToList().Count == 0)
+                if (Main.Instance?.AllPlayers.Where(x => x._Object == player).ToList().Count == 0)
                     Main.Instance.AllPlayers.Add(new ModdedPlayerClass(player, null, new List<Item>()));
 
-            Main.Instance.GetLocalModdedPlayer().Update();
+            Main.Instance?.GetLocalModdedPlayer().Update();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace HarryPotter.Classes
         TryPickupItem = 86,
         GiveItem = 87,
         DestroyItem = 88,
-        ReviveEveryone = 100,
+        SetSnitchVelocity = 89,
     }
 
     public class CustomRpc
@@ -128,13 +128,6 @@ namespace HarryPotter.Classes
                     PlayerControl ddPlayer = Main.Instance.ModdedPlayerById(ddId)._Object;
                     Main.Instance.DefensiveDuelist(ddPlayer);
                     break;
-                case (byte)Packets.ReviveEveryone:
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.Data.IsDead)
-                            player.Revive();
-                    foreach (DeadBody body in UnityEngine.Object.FindObjectsOfType<DeadBody>())
-                        body.Destroy();
-                    break;
                 case (byte)Packets.RevivePlayer:
                     byte reviveId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -160,7 +153,11 @@ namespace HarryPotter.Classes
                 case (byte)Packets.SpawnItem:
                     var itemId = reader.ReadInt32();
                     var itemPosition = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-                    Main.Instance.SpawnItem(itemId, itemPosition);
+                    var velocity = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+                    if (itemId == 3)
+                        Main.Instance.SpawnItem(itemId, itemPosition, velocity);
+                    else
+                        Main.Instance.SpawnItem(itemId, itemPosition);
                     break;
                 case (byte)Packets.TryPickupItem:
                     if (!AmongUsClient.Instance.AmHost)

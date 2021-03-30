@@ -20,8 +20,12 @@ namespace HarryPotter.Classes.Roles
         {
             RoleName = "Bellatrix";
             RoleColor = Palette.ImpostorRed;
-            IntroString = "Hello World";
+            RoleColor2 = Palette.ImpostorRed;
+            IntroString = "Oh, he knows how to play,\nlittle bitty baby Potter.";
             Owner = owner;
+
+            if (!Owner._Object.AmOwner)
+                return;
 
             CrucioButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             CrucioButton.renderer.enabled = true;
@@ -109,14 +113,10 @@ namespace HarryPotter.Classes.Roles
 
             if (Owner._Object.inVent && !Main.Instance.Config.SpellsInVents)
                 return;
-
-            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var v = mouseWorld - PlayerControl.LocalPlayer.myRend.bounds.center;
-            var dist = Vector2.Distance(mouseWorld, PlayerControl.LocalPlayer.myRend.bounds.center);
-            var d = v * 3f * (2f / dist);
-
+            
             ResetCooldowns();
-            Main.Instance.RpcCreateCrucio(d, Owner);
+            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Main.Instance.RpcCreateCrucio(mouseWorld, Owner);
         }
 
         public void DrawButtons()

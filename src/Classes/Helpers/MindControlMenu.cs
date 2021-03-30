@@ -48,13 +48,8 @@ namespace HarryPotter.Classes
             }
             MenuObject.chatBubPool.activeChildren.Clear();
 
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.ToArray().Where(x => x != PlayerControl.LocalPlayer))
-            {
-                bool oldDead = player.Data.IsDead;
-                player.Data.IsDead = false;
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.ToArray().Where(x => x != PlayerControl.LocalPlayer && !x.Data.IsDead && !x.Data.IsImpostor))
                 MenuObject.AddChat(player, "");
-                player.Data.IsDead = oldDead;
-            }
         }
 
         public void CloseMenu()

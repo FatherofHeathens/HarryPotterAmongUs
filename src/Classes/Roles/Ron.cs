@@ -12,8 +12,13 @@ namespace HarryPotter.Classes.Roles
         {
             RoleName = "Ron";
             RoleColor = Palette.Orange;
-            IntroString = "Hello World";
+            RoleColor2 = Palette.Orange;
+            IntroString = "Why Spiders!? Why couldn't it\nhave been follow the butterflies!?";
             Owner = owner;
+            
+            if (!Owner._Object.AmOwner)
+                return;
+            
             DDButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             DDButton.renderer.enabled = true;
         }

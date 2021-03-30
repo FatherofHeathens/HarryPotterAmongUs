@@ -12,10 +12,12 @@ namespace HarryPotter.Classes
         private CustomNumberOption Option6 = CustomOption.AddNumber("Invisibility Cloak Duration", 5f, 5f, 30f, 1f);
         private CustomNumberOption Option7 = CustomOption.AddNumber("Time Turner Timer", 5f, 5f, 30f, 1f);
         private CustomNumberOption Option8 = CustomOption.AddNumber("Crucio Duration", 5f, 5f, 30f, 1f);
+        private CustomNumberOption Option13 = CustomOption.AddNumber("Imperio Duration", 5f, 5f, 30f, 1f);
         private CustomNumberOption Option9 = CustomOption.AddNumber("Defensive Duelist Cooldown", 20f, 10f, 40f, 2.5f);
         private CustomNumberOption Option10 = CustomOption.AddNumber("Invisibility Cloak Cooldown", 20f, 10f, 40f, 2.5f);
         private CustomNumberOption Option11 = CustomOption.AddNumber("Time Turner Cooldown", 20f, 10f, 40f, 2.5f);
         private CustomNumberOption Option12 = CustomOption.AddNumber("Crucio Cooldown", 20f, 10f, 40f, 2.5f);
+        private CustomToggleOption Option14 = CustomOption.AddToggle("Each Item Spawns Only Once Per Game", true);
 
         public bool OrderOfTheImp { get; private set; }
         public bool OrderOfTheCrew { get; private set; }
@@ -29,6 +31,8 @@ namespace HarryPotter.Classes
         public float HourglassCooldown { get; private set; }
         public float CrucioCooldown { get; private set; }
         public bool SpellsInVents { get; private set; }
+        public float ImperioDuration { get; private set; }
+        public bool SingleItem { get; private set; }
         
         public void ReloadSettings()
         {
@@ -44,6 +48,8 @@ namespace HarryPotter.Classes
             InvisCloakCooldown = Option10.GetValue();
             HourglassCooldown = Option11.GetValue();
             CrucioCooldown = Option12.GetValue();
+            ImperioDuration = Option13.GetValue();
+            SingleItem = Option14.GetValue();
         }
     }
 }

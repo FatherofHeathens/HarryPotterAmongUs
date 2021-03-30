@@ -3,6 +3,7 @@ using System.Linq;
 using HarryPotter.Classes.Items;
 using Hazel;
 using Reactor.Extensions;
+using Rewired;
 using UnityEngine;
 
 namespace HarryPotter.Classes
@@ -21,21 +22,27 @@ namespace HarryPotter.Classes
             if (ItemWorldObject == null)
                 return;
 
+            if (PlayerControl.LocalPlayer.Data.IsDead)
+                return;
+
+            if (PlayerControl.LocalPlayer.Data.Disconnected)
+                return;
+
             if (ItemWorldObject.GetComponent<SpriteRenderer>().bounds.Intersects(PlayerControl.LocalPlayer.myRend.bounds))
                 PickUp();
         }
 
-        public void DrawWorldIcon()
+        public virtual void DrawWorldIcon()
         {
             if (ItemWorldObject == null)
             {
+                System.Console.WriteLine("Creating new Item: " + Name);
                 ItemWorldObject = new GameObject();
                 ItemWorldObject.AddComponent<SpriteRenderer>();
-                System.Console.WriteLine("Drawing item " + Name + " at: " + Position.x + ":" + Position.y);
+                ItemWorldObject.SetActive(true);
             }
 
             SpriteRenderer itemRender = ItemWorldObject.GetComponent<SpriteRenderer>();
-            ItemWorldObject.SetActive(true);
             itemRender.enabled = true;
             itemRender.sprite = Icon;
             itemRender.transform.localScale = new Vector2(0.5f, 0.5f);

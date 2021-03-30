@@ -46,7 +46,7 @@ namespace HarryPotter.Classes.WorldItems
             if (ItemRandom.Next(0, 100000) > ItemSpawnChance)
                 return false;
 
-            if (HasSpawned)
+            if (HasSpawned && Main.Instance.Config.SingleItem)
                 return false;
             
             return true;

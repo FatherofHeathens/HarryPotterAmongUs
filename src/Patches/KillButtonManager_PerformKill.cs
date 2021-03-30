@@ -17,11 +17,11 @@
             
             foreach (Item item in Main.Instance.GetLocalModdedPlayer().Inventory)
             {
-                if (__instance == item.Button)
-                {
-                    item.Use();    
-                    return false;
-                }
+                if (__instance != item.Button)
+                    continue;
+                
+                item.Use();    
+                return false;
             }
 
             if (__instance == HudManager.Instance.KillButton && Main.Instance.GetLocalModdedPlayer().Role?.RoleName == "Bellatrix" && ((Bellatrix)Main.Instance.GetLocalModdedPlayer().Role).MindControlledPlayer != null)

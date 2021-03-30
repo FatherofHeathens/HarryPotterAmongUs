@@ -14,8 +14,13 @@ namespace HarryPotter.Classes.Roles
         {
             RoleName = "Hermione";
             RoleColor = Palette.Orange;
-            IntroString = "Hello World";
+            RoleColor2 = Palette.Orange;
+            IntroString = "We could all have been\nkilled - or worse, expelled.";
             Owner = owner;
+            
+            if (!Owner._Object.AmOwner)
+                return;
+            
             HourglassButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             HourglassButton.renderer.enabled = true;
         }

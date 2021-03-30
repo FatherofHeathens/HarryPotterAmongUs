@@ -23,19 +23,21 @@ namespace HarryPotter.Patches
 
             List<string> impRolesToAssign = new List<string> { "Voldemort", "Bellatrix" };
             List<string> crewRolesToAssign = new List<string> { "Harry", "Hermione", "Ron" };
+            //crewRolesToAssign.Clear();
+            //impRolesToAssign.Clear();
 
             while (allImp.Count > 0 && impRolesToAssign.Count > 0)
             {
                 ModdedPlayerClass rolePlayer = allImp.Random();
                 allImp.Remove(rolePlayer);
-
+                
                 if (impRolesToAssign.Contains("Voldemort"))
                 {
                     impRolesToAssign.Remove("Voldemort");
                     Main.Instance.RpcAssignRole(rolePlayer, new Voldemort(rolePlayer));
                     continue;
                 }
-
+                
                 if (impRolesToAssign.Contains("Bellatrix"))
                 {
                     impRolesToAssign.Remove("Bellatrix");

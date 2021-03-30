@@ -26,7 +26,7 @@ namespace HarryPotter.Classes.WorldItems
 
             if (!ShipStatus.Instance)
                 return;
-
+            
             Vector2 pos = Main.Instance.GetAllApplicableItemPositions().Random();
             Main.Instance.PossibleItemPositions.RemoveAll(x => x.Item2 == pos);
             Main.Instance.RpcSpawnItem(0, pos);
@@ -47,7 +47,7 @@ namespace HarryPotter.Classes.WorldItems
             if (ItemRandom.Next(0, 100000) > ItemSpawnChance)
                 return false;
             
-            if (HasSpawned)
+            if (HasSpawned && Main.Instance.Config.SingleItem)
                 return false;
 
             return true;

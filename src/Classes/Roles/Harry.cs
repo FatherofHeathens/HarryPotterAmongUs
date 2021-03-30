@@ -12,8 +12,13 @@ namespace HarryPotter.Classes.Roles
         {
             RoleName = "Harry";
             RoleColor = Palette.Orange;
-            IntroString = "Hello World";
+            RoleColor2 = Palette.Orange;
+            IntroString = "I solemnly swear I am up to no good.";
             Owner = owner;
+            
+            if (!Owner._Object.AmOwner)
+                return;
+            
             InvisCloakButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             InvisCloakButton.renderer.enabled = true;
         }

@@ -10,10 +10,14 @@ namespace HarryPotter.Classes.Roles
         {
             RoleName = "Voldemort";
             RoleColor = Palette.ImpostorRed;
-            IntroString = "Hello World";
+            RoleColor2 = Palette.ImpostorRed;
+            IntroString = "There is no good and evil. There is only\npower, and those too weak to seek it.";
             Owner = owner;
 
-            CurseButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
+            if (!Owner._Object.AmOwner)
+                return;
+            
+            CurseButton = Object.Instantiate(HudManager.Instance.KillButton);
             CurseButton.renderer.enabled = true;
         }
 
@@ -26,8 +30,8 @@ namespace HarryPotter.Classes.Roles
                 return;
             
             Vector2 bottomLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0));
-            
-            CurseButton.gameObject.SetActive(HudManager.Instance.KillButton.gameObject.active);
+
+            CurseButton.gameObject.SetActive(HudManager.Instance.KillButton.isActiveAndEnabled);
             CurseButton.renderer.sprite = Main.Instance.Assets.AbilityIcons[0];
             CurseButton.transform.position = new Vector2(bottomLeft.x + 0.75f, bottomLeft.y + 0.75f);
             CurseButton.SetTarget(null);
@@ -65,11 +69,7 @@ namespace HarryPotter.Classes.Roles
                 return false;
 
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var v = mouseWorld - PlayerControl.LocalPlayer.myRend.bounds.center;
-            var dist = Vector2.Distance(mouseWorld, PlayerControl.LocalPlayer.myRend.bounds.center);
-            var d = v * 3f * (2f / dist);
-            
-            Main.Instance.RpcCreateCurse(d, Owner);
+            Main.Instance.RpcCreateCurse(mouseWorld, Owner);
             return false;
         }
     }

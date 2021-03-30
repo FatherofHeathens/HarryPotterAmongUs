@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Essentials.Extensions;
 using HarryPotter.Classes.Items;
 using HarryPotter.Classes.WorldItems;
 using Hazel;
@@ -22,9 +23,13 @@ namespace HarryPotter.Classes
 
         public void Update()
         {
+            if (ExileController.Instance != null)
+                Role.ResetCooldowns();
+            
             if (_Object.Data.IsDead)
                 ClearItems();
 
+            TaskInfoHandler.Instance.Update();
             HandleNameColors();
             PopulateButtons();
             Role?.Update();
@@ -35,48 +40,75 @@ namespace HarryPotter.Classes
                 MaraudersMapWorld.WorldSpawn();
                 PortKeyWorld.WorldSpawn();
                 TheGoldenSnitchWorld.WorldSpawn();
-            }
 
-            foreach (WorldItem wItem in Main.Instance.AllItems)
-            {
-                wItem.DrawWorldIcon();
-                wItem.Update();
-            }
-
-            Main.Instance.AllItems.RemoveAll(x => x.IsPickedUp);
-
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                for (var i = 0; i < 4; i++)
+                if (Main.Instance.Config.OrderOfTheImp)
                 {
-                    if (HasItem(i))
-                        continue;
-                    GiveItem(i);
+                    if (Main.Instance.AllPlayers.Any(x => Main.Instance.IsPlayerRole(x, "Harry") && (x._Object.Data.IsDead || x._Object.Data.Disconnected)) &&
+                        Main.Instance.AllPlayers.Any(x => Main.Instance.IsPlayerRole(x, "Hermione") && (x._Object.Data.IsDead || x._Object.Data.Disconnected)) &&
+                        Main.Instance.AllPlayers.Any(x => Main.Instance.IsPlayerRole(x, "Ron") && (x._Object.Data.IsDead || x._Object.Data.Disconnected)))
+                    {
+                        ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                    }
                 }
             }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    if (player.Data.IsDead)
-                        player.Revive();
-
-                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.ReviveEveryone, SendOption.Reliable);
-                writer.EndMessage();
-            }
         }
-        
+
         public void HandleNameColors()
         {
-            if (_Object.Data.IsDead)
+            if (_Object.Data.IsDead && !CanSeeAllRolesOveridden)
+            {
                 foreach (ModdedPlayerClass moddedPlayer in Main.Instance.AllPlayers)
-                    if (moddedPlayer.Role != null)
-                        Main.Instance.SetNameColor(moddedPlayer._Object, moddedPlayer.Role.RoleColor);
+                {
+                    if (moddedPlayer.Role == null) continue;
+                    
+                    Main.Instance.SetNameColor(moddedPlayer._Object, moddedPlayer.Role.RoleColor);
+                    moddedPlayer._Object.nameText.transform.position = new Vector3(
+                        moddedPlayer._Object.nameText.transform.position.x,
+                        moddedPlayer._Object.transform.position.y + 0.8f,
+                        moddedPlayer._Object.nameText.transform.position.z);
+                    moddedPlayer._Object.nameText.Text =
+                        moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
+                }
+            }
 
             if (Role == null)
+            {
+                _Object.nameText.Text = _Object.Data.PlayerName + "\n" + (_Object.Data.IsImpostor ? "Impostor" : "Crewmate");
+                _Object.nameText.transform.position = new Vector3(
+                    _Object.nameText.transform.position.x, 
+                    _Object.transform.position.y + 0.8f, 
+                    _Object.nameText.transform.position.z);
                 return;
+            }
 
             Main.Instance.SetNameColor(_Object, Role.RoleColor);
+            _Object.nameText.Text = _Object.Data.PlayerName + "\n" + Role.RoleName;
+            _Object.nameText.transform.position = new Vector3(
+                _Object.nameText.transform.position.x, 
+                _Object.transform.position.y + 0.8f, 
+                _Object.nameText.transform.position.z);
+
+            if (_Object.Data.IsImpostor)
+            {
+                foreach (ModdedPlayerClass moddedPlayer in Main.Instance.AllPlayers)
+                {
+                    if (moddedPlayer._Object.AmOwner)
+                        continue;
+
+                    if (!moddedPlayer._Object.Data.IsImpostor)
+                        continue;
+                    
+                    if (moddedPlayer.Role == null)
+                        continue;
+                    
+                    moddedPlayer._Object.nameText.transform.position = new Vector3(
+                        moddedPlayer._Object.nameText.transform.position.x,
+                        moddedPlayer._Object.transform.position.y + 0.8f,
+                        moddedPlayer._Object.nameText.transform.position.z);
+                    moddedPlayer._Object.nameText.Text =
+                        moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
+                }
+            }
 
             if (!Main.Instance.Config.OrderOfTheCrew)
                 return;
@@ -92,6 +124,12 @@ namespace HarryPotter.Classes
                         Main.Instance.IsPlayerRole(moddedPlayer, "Ron"))
                     {
                         Main.Instance.SetNameColor(moddedPlayer._Object, moddedPlayer.Role.RoleColor);
+                        moddedPlayer._Object.nameText.transform.position = new Vector3(
+                            moddedPlayer._Object.nameText.transform.position.x, 
+                            moddedPlayer._Object.transform.position.y + 0.8f, 
+                            moddedPlayer._Object.nameText.transform.position.z);
+                        moddedPlayer._Object.nameText.Text =
+                            moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
                     }
                 }
             }
@@ -105,7 +143,7 @@ namespace HarryPotter.Classes
                 if (item.IsSpecial)
                     continue;
                 
-                item.DrawIcon(HudManager.Instance.ReportButton.renderer.bounds.max.x - 0.375f, HudManager.Instance.ReportButton.renderer.bounds.max.y + 0.375f + (itemCount * 0.6f), HudManager.Instance.KillButton.transform.position.z);
+                item.DrawIcon(HudManager.Instance.ReportButton.renderer.bounds.max.x - 0.375f - (itemCount * 0.6f), HudManager.Instance.ReportButton.renderer.bounds.max.y + 0.375f, HudManager.Instance.KillButton.transform.position.z);
                 itemCount++;
             }
         }
@@ -147,5 +185,6 @@ namespace HarryPotter.Classes
         public bool Immortal { get; set; }
         public bool KilledByCurse { get; set; }
         public bool CanUseConsoles { get; set; } = true;
+        public bool CanSeeAllRolesOveridden { get; set; }
     }
 }
