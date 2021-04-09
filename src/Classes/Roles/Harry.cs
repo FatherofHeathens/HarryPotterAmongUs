@@ -73,9 +73,7 @@ namespace HarryPotter.Classes.Roles
             InvisCloakButton.SetCoolDown(Main.Instance.Config.InvisCloakCooldown - (float)(DateTime.UtcNow - LastCloak).TotalSeconds, Main.Instance.Config.InvisCloakCooldown);
             
             bool isDead = Owner._Object.Data.IsDead;
-            if (isDead)
-                InvisCloakButton.SetCoolDown(0, 1);
-            
+            if (isDead) InvisCloakButton.SetCoolDown(0, 1);
             if (!InvisCloakButton.isCoolingDown && !isDead)
             {
                 InvisCloakButton.renderer.material.SetFloat("_Desat", 0f);

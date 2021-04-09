@@ -11,7 +11,7 @@ namespace HarryPotter.Classes
 
         public void Update()
         {
-            if (HudManager.Instance.Field_11 != 0f)
+            if (HudManager.Instance.taskDirtyTimer != 0f)
                 return;
 
             if (AllInfo.Count == 0 && PlayerControl.LocalPlayer.myTasks.Count > 0)

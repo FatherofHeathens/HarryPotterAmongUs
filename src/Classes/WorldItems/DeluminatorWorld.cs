@@ -8,7 +8,7 @@ namespace HarryPotter.Classes.WorldItems
     public class DeluminatorWorld : WorldItem
     {
         public static System.Random ItemRandom { get; set; } = new System.Random();
-        public static float ItemSpawnChance { get; set; } = 15;
+        public static float ItemSpawnChance { get; set; } = 20 * (Main.Instance.GetAllApplicableItemPositions().Count / 28);
         public static bool HasSpawned { get; set; }
         
         public DeluminatorWorld(Vector2 position)
@@ -28,7 +28,12 @@ namespace HarryPotter.Classes.WorldItems
                 return;
             
             Vector2 pos = Main.Instance.GetAllApplicableItemPositions().Random();
-            Main.Instance.PossibleItemPositions.RemoveAll(x => x.Item2 == pos);
+
+            System.Console.WriteLine(pos.x + ":" + pos.y);
+
+            if (Main.Instance.Config.SingleItem)
+                Main.Instance.PossibleItemPositions.RemoveAll(x => x.Item2 == pos);
+
             Main.Instance.RpcSpawnItem(0, pos);
             HasSpawned = true;
         }

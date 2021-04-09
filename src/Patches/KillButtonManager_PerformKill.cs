@@ -17,9 +17,8 @@
             
             foreach (Item item in Main.Instance.GetLocalModdedPlayer().Inventory)
             {
-                if (__instance != item.Button)
-                    continue;
-                
+                if (__instance != item.Button) continue;
+                if (!HudManager._instance.UseButton.isActiveAndEnabled) break;
                 item.Use();    
                 return false;
             }

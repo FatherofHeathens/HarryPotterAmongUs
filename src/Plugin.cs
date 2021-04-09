@@ -13,7 +13,7 @@ namespace HarryPotter
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
     [BepInDependency(ReactorPlugin.Id)]
-    [BepInDependency(Essentials.EssentialsPlugin.Id)]
+    [BepInDependency(EssentialsPlugin.Id)]
     public class Plugin : BasePlugin
     {
         public const string Id = "harry.potter.mod";
@@ -23,6 +23,7 @@ namespace HarryPotter
         {
             Main.Instance = new Main { Config = new Config(), Rpc = new CustomRpc(), Assets = new Asset(), AllPlayers = new List<ModdedPlayerClass>(), AllItems = new List<WorldItem>() };
             TaskInfoHandler.Instance = new TaskInfoHandler { AllInfo = new List<ImportantTextTask>() };
+            Essentials.Options.CustomOption.ShamelessPlug = false;
             Harmony.PatchAll();
         }
     }

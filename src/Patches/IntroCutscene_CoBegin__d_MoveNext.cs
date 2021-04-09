@@ -1,20 +1,19 @@
 ﻿﻿﻿using HarmonyLib;
 using HarryPotter.Classes;
 using HarryPotter.Classes.Roles;
-using Reactor.Net;
 using UnityEngine;
 
 namespace HarryPotter.Patches
 {
-    [HarmonyPatch(typeof(IntroCutscene.CoBegin__d), nameof(IntroCutscene.CoBegin__d.MoveNext))]
+    [HarmonyPatch(typeof(IntroCutscene._CoBegin_d__11), nameof(IntroCutscene._CoBegin_d__11.MoveNext))]
     class IntroCutscene_CoBegin__d_MoveNext
     {
-        static void Prefix(IntroCutscene.CoBegin__d __instance)
+        static void Prefix(IntroCutscene._CoBegin_d__11 __instance)
         {
             __instance.__this.IntroStinger = Main.Instance.Assets.HPTheme;
         }
         
-        static void Postfix(IntroCutscene.CoBegin__d __instance)
+        static void Postfix(IntroCutscene._CoBegin_d__11 __instance)
         {
             ModdedPlayerClass localPlayer = Main.Instance.GetLocalModdedPlayer();
             FontCache.Instance.SetFont(__instance.__this.ImpostorText, "Arial");

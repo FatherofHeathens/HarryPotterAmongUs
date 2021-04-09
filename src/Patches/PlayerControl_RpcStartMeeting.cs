@@ -3,7 +3,7 @@ using HarryPotter.Classes;
 
 namespace HarryPotter.Patches
 {
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcStartMeeting))]
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CoStartMeeting))]
     public class PlayerControl_RpcStartMeeting
     {
         static void Postfix()

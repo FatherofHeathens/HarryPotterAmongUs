@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using HarryPotter.Classes;
+using System.Linq;
 using UnityEngine;
 
 namespace HarryPotter.Patches
@@ -11,8 +12,7 @@ namespace HarryPotter.Patches
         {
             if (!__instance.AmOwner)
             {
-                if (Main.Instance.AllPlayers.Find(x => x._Object.NetTransform == __instance)?.ControllerOverride == Main.Instance.GetLocalModdedPlayer())
-                    return false;
+                if (Main.Instance.AllPlayers.Any(x => x._Object.NetTransform == __instance && x.ControllerOverride == Main.Instance.GetLocalModdedPlayer())) return false;
                 
                 if (__instance.interpolateMovement != 0f)
                 {

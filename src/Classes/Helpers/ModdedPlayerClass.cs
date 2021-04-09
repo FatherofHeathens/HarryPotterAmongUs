@@ -140,9 +140,7 @@ namespace HarryPotter.Classes
             float itemCount = 0;
             foreach (var item in Inventory)
             {
-                if (item.IsSpecial)
-                    continue;
-                
+                if (item.IsSpecial) continue;
                 item.DrawIcon(HudManager.Instance.ReportButton.renderer.bounds.max.x - 0.375f - (itemCount * 0.6f), HudManager.Instance.ReportButton.renderer.bounds.max.y + 0.375f, HudManager.Instance.KillButton.transform.position.z);
                 itemCount++;
             }
