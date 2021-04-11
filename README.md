@@ -36,7 +36,7 @@ Each Item Only Spawns Once Per Game  |  If toggled, each item will only spawn a 
 For general help with issues, feature suggestions, or bugs, join the [Discord Server](https://discord.gg/chGrxw8mJk).
  
 # Resources
-- https://github.com/NuclearPowered/Reactor The framework the mod uses.
+- https://github.com/NuclearPowered/Reactor The modding-framework used.
 - https://github.com/DorCoMaNdO/Reactor-Essentials To do various things easier. (i.e creating custom lobby options)
 
 # License
