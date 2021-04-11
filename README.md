@@ -1,6 +1,19 @@
 # Harry Potter Mod
 A theme-based Among Us mod that adds items and roles related to the Harry Potter movies/books.
 
+# Installation Instructions
+For a video installation tutorial, go [here](https://www.youtube.com/watch?v=MN-prLtBrcQ).
+
+- Verify you have installed the [C++ Redist](https://aka.ms/vs/16/release/vc_redist.x86.exe).
+- Click on the tab labeled "Releases" on the right of this page.
+- Click on the zip file inside the latest release window.
+- Once it is downloaded, open the zip file.
+- Open steam, right click on Among Us, hover over "Manage", and then press "Browse Local Files".
+- Drag all the files inside the downloaded zip file into your Among Us folder.
+- Open the game and wait; the first start may take a few minutes.
+- Once the game is open, check the top left corner to verify it says "Mods: 3".
+- The mod is installed. Hooray!
+
 # Roles
 
 Role  | Passive Ability  |  Active Ability  |  Active Ability #2
