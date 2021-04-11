@@ -37,8 +37,6 @@ For general help with issues, feature suggestions, or bugs, join the [Discord Se
  
 # Resources
 - https://github.com/NuclearPowered/Reactor The framework the mod uses.
-- https://github.com/BepInEx For hooking game functions.
-- https://github.com/Impostor/Impostor For running a non-official server. (currently, the anti-cheat breaks some features of the mod)
 - https://github.com/DorCoMaNdO/Reactor-Essentials To do various things easier. (i.e creating custom lobby options)
 
 # License
