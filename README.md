@@ -45,4 +45,4 @@ For general help with issues, feature suggestions, or bugs, join the [Discord Se
 - https://github.com/DorCoMaNdO/Reactor-Essentials For creating custom game options easily.
 
 # License
-This software is distributed under the <a href="https://github.com/NotHunter101/ExtraRolesAmongUs/blob/main/LICENSE">`GNU GPLv3 License`</a>. BepInEx is distributed under <a href="https://github.com/BepInEx/BepInEx/blob/master/LICENSE">`LGPL-2.1 License`</a>.
+This software is distributed under the <a href="https://github.com/NotHunter101/ExtraRolesAmongUs/blob/main/LICENSE">`GNU GPLv3 License`</a>. Reactor is distributed under <a href="https://github.com/NuclearPowered/Reactor/blob/master/LICENSE">`LGPL-3.0 License`</a>.
