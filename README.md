@@ -34,7 +34,7 @@ Each Item Only Spawns Once Per Game  |  If toggled, each item will only spawn a 
 
 # Bugs or feature suggestions
 For general help with issues, feature suggestions, or bugs, join the [Discord Server](https://discord.gg/chGrxw8mJk).
-(https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg)
+[(https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg)]
  
 # Resources
 - https://github.com/NuclearPowered/Reactor The framework the mod uses.
