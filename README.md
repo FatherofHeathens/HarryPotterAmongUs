@@ -2,6 +2,14 @@
 A theme-based Among Us mod that adds items and roles related to the Harry Potter movies/books.
 
 # Roles
+
+Role  | Passive Ability  |  Active Ability
+------------- | -------------
+Deluminator  |  None  |  None
+Port Key  | None  |  None
+Marauder’s Map  |  None  | None
+The Golden Snitch  |  None  |  None
+
 ## Harry
 Passive Ability: Can not be killed by Voldemort's spell.  
 Active Ability: Can become invisible for 10 seconds.
