@@ -31,3 +31,7 @@ Invisibility Cloak Cooldown  |  Changes the cooldown of Harry's active ability.
 Time Turner Cooldown  |  Changes the cooldown of Hermione's active ability.
 Crucio Cooldown  |  Changes the cooldown of Bellatrix's spell.
 Each Item Only Spawns Once Per Game  |  If toggled, each item will only spawn a single time in one game.
+
+# Resources
+
+# License
