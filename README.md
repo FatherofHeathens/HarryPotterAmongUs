@@ -18,3 +18,13 @@ Active Ability: Can shoot a spell that will kill any player it connects with, ex
 Passive Ability: None.  
 Active Ability: Can shoot a spell that temporarily blinds and freezes any player it connects with.
 Active Ability 2: Can mind-control any player they choose and kill someone as that player.
+
+# Items
+## Deluminator
+Toggles the status of the lights.
+## Port Key
+Teleports the user to the emergency meeting button.
+## Marauder’s Map
+Zooms out the player's vision so they can see almost the entire map.
+## The Golden Snitch
+Can be used during meetings to force all the votes onto a single player.
