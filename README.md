@@ -4,7 +4,7 @@ A theme-based Among Us mod that adds items and roles related to the Harry Potter
 # Roles
 
 Role  | Passive Ability  |  Active Ability
-------------- | -------------
+------------- | ------------- | -------------
 Deluminator  |  None  |  None
 Port Key  | None  |  None
 Marauder’s Map  |  None  | None
