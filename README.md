@@ -45,9 +45,5 @@ If you ever need to talk to someone for help fixing an issue, want to report a b
 
 - https://github.com/DorCoMaNdO/Reactor-Essentials For creating custom game options easily.
 
-- https://github.com/Woodi-dev/Among-Us-Sheriff-Mod For code snippets.
-
-- https://github.com/tomozbot/SweeperMod For code snippets.
-
 # License
 This software is distributed under the <a href="https://github.com/NotHunter101/ExtraRolesAmongUs/blob/main/LICENSE">`GNU GPLv3 License`</a>. BepInEx is distributed under <a href="https://github.com/BepInEx/BepInEx/blob/master/LICENSE">`LGPL-2.1 License`</a>.
