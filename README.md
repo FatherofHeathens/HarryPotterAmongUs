@@ -20,14 +20,13 @@ Active Ability: Can shoot a spell that temporarily blinds and freezes any player
 Active Ability 2: Can mind-control any player they choose and kill someone as that player. (shares a cooldown with the kill button)
 
 # Items
-## Deluminator
-Toggles the status of the lights.
-## Port Key
-Teleports the user to the emergency meeting button.
-## Marauder’s Map
-Zooms out the player's vision so they can see almost the entire map.
-## The Golden Snitch
-Can be used during meetings to force all the votes onto a single player.
+
+Item  | Explanation
+------------- | -------------
+Deluminator  |  Toggles the status of the lights.
+Port Key  | Teleports the user to the emergency meeting button.
+Marauder’s Map  |  Zooms out the player's vision so they can see almost the entire map.
+The Golden Snitch  |  Can be used during meetings to force all the votes onto a single player.
 
 # Game Options
 
