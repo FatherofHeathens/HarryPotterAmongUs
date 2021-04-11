@@ -37,12 +37,9 @@ For general help with issues, feature suggestions, or bugs, join the [Discord Se
  
 # Resources
 - https://github.com/NuclearPowered/Reactor The framework the mod uses.
-
 - https://github.com/BepInEx For hooking game functions.
-
 - https://github.com/Impostor/Impostor For running a non-official server. (currently, the anti-cheat breaks some features of the mod)
-
-- https://github.com/DorCoMaNdO/Reactor-Essentials For creating custom game options easily.
+- https://github.com/DorCoMaNdO/Reactor-Essentials To do various things easier. (i.e creating custom lobby options)
 
 # License
 This software is distributed under the <a href="https://github.com/NotHunter101/ExtraRolesAmongUs/blob/main/LICENSE">`GNU GPLv3 License`</a>. Reactor is distributed under <a href="https://github.com/NuclearPowered/Reactor/blob/master/LICENSE">`LGPL-3.0 License`</a>.
