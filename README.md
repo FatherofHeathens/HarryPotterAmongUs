@@ -34,9 +34,13 @@ Each Item Only Spawns Once Per Game  |  If toggled, each item will only spawn a 
 
 # Bugs or feature suggestions
 For general help with issues, feature suggestions, or bugs, join the [Discord Server](https://discord.gg/chGrxw8mJk).
+
+# Reactor Modifictions
+A modified version of Reactor that removes Modded Handshake functionality is used, and it can be found [here](https://github.com/NotHunter101/Reactor).
  
 # Resources
-- https://github.com/NuclearPowered/Reactor The modding-framework used.
+- https://github.com/NuclearPowered/Reactor The modding-framework used. (original)
+- https://github.com/NotHunter101/Reactor The modding-framework used. (modified to remove handshake)
 - https://github.com/DorCoMaNdO/Reactor-Essentials To do various things easier. (i.e creating custom lobby options)
 
 # License
