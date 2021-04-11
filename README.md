@@ -33,8 +33,8 @@ Crucio Cooldown  |  Changes the cooldown of Bellatrix's spell.
 Each Item Only Spawns Once Per Game  |  If toggled, each item will only spawn a single time in one game.
 
 # Bugs or feature suggestions
-For general help with issues, feature suggestions, or bugs, join the [Discord Server](https://discord.gg/j2MVs4r6cc).
-[![Discord](https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg)](https://discord.gg/chGrxw8mJk)
+For general help with issues, feature suggestions, or bugs, join the [Discord Server](https://discord.gg/chGrxw8mJk).
+[![Discord](https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg)]
  
 # Resources
 - https://github.com/NuclearPowered/Reactor The framework the mod uses.
