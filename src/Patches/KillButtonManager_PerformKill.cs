@@ -15,7 +15,7 @@
                     if (HudManager.Instance.KillButton == __instance)
                         return false;
             
-            foreach (Item item in Main.Instance.GetLocalModdedPlayer().Inventory)
+            foreach (Item item in Main.Instance.GetLocalModdedPlayer()?.Inventory)
             {
                 if (__instance != item.Button) continue;
                 if (!HudManager._instance.UseButton.isActiveAndEnabled) break;
@@ -23,7 +23,7 @@
                 return false;
             }
 
-            if (__instance == HudManager.Instance.KillButton && Main.Instance.GetLocalModdedPlayer().Role?.RoleName == "Bellatrix" && ((Bellatrix)Main.Instance.GetLocalModdedPlayer().Role).MindControlledPlayer != null)
+            if (__instance == HudManager.Instance.KillButton && Main.Instance.GetLocalModdedPlayer()?.Role?.RoleName == "Bellatrix" && ((Bellatrix)Main.Instance.GetLocalModdedPlayer().Role).MindControlledPlayer != null)
             {
                 PlayerControl killer = ((Bellatrix)Main.Instance.GetLocalModdedPlayer().Role).MindControlledPlayer._Object;
                 if (killer.FindClosestTarget() != null && !Main.Instance.ControlKillUsed)
@@ -34,7 +34,7 @@
                 return false;
             }
 
-            if (Main.Instance.GetLocalModdedPlayer().Role != null)
+            if (Main.Instance.GetLocalModdedPlayer()?.Role != null)
                 return Main.Instance.GetLocalModdedPlayer().Role.PerformKill(__instance);
             return true;
         }

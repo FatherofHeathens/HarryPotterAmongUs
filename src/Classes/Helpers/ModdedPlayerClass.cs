@@ -109,30 +109,6 @@ namespace HarryPotter.Classes
                         moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
                 }
             }
-
-            if (!Main.Instance.Config.OrderOfTheCrew)
-                return;
-
-            if (Main.Instance.IsPlayerRole(this, "Harry") || 
-                Main.Instance.IsPlayerRole(this, "Hermione") ||
-                Main.Instance.IsPlayerRole(this, "Ron"))
-            {
-                foreach (ModdedPlayerClass moddedPlayer in Main.Instance.AllPlayers)
-                {
-                    if (Main.Instance.IsPlayerRole(moddedPlayer, "Harry") ||
-                        Main.Instance.IsPlayerRole(moddedPlayer, "Hermione") ||
-                        Main.Instance.IsPlayerRole(moddedPlayer, "Ron"))
-                    {
-                        Main.Instance.SetNameColor(moddedPlayer._Object, moddedPlayer.Role.RoleColor);
-                        moddedPlayer._Object.nameText.transform.position = new Vector3(
-                            moddedPlayer._Object.nameText.transform.position.x, 
-                            moddedPlayer._Object.transform.position.y + 0.8f, 
-                            moddedPlayer._Object.nameText.transform.position.z);
-                        moddedPlayer._Object.nameText.Text =
-                            moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
-                    }
-                }
-            }
         }
 
         public void PopulateButtons()

@@ -17,6 +17,7 @@ namespace HarryPotter.Classes
         public List<Sprite> WorldItemIcons { get; }
         public List<Sprite> CrucioSprite { get;  }
         public List<Sprite> CurseSprite { get; }
+        public List<Sprite> AllCustomHats { get; }
         public PhysicsMaterial2D SnitchMaterial { get; }
         public AudioClip HPTheme { get; }
         public Asset()
@@ -27,7 +28,9 @@ namespace HarryPotter.Classes
             WorldItemIcons = new List<Sprite>();
             CrucioSprite = new List<Sprite>();
             CurseSprite = new List<Sprite>();
-            
+            AllCustomHats = new List<Sprite>();
+
+
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("CurseButton").DontUnload());
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("CrucioButton").DontUnload());
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("ImperioButton").DontUnload());
@@ -50,7 +53,14 @@ namespace HarryPotter.Classes
             
             CurseSprite.Add(bundle.LoadAsset<Sprite>("CurseF1").DontUnload());
             CurseSprite.Add(bundle.LoadAsset<Sprite>("CurseF2").DontUnload());
-                
+
+            AllCustomHats.Add(bundle.LoadAsset<Sprite>("hat (1)").DontUnload());
+            AllCustomHats.Add(bundle.LoadAsset<Sprite>("hat (2)").DontUnload());
+            AllCustomHats.Add(bundle.LoadAsset<Sprite>("hat (3)").DontUnload());
+            AllCustomHats.Add(bundle.LoadAsset<Sprite>("hat (4)").DontUnload());
+            AllCustomHats.Add(bundle.LoadAsset<Sprite>("hat (5)").DontUnload());
+            AllCustomHats.Add(bundle.LoadAsset<Sprite>("hat (6)").DontUnload());
+
             SmallSnitchSprite = bundle.LoadAsset<Sprite>("SmallSnitchIco").DontUnload();
             SnitchMaterial = bundle.LoadAsset<PhysicsMaterial2D>("SnitchMaterial").DontUnload();
             HPTheme = bundle.LoadAsset<AudioClip>("HPTheme").DontUnload();

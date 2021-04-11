@@ -10,7 +10,7 @@ namespace HarryPotter.Classes.WorldItems
     public class TheGoldenSnitchWorld : WorldItem
     {
         public static System.Random ItemRandom { get; set; } = new System.Random();
-        public static float ItemSpawnChance { get; set; } = 20 * (Main.Instance.GetAllApplicableItemPositions().Count / 28);
+        public static float ItemSpawnChance { get; set; } = 30;
         public static bool HasSpawned { get; set; }
         public Vector2 Velocity { get; set; }
 
