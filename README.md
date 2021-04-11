@@ -30,6 +30,12 @@ Zooms out the player's vision so they can see almost the entire map.
 Can be used during meetings to force all the votes onto a single player.
 
 # Game Options
+
+Game Setting  | Explanation
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
 ## Order of the Impostors
 If toggled, the Impostors can win by eliminating Harry, Hermione, and Ron.
 ## Can Spells be Used in Vents
