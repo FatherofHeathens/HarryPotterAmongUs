@@ -33,20 +33,10 @@ Can be used during meetings to force all the votes onto a single player.
 
 Game Setting  | Explanation
 ------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
-
-## Order of the Impostors
-If toggled, the Impostors can win by eliminating Harry, Hermione, and Ron.
-## Can Spells be Used in Vents
-If toggled, spells can be casted while the caster is inside a vent.
-## Defensive Duelist Cooldown
-Changes the cooldown of Ron's active ability.
-## Invisibility Cloak Cooldown
-Changes the cooldown of Harry's active ability.
-## Time Turner Cooldown
-Changes the cooldown of Hermione's active ability.
-## Crucio Cooldown
-Changes the cooldown of Bellatrix's spell.
-## Each Item Only Spawns Once Per Game
-If toggled, each item will only spawn a single time in one game.
+Order of the Impostors  | If toggled, the Impostors can win by eliminating Harry, Hermione, and Ron.
+Can Spells be Used in Vents  | If toggled, spells can be casted while the caster is inside a vent.
+Defensive Duelist Cooldown  |  Changes the cooldown of Ron's active ability.
+Invisibility Cloak Cooldown  |  Changes the cooldown of Harry's active ability.
+Time Turner Cooldown  |  Changes the cooldown of Hermione's active ability.
+Crucio Cooldown  |  Changes the cooldown of Bellatrix's spell.
+Each Item Only Spawns Once Per Game  |  If toggled, each item will only spawn a single time in one game.
