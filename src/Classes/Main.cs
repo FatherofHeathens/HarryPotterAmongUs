@@ -384,6 +384,7 @@ namespace HarryPotter.Classes
             ImportantTextTask durationText = new ImportantTextTask();
             if (target.AmOwner)
                 durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}Invisibility Cloak: {Config.InvisCloakDuration}s remaining</color></color>");
+            
             while (true)
             {
                 if (target.AmOwner)
@@ -391,7 +392,7 @@ namespace HarryPotter.Classes
                     durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}Invisibility Cloak: {Math.Ceiling(Config.InvisCloakDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining</color></color>";
                     GetLocalModdedPlayer().Role?.ResetCooldowns();
                 }
-                
+
                 target.Visible = false;
                 
                 if (MeetingHud.Instance || 
