@@ -1,6 +1,10 @@
 # Harry Potter Mod
 A theme-based Among Us mod that adds items and roles related to the Harry Potter movies/books.
 
+# Important Notice
+
+## When updating the mod to a new version, do it on a fresh install of the latest version of Among Us!
+
 # Installation Instructions
 For a video installation tutorial, go [here](https://www.youtube.com/watch?v=MN-prLtBrcQ).
 
@@ -9,7 +13,7 @@ For a video installation tutorial, go [here](https://www.youtube.com/watch?v=MN-
 - Click on the zip file inside the latest release window.
 - Once it is downloaded, open the zip file.
 - Open steam, right click on Among Us, hover over "Manage", and then press "Browse Local Files".
-- Drag all the files inside the downloaded zip file into your Among Us folder.
+- Drag all the files inside the downloaded zip file into your Among Us folder (if it prompts you to replace any files, do it).
 - Open the game and wait; the first start may take a few minutes.
 - Once the game is open, check the top left corner to verify it says "Mods: 3".
 - The mod is installed. Hooray!
