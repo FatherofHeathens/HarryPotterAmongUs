@@ -51,7 +51,12 @@ namespace HarryPotter.Classes.Items
                     break;
 
                 if (MeetingHud.Instance)
+                {
+                    oldActiveKill = false;
+                    oldActiveReport = false;
+                    oldActiveUse = false;
                     break;
+                }
 
                 if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
                     break;
