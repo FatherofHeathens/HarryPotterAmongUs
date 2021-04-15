@@ -453,10 +453,11 @@ namespace HarryPotter.Classes
             ImportantTextTask durationText = new ImportantTextTask();
             if (controller.AmOwner)
             {
-                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Config.ImperioDuration}s remaining</color></color>");
                 Camera.main.GetComponent<FollowerCamera>().Target = target;
+                Camera.main.GetComponent<FollowerCamera>().shakeAmount = 0;
+                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Config.ImperioDuration}s remaining</color></color>");
             }
-            
+
             target.moveable = true;
             controller.moveable = true;
             
