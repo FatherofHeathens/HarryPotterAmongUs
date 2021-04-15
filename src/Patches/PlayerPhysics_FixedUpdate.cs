@@ -22,7 +22,6 @@ namespace HarryPotter.Patches
             
             GameData.PlayerInfo data = moddedController._Object.Data;
             bool flag = data != null && data.IsDead;
-            controlledPlayer.HICLDCGDENP(flag);
 
             Vector2 vel = HudManager.Instance.joystick.Delta * __instance.TrueSpeed;
             

@@ -19,7 +19,7 @@ namespace HarryPotter.Classes
                 string roleName = Main.Instance.GetLocalModdedPlayer().Role == null
                     ? (PlayerControl.LocalPlayer.Data.IsImpostor ? "Impostor" : "Crewmate")
                     : Main.Instance.GetLocalModdedPlayer().Role.RoleName;
-                AddNewItem(0, $"{GetRoleHexColor(PlayerControl.LocalPlayer)}Role: {roleName}");
+                AddNewItem(0, $"{GetRoleHexColor(PlayerControl.LocalPlayer)}Role: {roleName}</color></color>");
             }
         }
 
@@ -45,7 +45,7 @@ namespace HarryPotter.Classes
         {
             ModdedPlayerClass moddedPlayer = Main.Instance.ModdedPlayerById(player.PlayerId);
             if (moddedPlayer.Role == null)
-                return "[FFFFFFFF]";
+                return "<#FFFFFF>";
 
             return Extensions.ToTextColor(moddedPlayer.Role.RoleColor);
         }

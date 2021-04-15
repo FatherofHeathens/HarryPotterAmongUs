@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Essentials.Extensions;
 using HarryPotter.Classes.Items;
 using HarryPotter.Classes.WorldItems;
 using Hazel;
@@ -66,14 +65,14 @@ namespace HarryPotter.Classes
                         moddedPlayer._Object.nameText.transform.position.x,
                         moddedPlayer._Object.transform.position.y + 0.8f,
                         moddedPlayer._Object.nameText.transform.position.z);
-                    moddedPlayer._Object.nameText.Text =
+                    moddedPlayer._Object.nameText.text =
                         moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
                 }
             }
 
             if (Role == null)
             {
-                _Object.nameText.Text = _Object.Data.PlayerName + "\n" + (_Object.Data.IsImpostor ? "Impostor" : "Crewmate");
+                _Object.nameText.text = _Object.Data.PlayerName + "\n" + (_Object.Data.IsImpostor ? "Impostor" : "Crewmate");
                 _Object.nameText.transform.position = new Vector3(
                     _Object.nameText.transform.position.x, 
                     _Object.transform.position.y + 0.8f, 
@@ -82,7 +81,7 @@ namespace HarryPotter.Classes
             }
 
             Main.Instance.SetNameColor(_Object, Role.RoleColor);
-            _Object.nameText.Text = _Object.Data.PlayerName + "\n" + Role.RoleName;
+            _Object.nameText.text = _Object.Data.PlayerName + "\n" + Role.RoleName;
             _Object.nameText.transform.position = new Vector3(
                 _Object.nameText.transform.position.x, 
                 _Object.transform.position.y + 0.8f, 
@@ -105,7 +104,7 @@ namespace HarryPotter.Classes
                         moddedPlayer._Object.nameText.transform.position.x,
                         moddedPlayer._Object.transform.position.y + 0.8f,
                         moddedPlayer._Object.nameText.transform.position.z);
-                    moddedPlayer._Object.nameText.Text =
+                    moddedPlayer._Object.nameText.text =
                         moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
                 }
             }

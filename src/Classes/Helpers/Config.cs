@@ -1,16 +1,16 @@
-﻿using Essentials.Options;
+﻿using hunterlib.Classes;
 
 namespace HarryPotter.Classes
 {
     class Config
     {
-        private CustomToggleOption Option1 = CustomOption.AddToggle("Order of the Impostors", false);
-        private CustomToggleOption Option3 = CustomOption.AddToggle("Can Spells be Used In Vents", false);
-        private CustomNumberOption Option9 = CustomOption.AddNumber("Defensive Duelist Cooldown", 20f, 10f, 40f, 2.5f);
-        private CustomNumberOption Option10 = CustomOption.AddNumber("Invisibility Cloak Cooldown", 20f, 10f, 40f, 2.5f);
-        private CustomNumberOption Option11 = CustomOption.AddNumber("Time Turner Cooldown", 20f, 10f, 40f, 2.5f);
-        private CustomNumberOption Option12 = CustomOption.AddNumber("Crucio Cooldown", 20f, 10f, 40f, 2.5f);
-        private CustomToggleOption Option14 = CustomOption.AddToggle("Each Item Spawns Only Once Per Game", true);
+        private CustomToggleOption Option1 = CustomToggleOption.Create("Order of the Impostors", false);
+        private CustomToggleOption Option3 = CustomToggleOption.Create("Can Spells be Used In Vents", false);
+        private CustomNumberOption Option9 = CustomNumberOption.Create("Defensive Duelist Cooldown", 20f, 40f, 10, 2.5f);
+        private CustomNumberOption Option10 = CustomNumberOption.Create("Invisibility Cloak Cooldown", 20f, 40f, 10, 2.5f);
+        private CustomNumberOption Option11 = CustomNumberOption.Create("Time Turner Cooldown", 20f, 40f, 10f, 2.5f);
+        private CustomNumberOption Option12 = CustomNumberOption.Create("Crucio Cooldown", 20f, 40f, 10f, 2.5f);
+        private CustomToggleOption Option14 = CustomToggleOption.Create("Each Item Spawns Only Once Per Game", true);
 
         public bool OrderOfTheImp { get; private set; }
         public float MapDuration { get { return 10; } }
@@ -28,13 +28,13 @@ namespace HarryPotter.Classes
         
         public void ReloadSettings()
         {
-            OrderOfTheImp = Option1.GetValue();
-            SpellsInVents = Option3.GetValue();
-            DefensiveDuelistCooldown = Option9.GetValue();
-            InvisCloakCooldown = Option10.GetValue();
-            HourglassCooldown = Option11.GetValue();
-            CrucioCooldown = Option12.GetValue();
-            SingleItem = Option14.GetValue();
+            OrderOfTheImp = Option1.Value;
+            SpellsInVents = Option3.Value;
+            DefensiveDuelistCooldown = Option9.Value;
+            InvisCloakCooldown = Option10.Value;
+            HourglassCooldown = Option11.Value;
+            CrucioCooldown = Option12.Value;
+            SingleItem = Option14.Value;
         }
     }
 }
