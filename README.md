@@ -58,7 +58,6 @@ A modified version of Reactor that removes Modded Handshake functionality is use
 # Resources
 - https://github.com/NuclearPowered/Reactor The modding-framework used. (original)
 - https://github.com/NotHunter101/Reactor The modding-framework used. (modified to remove handshake)
-- https://github.com/DorCoMaNdO/Reactor-Essentials To do various things easier. (i.e creating custom lobby options)
 
 # License
 This software is distributed under the <a href="https://github.com/NotHunter101/ExtraRolesAmongUs/blob/main/LICENSE">`GNU GPLv3 License`</a>. Reactor is distributed under <a href="https://github.com/NuclearPowered/Reactor/blob/master/LICENSE">`LGPL-3.0 License`</a>.
