@@ -25,7 +25,7 @@ Role  | Passive Ability  |  Active Ability  |  Active Ability #2
 Harry  |  Can not be killed by Voldemort's spell.  |  Can become invisible for 10 seconds.  | None.
 Hermione  | None.  |  Can teleport themselves back to where they were 10 seconds ago. This can bring the player back to life, unless they are killed by Voldemort's spell.  |  None.
 Ron  |  None.  | Can activate an ability that prevents any spells or kills being used against the player.  |  None.
-Voldemort  |  None.  |  Can shoot a spell that will kill any player it connects with, except Harry; it will kill the Voldemort instead. (shares a cooldown with the kill button)  |  None.
+Voldemort  |  None.  |  Can shoot a spell that will kill any player it connects with, except Harry; it will kill Voldemort instead. (shares a cooldown with the kill button)  |  None.
 Bellatrix  |  None.  |  Can shoot a spell that temporarily blinds and freezes any player it connects with.  |  Can mind-control any player they choose and kill someone as that player. (shares a cooldown with the kill button)
 
 # Items
