@@ -1,6 +1,8 @@
 # Harry Potter Mod
 A theme-based Among Us mod that adds items and roles related to the Harry Potter movies/books.
 
+https://www.youtube.com/watch?v=b22hzt0sPhE&lc=UgwfTwSKfYn_ASfQxL14AaABAg
+
 # Important Notice
 
 ## When updating the mod to a new version, do it on a fresh install of the latest version of Among Us!
