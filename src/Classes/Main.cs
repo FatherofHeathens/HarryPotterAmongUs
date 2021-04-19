@@ -391,15 +391,24 @@ namespace HarryPotter.Classes
                 {
                     durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}Invisibility Cloak: {Math.Ceiling(Config.InvisCloakDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining</color></color>";
                     GetLocalModdedPlayer().Role?.ResetCooldowns();
-                }
 
-                target.Visible = false;
+                    target.Visible = true;
+
+                    target.myRend.color = new Color(1f, 1f, 1f, 100f / 255f);
+                    target.HatRenderer.color = new Color(1f, 1f, 1f, 100f / 255f);
+                    target.MyPhysics.Skin.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 100f / 255f);
+                }
+                else
+                    target.Visible = false;
                 
                 if (MeetingHud.Instance || 
                     AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
                     now.AddSeconds(Config.InvisCloakDuration) < DateTime.UtcNow ||
                     ModdedPlayerById(target.PlayerId).ControllerOverride != null)
                 {
+                    target.myRend.color = Color.white;
+                    target.HatRenderer.color = Color.white;
+                    target.MyPhysics.Skin.GetComponent<SpriteRenderer>().color = Color.white;
                     target.Visible = true;
                     TaskInfoHandler.Instance.RemoveItem(durationText);
                     yield break;
