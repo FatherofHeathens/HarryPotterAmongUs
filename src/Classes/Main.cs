@@ -397,9 +397,15 @@ namespace HarryPotter.Classes
                     target.myRend.color = new Color(1f, 1f, 1f, 100f / 255f);
                     target.HatRenderer.color = new Color(1f, 1f, 1f, 100f / 255f);
                     target.MyPhysics.Skin.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 100f / 255f);
+                    target.CurrentPet.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 100f / 255f);
                 }
                 else
+                {
                     target.Visible = false;
+
+                    if (target.CurrentPet)
+                        target.CurrentPet.Visible = false;
+                }
                 
                 if (MeetingHud.Instance || 
                     AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
@@ -409,6 +415,13 @@ namespace HarryPotter.Classes
                     target.myRend.color = Color.white;
                     target.HatRenderer.color = Color.white;
                     target.MyPhysics.Skin.GetComponent<SpriteRenderer>().color = Color.white;
+
+                    if (target.CurrentPet)
+                    {
+                        target.CurrentPet.GetComponent<SpriteRenderer>().color = Color.white;
+                        target.CurrentPet.Visible = true;
+                    }
+
                     target.Visible = true;
                     TaskInfoHandler.Instance.RemoveItem(durationText);
                     yield break;
