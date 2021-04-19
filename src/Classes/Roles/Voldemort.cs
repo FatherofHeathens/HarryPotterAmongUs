@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace HarryPotter.Classes.Roles
 {
     public class Voldemort : Role
     {
         public KillButtonManager CurseButton { get; set; }
-            
+        public DateTime LastCurse { get; set; }
+
         public Voldemort(ModdedPlayerClass owner)
         {
             RoleName = "Voldemort";
@@ -17,7 +19,7 @@ namespace HarryPotter.Classes.Roles
             if (!Owner._Object.AmOwner)
                 return;
             
-            CurseButton = Object.Instantiate(HudManager.Instance.KillButton);
+            CurseButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton);
             CurseButton.renderer.enabled = true;
         }
 
@@ -35,7 +37,7 @@ namespace HarryPotter.Classes.Roles
             CurseButton.renderer.sprite = Main.Instance.Assets.AbilityIcons[0];
             CurseButton.transform.position = new Vector2(bottomLeft.x + 0.75f, bottomLeft.y + 0.75f);
             CurseButton.SetTarget(null);
-            CurseButton.SetCoolDown(Owner._Object.killTimer, PlayerControl.GameOptions.KillCooldown);
+            CurseButton.SetCoolDown(PlayerControl.GameOptions.KillCooldown - (float)(DateTime.UtcNow - LastCurse).TotalSeconds, PlayerControl.GameOptions.KillCooldown);
 
             bool isDead = Owner._Object.Data.IsDead;
             if (isDead)
@@ -49,6 +51,11 @@ namespace HarryPotter.Classes.Roles
             
             if (Input.GetMouseButtonDown(1))
                 PerformKill(CurseButton);
+        }
+
+        public override void ResetCooldowns()
+        {
+            LastCurse = DateTime.UtcNow;
         }
 
         public override bool PerformKill(KillButtonManager __instance)
@@ -68,6 +75,7 @@ namespace HarryPotter.Classes.Roles
             if (Owner._Object.inVent && !Main.Instance.Config.SpellsInVents)
                 return false;
 
+            ResetCooldowns();
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Main.Instance.RpcCreateCurse(mouseWorld, Owner);
             return false;

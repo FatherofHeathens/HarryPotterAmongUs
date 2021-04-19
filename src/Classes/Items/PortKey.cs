@@ -18,7 +18,7 @@ namespace HarryPotter.Classes.Items
             System.Console.WriteLine("Used Port Key");
             this.Delete();
 
-            Main.Instance.RpcTeleportPlayer(Owner._Object, ShipStatus.Instance.MeetingSpawnCenter);
+            Main.Instance.RpcTeleportPlayer(Owner._Object, PlayerControl.GameOptions.MapId == 4 ? ShipStatus.Instance.MeetingSpawnCenter2 : ShipStatus.Instance.MeetingSpawnCenter);
         }
     }
 }
