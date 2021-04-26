@@ -11,6 +11,7 @@ namespace HarryPotter.Classes.Items
             this.Id = 2;
             this.Icon = Main.Instance.Assets.ItemIcons[Id];
             this.Name = "Port Key";
+            this.Tooltip = "Teleports the user to\nthe Emergency button.";
         }
 
         public override void Use()
@@ -18,7 +19,7 @@ namespace HarryPotter.Classes.Items
             System.Console.WriteLine("Used Port Key");
             this.Delete();
 
-            Main.Instance.RpcTeleportPlayer(Owner._Object, PlayerControl.GameOptions.MapId == 4 ? ShipStatus.Instance.MeetingSpawnCenter2 : ShipStatus.Instance.MeetingSpawnCenter);
+            Main.Instance.RpcTeleportPlayer(Owner._Object, PlayerControl.GameOptions.MapId == 4 ? new Vector2(7.620923f, 15.0479f) : ShipStatus.Instance.MeetingSpawnCenter);
         }
     }
 }

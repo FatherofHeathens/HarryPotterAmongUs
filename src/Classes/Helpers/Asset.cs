@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using HarryPotter.Classes.Helpers.UI;
 using Reactor.Extensions;
 using Reactor.Unstrip;
 using UnityEngine;
@@ -23,13 +24,13 @@ namespace HarryPotter.Classes
         public Asset()
         {
             AssetBundle bundle = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\harrypotter");
+            
             ItemIcons = new List<Sprite>();
             AbilityIcons = new List<Sprite>();
             WorldItemIcons = new List<Sprite>();
             CrucioSprite = new List<Sprite>();
             CurseSprite = new List<Sprite>();
             AllCustomHats = new List<Sprite>();
-
 
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("CurseButton").DontUnload());
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("CrucioButton").DontUnload());
@@ -64,6 +65,7 @@ namespace HarryPotter.Classes
             SmallSnitchSprite = bundle.LoadAsset<Sprite>("SmallSnitchIco").DontUnload();
             SnitchMaterial = bundle.LoadAsset<PhysicsMaterial2D>("SnitchMaterial").DontUnload();
             HPTheme = bundle.LoadAsset<AudioClip>("HPTheme").DontUnload();
+            InventoryUI.PanelPrefab = bundle.LoadAsset<GameObject>("InventoryPanel").DontUnload();
         }
     }
 }

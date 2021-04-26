@@ -10,9 +10,10 @@ namespace HarryPotter.Classes.Items
             this.Owner = owner;
             this.ParentInventory = owner.Inventory;
             this.Id = 3;
-            this.Icon = Main.Instance.Assets.ItemIcons[Id];
+            this.Icon = Main.Instance.Assets.WorldItemIcons[Id];
             this.Name = "The Golden Snitch";
             this.IsSpecial = true;
+            this.Tooltip = "Forces all votes onto the target.\nCan only be used in meetings.";
         }
     }
 }

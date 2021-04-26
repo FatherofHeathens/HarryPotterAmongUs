@@ -16,6 +16,7 @@ namespace HarryPotter.Patches
         static void Postfix(IntroCutscene.Nested_0 __instance)
         {
             ModdedPlayerClass localPlayer = Main.Instance.GetLocalModdedPlayer();
+            if (!localPlayer._Object.Data.IsImpostor) __instance.__this.Title.text = "Muggle";
             if (localPlayer.Role == null) return;
             localPlayer.Role.ResetCooldowns();
             __instance.__this.ImpostorText.gameObject.SetActive(true);

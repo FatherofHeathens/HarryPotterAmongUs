@@ -2,12 +2,7 @@
 using System.Linq;
 using HarryPotter.Classes.Items;
 using HarryPotter.Classes.WorldItems;
-using Hazel;
-using Reactor.Extensions;
-using Rewired;
-using Rewired.ComponentControls;
 using UnityEngine;
-using UnityEngine.Purchasing.Security;
 
 namespace HarryPotter.Classes
 {
@@ -28,9 +23,10 @@ namespace HarryPotter.Classes
             if (_Object.Data.IsDead)
                 ClearItems();
 
+            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 4; i++) GiveItem(i);
+
             TaskInfoHandler.Instance.Update();
             HandleNameColors();
-            PopulateButtons();
             Role?.Update();
 
             if (AmongUsClient.Instance.AmHost)
@@ -109,18 +105,7 @@ namespace HarryPotter.Classes
                 }
             }
         }
-
-        public void PopulateButtons()
-        {
-            float itemCount = 0;
-            foreach (var item in Inventory)
-            {
-                if (item.IsSpecial) continue;
-                item.DrawIcon(HudManager.Instance.ReportButton.renderer.bounds.max.x - 0.375f - (itemCount * 0.6f), HudManager.Instance.ReportButton.renderer.bounds.max.y + 0.375f, HudManager.Instance.KillButton.transform.position.z);
-                itemCount++;
-            }
-        }
-
+        
         public bool HasItem(int id)
         {
             return Inventory.FindAll(x => x.Id == id).Count > 0;

@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
 using HarryPotter.Classes;
 using InnerNet;
+using System.Linq;
+using HarryPotter.Classes.Helpers.UI;
+using UnityEngine;
 
 namespace HarryPotter.Patches
 {
@@ -11,14 +14,16 @@ namespace HarryPotter.Patches
         {
             SoundManager.Instance.PlaySound(Main.Instance.Assets.HPTheme, false, 1f);
 
-            foreach (UnityEngine.Sprite customHat in Main.Instance.Assets.AllCustomHats)
+            foreach (Sprite customHat in Main.Instance.Assets.AllCustomHats)
             {
-                HatBehaviour newHat = UnityEngine.Object.Instantiate(HatManager.Instance.AllHats[0]);
+                HatBehaviour newHat = UnityEngine.Object.Instantiate(HatManager.Instance.AllHats.ToArray().First());
                 newHat.MainImage = customHat;
                 System.Console.WriteLine(customHat.name);
                 if (customHat.name != "hat (6)") newHat.NoBounce = true;
                 HatManager.Instance.AllHats.Insert(1, newHat);
             }
+            
+            new GameObject().AddComponent<InventoryUI>();
         }
     }
 }

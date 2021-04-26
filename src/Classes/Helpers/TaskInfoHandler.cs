@@ -17,7 +17,7 @@ namespace HarryPotter.Classes
             if (AllInfo.Count == 0 && PlayerControl.LocalPlayer.myTasks.Count > 0)
             {
                 string roleName = Main.Instance.GetLocalModdedPlayer().Role == null
-                    ? (PlayerControl.LocalPlayer.Data.IsImpostor ? "Impostor" : "Crewmate")
+                    ? (PlayerControl.LocalPlayer.Data.IsImpostor ? "Impostor" : "Muggle")
                     : Main.Instance.GetLocalModdedPlayer().Role.RoleName;
                 AddNewItem(0, $"{GetRoleHexColor(PlayerControl.LocalPlayer)}Role: {roleName}</color></color>");
 

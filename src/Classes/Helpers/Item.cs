@@ -13,6 +13,7 @@ namespace HarryPotter.Classes
         public List<Item> ParentInventory { get; set; }
         public ModdedPlayerClass Owner { get; set; }
         public bool IsSpecial { get; set; }
+        public string Tooltip { get; set; }
         
         public virtual void Use() { }
 

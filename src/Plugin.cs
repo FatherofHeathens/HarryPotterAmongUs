@@ -13,7 +13,10 @@ namespace HarryPotter
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
     [BepInDependency(ReactorPlugin.Id)]
+
+    //Imagine not having a custom options library? Couldn't be me
     [BepInDependency(HunterPlugin.Id)]
+
     public class Plugin : BasePlugin
     {
         public const string Id = "harry.potter.mod";
@@ -21,9 +24,13 @@ namespace HarryPotter
 
         public override void Load()
         {
+            //I'm too lazy to move these unnecessary assignments to the actual classes I am creating
             Main.Instance = new Main { Config = new Config(), Rpc = new CustomRpc(), Assets = new Asset(), AllPlayers = new List<ModdedPlayerClass>(), AllItems = new List<WorldItem>() };
             TaskInfoHandler.Instance = new TaskInfoHandler { AllInfo = new List<ImportantTextTask>() };
+
+            HunterPlugin.DrawHudString = true;
             HunterPlugin.HudScale = 0.8f;
+            RegisterInIl2CppAttribute.Register();
             Harmony.PatchAll();
         }
     }
@@ -52,8 +59,8 @@ namespace HarryPotter
             __instance.text.text += "\n<#FFFFFFFF>Download at: <#00DDFFFF>www.computable.us";
             __instance.text.text += "\n<#FFFFFFFF>Original Design by: <#88FF00FF>npc & friends";
             __instance.text.text += "\n<#FFFFFFFF>Art by: <#E67E22FF>PhasmoFireGod";
-            __instance.text.text += "\n<#FFFFFFFF>Support projects like these at:";
-            __instance.text.text += "\n<#F96854FF>www.patreon.com/HunterMuir";
+            //__instance.text.text += "\n<#FFFFFFFF>Support projects like these at:";
+            //__instance.text.text += "\n<#F96854FF>www.patreon.com/HunterMuir";
         }
     }
 }

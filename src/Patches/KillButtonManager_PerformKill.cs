@@ -1,9 +1,8 @@
-﻿﻿﻿using HarmonyLib;
-  using HarryPotter.Classes;
-  using HarryPotter.Classes.Roles;
-  using Rewired;
+﻿using HarmonyLib;
+using HarryPotter.Classes;
+using HarryPotter.Classes.Roles;
 
-  namespace HarryPotter.Patches
+namespace HarryPotter.Patches
 {
     [HarmonyPatch(typeof(KillButtonManager), nameof(KillButtonManager.PerformKill))]
     class KillButtonManager_PerformKill
