@@ -4,8 +4,10 @@ using HarmonyLib;
 using Reactor;
 using HarryPotter.Classes;
 using System.Collections.Generic;
+using HarryPotter.Classes.UI;
 using hunterlib;
 using InnerNet;
+using TMPro;
 using UnityEngine;
 
 namespace HarryPotter
@@ -27,6 +29,7 @@ namespace HarryPotter
             //I'm too lazy to move these unnecessary assignments to the actual classes I am creating
             Main.Instance = new Main { Config = new Config(), Rpc = new CustomRpc(), Assets = new Asset(), AllPlayers = new List<ModdedPlayerClass>(), AllItems = new List<WorldItem>() };
             TaskInfoHandler.Instance = new TaskInfoHandler { AllInfo = new List<ImportantTextTask>() };
+            PopupTMPHandler.Instance = new PopupTMPHandler { AllPopups = new List<TextMeshPro>() };
 
             HunterPlugin.DrawHudString = true;
             HunterPlugin.HudScale = 0.8f;

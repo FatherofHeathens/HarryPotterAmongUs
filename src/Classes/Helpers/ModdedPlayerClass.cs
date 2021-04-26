@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarryPotter.Classes.Items;
+using HarryPotter.Classes.UI;
 using HarryPotter.Classes.WorldItems;
 using UnityEngine;
 
@@ -22,8 +23,6 @@ namespace HarryPotter.Classes
             
             if (_Object.Data.IsDead)
                 ClearItems();
-
-            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 4; i++) GiveItem(i);
 
             TaskInfoHandler.Instance.Update();
             HandleNameColors();
@@ -128,6 +127,8 @@ namespace HarryPotter.Classes
                     Inventory.Add(new TheGoldenSnitch(this));
                     break;
             }
+            
+            PopupTMPHandler.Instance.CreatePopup("You picked up an item! Press 'C' to open your Inventory.", Color.green);
         }
 
         public void ClearItems()

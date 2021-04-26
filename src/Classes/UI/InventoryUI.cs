@@ -64,7 +64,6 @@ namespace HarryPotter.Classes.Helpers.UI
 
         public void Open()
         {
-            if (HudManager.Instance?.UseButton?.isActiveAndEnabled == false) return;
             Coroutines.Start(CoOpen());
         }
         
@@ -118,6 +117,7 @@ namespace HarryPotter.Classes.Helpers.UI
         public void Toggle()
         {
             if (!AmongUsClient.Instance.IsGameStarted) return;
+            if (HudManager.Instance?.UseButton?.isActiveAndEnabled == false) return;
             if (DestroyableSingleton<IntroCutscene>.InstanceExists) return;
             if (MeetingHud.Instance) return;
             if (Minigame.Instance) return;
@@ -130,7 +130,6 @@ namespace HarryPotter.Classes.Helpers.UI
         public bool IsOpen { get; set; }
         public bool IsOpeningOrClosing { get; set; }
         public GameObject Panel { get; set; }
-        
         public static GameObject PanelPrefab { get; set; }
         public static InventoryUI Instance { get; set; }
     }

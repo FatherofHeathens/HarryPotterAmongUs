@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using HarryPotter.Classes.WorldItems;
 using Hazel;
 
 namespace HarryPotter.Classes.Items
@@ -12,10 +13,18 @@ namespace HarryPotter.Classes.Items
             this.Id = 0;
             this.Icon = Main.Instance.Assets.ItemIcons[Id];
             this.Name = "Deluminator";
-            this.Tooltip = "Toggles the status of the lights.";
+            this.Tooltip = "Deluminator:\nToggles the status of the lights.";
         }
         public override void Use()
         {
+            if (AmongUsClient.Instance.AmHost)
+                DeluminatorWorld.HasSpawned = false;
+            else
+            {
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem, SendOption.Reliable);
+                writer.Write(Id);
+                writer.EndMessage();
+            }
             System.Console.WriteLine("Used Deluminator");
             this.Delete();
             

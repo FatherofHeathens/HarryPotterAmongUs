@@ -27,32 +27,17 @@ namespace HarryPotter.Classes.WorldItems
                 return;
 
             Vector2 pos = Main.Instance.GetAllApplicableItemPositions().Random();
-
-            System.Console.WriteLine(pos.x + ":" + pos.y);
-
-            if (Main.Instance.Config.SingleItem)
-                Main.Instance.PossibleItemPositions.RemoveAll(x => x.Item2 == pos);
-
             Main.Instance.RpcSpawnItem(2, pos);
             HasSpawned = true;
         }
         
         public static bool CanSpawn()
         {
-            if (Main.Instance.AllItems.Where(x => x.Id == 2).ToList().Count > 0)
-                return false;
-
-            if (MeetingHud.Instance)
-                return false;
-
-            if (!AmongUsClient.Instance.IsGameStarted)
-                return false;
-
-            if (ItemRandom.Next(0, 100000) > ItemSpawnChance)
-                return false;
-            
-            if (HasSpawned && Main.Instance.Config.SingleItem)
-                return false;
+            if (Main.Instance.AllItems.Where(x => x.Id == 2).ToList().Count > 0) return false;
+            if (MeetingHud.Instance) return false;
+            if (!AmongUsClient.Instance.IsGameStarted) return false;
+            if (ItemRandom.Next(0, 100000) > ItemSpawnChance) return false;
+            if (HasSpawned) return false;
 
             return true;
         }

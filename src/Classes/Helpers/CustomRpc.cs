@@ -4,7 +4,9 @@ using System.Data;
 using HarmonyLib;
 using Hazel;
 using System.Linq;
+using HarryPotter.Classes.Items;
 using HarryPotter.Classes.Roles;
+using HarryPotter.Classes.WorldItems;
 using Hazel.Udp;
 using Il2CppSystem.Diagnostics;
 using Il2CppSystem.Net;
@@ -34,7 +36,7 @@ namespace HarryPotter.Classes
         TryPickupItem = 86,
         GiveItem = 87,
         DestroyItem = 88,
-        SetSnitchVelocity = 89,
+        UseItem = 89,
     }
 
     public class CustomRpc
@@ -168,8 +170,7 @@ namespace HarryPotter.Classes
                     if (Main.Instance.AllItems.Any(x => x.Id == pickupId))
                     {
                         List<WorldItem> allMatches = Main.Instance.AllItems.FindAll(x => x.Id == pickupId);
-                        foreach (WorldItem item in allMatches)
-                            item.Delete();
+                        foreach (WorldItem item in allMatches) item.Delete();
                         Main.Instance.AllItems.RemoveAll(x => x.IsPickedUp);
                         
                         MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.GiveItem, SendOption.Reliable);
@@ -199,6 +200,22 @@ namespace HarryPotter.Classes
                         foreach (WorldItem item in allMatches)
                             item.Delete();
                         Main.Instance.AllItems.RemoveAll(x => x.IsPickedUp);
+                    }
+                    break;
+                case (byte)Packets.UseItem:
+                    if (!AmongUsClient.Instance.AmHost) return;
+                    int usedItemId = reader.ReadInt32();
+                    switch (usedItemId)
+                    {
+                        case 0:
+                            DeluminatorWorld.HasSpawned = false;
+                            break;
+                        case 1:
+                            MaraudersMapWorld.HasSpawned = false;
+                            break;
+                        case 2:
+                            PortKeyWorld.HasSpawned = false;
+                            break;
                     }
                     break;
             }

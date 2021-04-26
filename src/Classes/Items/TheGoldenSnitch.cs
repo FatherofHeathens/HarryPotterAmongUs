@@ -13,7 +13,7 @@ namespace HarryPotter.Classes.Items
             this.Icon = Main.Instance.Assets.WorldItemIcons[Id];
             this.Name = "The Golden Snitch";
             this.IsSpecial = true;
-            this.Tooltip = "Forces all votes onto the target.\nCan only be used in meetings.";
+            this.Tooltip = "The Golden Snitch:\nForces all votes onto a targeted player.\n<#FF0000FF>Can only be used in meetings!";
         }
     }
 }

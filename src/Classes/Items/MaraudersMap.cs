@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Discord;
+using HarryPotter.Classes.WorldItems;
+using Hazel;
 using UnityEngine;
 using InnerNet;
 
@@ -17,13 +19,21 @@ namespace HarryPotter.Classes.Items
             this.Id = 1;
             this.Icon = Main.Instance.Assets.ItemIcons[Id];
             this.Name = "Marauder's Map";
-            this.Tooltip = $"Temporarily zooms out\nthe camera. {Main.Instance.Config.MapDuration}s duration.";
+            this.Tooltip = $"Marauder's Map:\nTemporarily zooms out\nthe camera. {Main.Instance.Config.MapDuration}s duration.";
         }
         public override void Use()
         {
+            if (AmongUsClient.Instance.AmHost)
+                MaraudersMapWorld.HasSpawned = false;
+            else
+            {
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem, SendOption.Reliable);
+                writer.Write(Id);
+                writer.EndMessage();
+            }
             System.Console.WriteLine("Used Marauders Map");
             this.Delete();
-            
+
             Reactor.Coroutines.Start(ZoomOut());
         }
 

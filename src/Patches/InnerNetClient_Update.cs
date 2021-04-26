@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HarryPotter.Classes;
   using HarryPotter.Classes.Items;
+  using HarryPotter.Classes.UI;
   using HarryPotter.Classes.WorldItems;
   using InnerNet;
   using UnityEngine;
@@ -16,11 +17,6 @@ using HarryPotter.Classes;
         static void Postfix(PlayerPhysics __instance)
         {
             if (!__instance?.AmOwner == true) return;
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                System.Console.WriteLine($"new Tuple<byte, Vector2>({AmongUsClient.Instance.TutorialMapId}, new Vector2({PlayerControl.LocalPlayer.myRend.bounds.center.x}, {PlayerControl.LocalPlayer.myRend.bounds.center.y})),");
-            }
 
             Main.Instance?.Config?.ReloadSettings();
             
