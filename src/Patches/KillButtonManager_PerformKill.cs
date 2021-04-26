@@ -13,14 +13,6 @@ namespace HarryPotter.Patches
                 if (Main.Instance.ModdedPlayerById(PlayerControl.LocalPlayer.FindClosestTarget().PlayerId).Immortal)
                     if (HudManager.Instance.KillButton == __instance)
                         return false;
-            
-            foreach (Item item in Main.Instance.GetLocalModdedPlayer()?.Inventory)
-            {
-                if (__instance != item.Button) continue;
-                if (!HudManager._instance.UseButton.isActiveAndEnabled) break;
-                item.Use();    
-                return false;
-            }
 
             if (__instance == HudManager.Instance.KillButton && Main.Instance.GetLocalModdedPlayer()?.Role?.RoleName == "Bellatrix" && ((Bellatrix)Main.Instance.GetLocalModdedPlayer().Role).MindControlledPlayer != null)
             {

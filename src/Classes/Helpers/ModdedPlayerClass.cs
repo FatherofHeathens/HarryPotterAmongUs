@@ -24,6 +24,8 @@ namespace HarryPotter.Classes
             if (_Object.Data.IsDead)
                 ClearItems();
 
+            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 4; i++) GiveItem(i);
+            
             TaskInfoHandler.Instance.Update();
             HandleNameColors();
             Role?.Update();
@@ -128,7 +130,7 @@ namespace HarryPotter.Classes
                     break;
             }
             
-            PopupTMPHandler.Instance.CreatePopup("You picked up an item! Press 'C' to open your Inventory.", Color.green);
+            PopupTMPHandler.Instance.CreatePopup("You picked up an item! Press 'C' to open your Inventory.", Color.white, Color.black);
         }
 
         public void ClearItems()

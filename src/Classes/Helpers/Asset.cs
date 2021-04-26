@@ -5,6 +5,7 @@ using System.Text;
 using HarryPotter.Classes.Helpers.UI;
 using Reactor.Extensions;
 using Reactor.Unstrip;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -21,6 +22,7 @@ namespace HarryPotter.Classes
         public List<Sprite> AllCustomHats { get; }
         public PhysicsMaterial2D SnitchMaterial { get; }
         public AudioClip HPTheme { get; }
+        public Material GenericOutlineMat { get; }
         public Asset()
         {
             AssetBundle bundle = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\harrypotter");
@@ -66,6 +68,7 @@ namespace HarryPotter.Classes
             SnitchMaterial = bundle.LoadAsset<PhysicsMaterial2D>("SnitchMaterial").DontUnload();
             HPTheme = bundle.LoadAsset<AudioClip>("HPTheme").DontUnload();
             InventoryUI.PanelPrefab = bundle.LoadAsset<GameObject>("InventoryPanel").DontUnload();
+            GenericOutlineMat = bundle.LoadAsset<Material>("GenericOutline").DontUnload();
         }
     }
 }

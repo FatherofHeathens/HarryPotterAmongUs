@@ -35,7 +35,7 @@ namespace HarryPotter.Classes.Helpers.UI
             CustomButton closeButton = closeButtonObj.gameObject.AddComponent<CustomButton>();
             closeButton.HoverColor = Color.green;
             closeButton.TooltipEnabled = true;
-            closeButton.Tooltip = "Hello World!\nTest.";
+            closeButton.Tooltip = "Close Menu";
             closeButton.OnClick += Close;
 
             for (var i = 0; i < Panel.transform.FindChild("Inventory").childCount; i++)
