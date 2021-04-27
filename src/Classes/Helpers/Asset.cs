@@ -45,11 +45,13 @@ namespace HarryPotter.Classes
             ItemIcons.Add(bundle.LoadAsset<Sprite>("MapIco").DontUnload());
             ItemIcons.Add(bundle.LoadAsset<Sprite>("KeyIco").DontUnload());
             ItemIcons.Add(bundle.LoadAsset<Sprite>("SnitchIco").DontUnload());
+            ItemIcons.Add(bundle.LoadAsset<Sprite>("GhostStoneIco").DontUnload());
             
             WorldItemIcons.Add(bundle.LoadAsset<Sprite>("DelumWorldIcon").DontUnload());
             WorldItemIcons.Add(bundle.LoadAsset<Sprite>("MapWorldIcon").DontUnload());
             WorldItemIcons.Add(bundle.LoadAsset<Sprite>("KeyWorldIcon").DontUnload());
             WorldItemIcons.Add(bundle.LoadAsset<Sprite>("SnitchWorldIcon").DontUnload());
+            WorldItemIcons.Add(bundle.LoadAsset<Sprite>("GhostStoneWorldIcon").DontUnload());
             
             CrucioSprite.Add(bundle.LoadAsset<Sprite>("CrucioF1").DontUnload());
             CrucioSprite.Add(bundle.LoadAsset<Sprite>("CrucioF2").DontUnload());

@@ -24,7 +24,14 @@ namespace HarryPotter.Classes
             if (_Object.Data.IsDead)
                 ClearItems();
 
-            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 4; i++) GiveItem(i);
+            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 5; i++) GiveItem(i);
+            
+            if (HasItem(4))
+            {
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    if (player.Data.IsDead)
+                        player.Visible = true;
+            }
             
             TaskInfoHandler.Instance.Update();
             HandleNameColors();
@@ -36,6 +43,7 @@ namespace HarryPotter.Classes
                 MaraudersMapWorld.WorldSpawn();
                 PortKeyWorld.WorldSpawn();
                 TheGoldenSnitchWorld.WorldSpawn();
+                GhostStoneWorld.WorldSpawn();
 
                 if (Main.Instance.Config.OrderOfTheImp)
                 {
@@ -127,6 +135,9 @@ namespace HarryPotter.Classes
                     break;
                 case 3: 
                     Inventory.Add(new TheGoldenSnitch(this));
+                    break;
+                case 4:
+                    Inventory.Add(new GhostStone(this));
                     break;
             }
             

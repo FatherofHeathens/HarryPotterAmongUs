@@ -13,13 +13,15 @@ namespace HarryPotter.Classes.UI
         public static PopupTMPHandler Instance { get; set; }
         public List<TextMeshPro> AllPopups { get; set; }
 
-        public void CreatePopup(string message, Color color, Color outlineColor)
+        public void CreatePopup(string message, Color color, Color outlineColor, float delay = 0)
         {
-            Reactor.Coroutines.Start(CoCreatePopup(message, color, outlineColor));
+            Reactor.Coroutines.Start(CoCreatePopup(message, color, outlineColor, delay));
         }
 
-        public IEnumerator CoCreatePopup(string message, Color color, Color outlineColor)
+        public IEnumerator CoCreatePopup(string message, Color color, Color outlineColor, float delay = 0)
         {
+            if (delay != 0) yield return new WaitForSeconds(delay);
+            
             var popupObj = new GameObject();
             popupObj.layer = 5;
             popupObj.active = true;

@@ -117,8 +117,7 @@ namespace HarryPotter.Classes
                     byte moveId = reader.ReadByte();
                     Vector3 newVel = new Vector3(reader.ReadSingle(), reader.ReadSingle());
                     PlayerControl movePlayer = Main.Instance.ModdedPlayerById(moveId)._Object;
-                    if (movePlayer.AmOwner)
-                        movePlayer.MyPhysics.body.velocity = newVel;
+                    if (movePlayer.AmOwner) movePlayer.MyPhysics.body.velocity = newVel;
                     break;
                 case (byte)Packets.InvisPlayer:
                     byte invisId = reader.ReadByte();

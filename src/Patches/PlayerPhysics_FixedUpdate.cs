@@ -20,14 +20,11 @@ namespace HarryPotter.Patches
             
             PlayerPhysics controlledPlayer = ((Bellatrix)moddedController.Role).MindControlledPlayer._Object.MyPhysics;
             
-            GameData.PlayerInfo data = moddedController._Object.Data;
-            bool flag = data != null && data.IsDead;
-
             Vector2 vel = HudManager.Instance.joystick.Delta * __instance.TrueSpeed;
             
             controlledPlayer.body.velocity = vel;
 
-            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.MoveControlledPlayer, Hazel.SendOption.Reliable);
+            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.MoveControlledPlayer, SendOption.Reliable);
             writer.Write(controlledPlayer.myPlayer.PlayerId);
             writer.Write(vel.x);
             writer.Write(vel.y);

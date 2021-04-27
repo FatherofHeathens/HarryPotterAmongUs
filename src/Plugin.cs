@@ -56,8 +56,8 @@ namespace HarryPotter
             __instance.text.margin = new Vector4(0, 0, 0.5f, 0);
             __instance.text.fontSize = 2.5f;
             __instance.text.transform.localPosition = new Vector3(0, 0, 0);
-            Vector3 topright = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
-            __instance.text.transform.position = new Vector3(topright.x - 0.1f, topright.y - 1.6f);
+            Vector3 topRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
+            __instance.text.transform.position = new Vector3(topRight.x - 0.1f, topRight.y - 1.6f);
             __instance.text.text += "\nCreated by: <#7289DAFF>Hunter101#1337";
             __instance.text.text += "\n<#FFFFFFFF>Download at: <#00DDFFFF>www.computable.us";
             __instance.text.text += "\n<#FFFFFFFF>Original Design by: <#88FF00FF>npc & friends";
@@ -66,4 +66,11 @@ namespace HarryPotter
             //__instance.text.text += "\n<#F96854FF>www.patreon.com/HunterMuir";
         }
     }
+    
+    //TODO: add tooltips to all the ability buttons
+    //TODO: bellatrix nerfs (make it so they have to mark players to crucio them)
+    
+    //TODO: add new items
+    //TODO: add system that lets users select 3 items to make available for quick-use without opening inventory
+    //TODO: fix specific hats being blurry for no reason
 }

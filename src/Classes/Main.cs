@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarryPotter.Classes.Roles;
+using HarryPotter.Classes.UI;
 using HarryPotter.Classes.WorldItems;
 using InnerNet;
 using UnityEngine;
@@ -259,6 +260,10 @@ namespace HarryPotter.Classes
                     TheGoldenSnitchWorld snitch = new TheGoldenSnitchWorld(pos, vel.Value);
                     AllItems.Add(snitch);
                     break;
+                case 4:
+                    GhostStoneWorld ghostStone = new GhostStoneWorld(pos);
+                    AllItems.Add(ghostStone);
+                    break;
             }
         }
 
@@ -443,6 +448,7 @@ namespace HarryPotter.Classes
             {
                 if (target.AmOwner)
                 {
+                    PopupTMPHandler.Instance.CreatePopup("You were blinded and frozen by a spell!", Color.white, Color.black);
                     durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}You are blinded and frozen! {Math.Ceiling(Config.CrucioDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining</color></color>";
                     target.myLight.LightRadius = Mathf.Lerp(ShipStatus.Instance.MinLightRadius, ShipStatus.Instance.MaxLightRadius, num) * PlayerControl.GameOptions.CrewLightMod;
                     target.moveable = false;
@@ -474,12 +480,16 @@ namespace HarryPotter.Classes
                 Instance.ModdedPlayerById(target.PlayerId);
 
             ImportantTextTask durationText = new ImportantTextTask();
+            
             if (controller.AmOwner)
             {
+                target.MyPhysics.body.interpolation = RigidbodyInterpolation2D.Interpolate;
                 Camera.main.GetComponent<FollowerCamera>().Target = target;
                 Camera.main.GetComponent<FollowerCamera>().shakeAmount = 0;
                 durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Config.ImperioDuration}s remaining</color></color>");
             }
+
+            if (target.AmOwner) PopupTMPHandler.Instance.CreatePopup("You are being mind-controlled!", Color.white, Color.black);
 
             target.moveable = true;
             controller.moveable = true;
@@ -495,9 +505,12 @@ namespace HarryPotter.Classes
                     now.AddSeconds(Config.ImperioDuration) < DateTime.UtcNow)
                 {
                     if (target.AmOwner)
+                    {
                         target.moveable = true;
+                    }
                     else if (controller.AmOwner)
                     {
+                        target.MyPhysics.body.interpolation = RigidbodyInterpolation2D.None;
                         TaskInfoHandler.Instance.RemoveItem(durationText);
                         controller.moveable = true;
                         Camera.main.GetComponent<FollowerCamera>().Target = controller;
@@ -595,7 +608,15 @@ namespace HarryPotter.Classes
                 return;
 
             if (ModdedPlayerById(target.PlayerId).Immortal)
+            {
+                if (killer.AmOwner)
+                {
+                    PopupTMPHandler.Instance.CreatePopup("When using his ability, Ron cannot be killed.\nYour cooldown was reset.", Color.white, Color.black);
+                    killer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
+                }
+                
                 return;
+            }
 
             if (target.AmOwner || killer.AmOwner || ModdedPlayerById(killer.PlayerId).ControllerOverride?._Object.AmOwner == true)
             {  
@@ -620,7 +641,14 @@ namespace HarryPotter.Classes
             {
                 ModdedPlayerById(target.PlayerId).KilledByCurse = true;
                 if (target.AmOwner && killer.AmOwner)
+                {
+                    PopupTMPHandler.Instance.CreatePopup("You tried to kill Harry with the Killing Curse!\nBecause of Harry's passive ability, you are dead.", Color.white, Color.black, 3f);
                     HudManager.Instance.KillOverlay.ShowOne(killer.Data, killer.Data);
+                }
+                else
+                {
+                    PopupTMPHandler.Instance.CreatePopup("You were hit by a spell!", Color.white, Color.black);
+                }
             }
 
             DeadBody deadBody = DeadBody.Instantiate(target.KillAnimations[0].bodyPrefab);
@@ -642,18 +670,14 @@ namespace HarryPotter.Classes
 
         public void ForceAllVotes(sbyte playerId)
         {
+            PopupTMPHandler.Instance.CreatePopup($"All votes were forced onto a specific player!", Color.white, Color.black);
+            
             foreach (PlayerVoteArea playerVoteArea in MeetingHud.Instance.playerStates)
             {
                 if (AmongUsClient.Instance.AmHost)
                 {
-                    playerVoteArea.didVote = false;
-                    if (playerVoteArea.isDead || playerVoteArea.didVote)
-                        continue;
+                    SoundManager.Instance.PlaySound(MeetingHud.Instance.VoteLockinSound, false, 1f);
                     
-                    if (PlayerControl.LocalPlayer.PlayerId == playerVoteArea.TargetPlayerId ||
-                        AmongUsClient.Instance.GameMode != GameModes.LocalGame)
-                        SoundManager.Instance.PlaySound(MeetingHud.Instance.VoteLockinSound, false, 1f);
-
                     playerVoteArea.didVote = true;
                     playerVoteArea.votedFor = playerId;
                     playerVoteArea.Flag.enabled = true;
