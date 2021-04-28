@@ -443,12 +443,14 @@ namespace HarryPotter.Classes
             target.MyPhysics.body.velocity = new Vector2(0, 0);
             ImportantTextTask durationText = new ImportantTextTask();
             if (target.AmOwner)
+            {
+                PopupTMPHandler.Instance.CreatePopup("You were blinded and frozen by a spell!", Color.white, Color.black);
                 durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}You are blinded and frozen! {Config.CrucioDuration}s remaining</color></color>");
+            }
             while (true)
             {
                 if (target.AmOwner)
                 {
-                    PopupTMPHandler.Instance.CreatePopup("You were blinded and frozen by a spell!", Color.white, Color.black);
                     durationText.Text = $"{TaskInfoHandler.Instance.GetRoleHexColor(target)}You are blinded and frozen! {Math.Ceiling(Config.CrucioDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining</color></color>";
                     target.myLight.LightRadius = Mathf.Lerp(ShipStatus.Instance.MinLightRadius, ShipStatus.Instance.MaxLightRadius, num) * PlayerControl.GameOptions.CrewLightMod;
                     target.moveable = false;
@@ -645,7 +647,7 @@ namespace HarryPotter.Classes
                     PopupTMPHandler.Instance.CreatePopup("You tried to kill Harry with the Killing Curse!\nBecause of Harry's passive ability, you are dead.", Color.white, Color.black, 3f);
                     HudManager.Instance.KillOverlay.ShowOne(killer.Data, killer.Data);
                 }
-                else
+                else if (target.AmOwner)
                 {
                     PopupTMPHandler.Instance.CreatePopup("You were hit by a spell!", Color.white, Color.black);
                 }
@@ -716,245 +718,68 @@ namespace HarryPotter.Classes
             return false;
         }
 
-        public System.Collections.IEnumerator CoCastCrucio(Vector3 mousePosition, ModdedPlayerClass Owner)
+        public void CreateCrucio(Vector2 pos, ModdedPlayerClass owner)
         {
-            DateTime now = DateTime.UtcNow;
-            int crucioIndex = 0;
+            GameObject crucioObject = new GameObject();
+            crucioObject.name = "_crucio";
             
-            CrucioObject?.Destroy();
-            CrucioObject = new GameObject();
-            SpriteRenderer crucioRender = CrucioObject.AddComponent<SpriteRenderer>();
-            Rigidbody2D crucioRigid = CrucioObject.AddComponent<Rigidbody2D>();
-            CrucioObject.SetActive(true);
-            BoxCollider2D crucioCollider = CrucioObject.AddComponent<BoxCollider2D>();
-            crucioRender.enabled = true;
-            crucioRigid.transform.position = Owner._Object.myRend.bounds.center;
-            crucioRender.transform.localScale = new Vector2(1f, 1f);
-
-            Vector3 v = mousePosition - Owner._Object.myRend.bounds.center;
-            float dist = Vector2.Distance(mousePosition, Owner._Object.myRend.bounds.center);
-            Vector3 d = v * 3f * (2f / dist);
-            float AngleRad = Mathf.Atan2(mousePosition.y - Owner._Object.myRend.bounds.center.y, mousePosition.x - Owner._Object.myRend.bounds.center.x);
-            float AngleDeg = (180 / (float)Math.PI) * AngleRad;
-
-            crucioCollider.autoTiling = false;
-            crucioCollider.edgeRadius = 0;
-            crucioCollider.size = Owner._Object.Collider.bounds.size * 2;
-            crucioRigid.velocity = new Vector2(d.x, d.y);
-            CrucioObject.layer = 8;
-
-            while (true)
+            Spell crucio = crucioObject.AddComponent<Spell>();
+            crucio.Owner = owner;
+            crucio.MousePostition = pos;
+            crucio.SpellSprites = Assets.CrucioSprite.ToArray();
+            crucio.OnHit += (spell, player) =>
             {
-                if (CrucioObject == null)
-                    yield break;
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCrucio, SendOption.Reliable);
+                writer.EndMessage();
                 
-                if (crucioIndex <= 5)
-                    crucioRender.sprite = Assets.CrucioSprite[0];
-                else
-                    crucioRender.sprite = Assets.CrucioSprite[1];
-
-                if (crucioIndex >= 10)
-                    crucioIndex = 0;
-
-                crucioIndex++;
-                
-                crucioRigid.rotation = AngleDeg;
-                crucioRigid.drag = 0;
-                crucioRigid.angularDrag = 0;
-                crucioRigid.inertia = 0;
-                crucioRigid.gravityScale = 0;
-
-                Vector2 oldVelocity = crucioRigid.velocity;
-                
-                yield return null;
-                
-                if (CrucioObject == null)
-                    yield break;
-
-                if (crucioRigid.velocity != oldVelocity && Owner._Object.AmOwner)
-                {
-                    RpcDestroyCrucio();
-                    yield break;
-                }
-                
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                {
-                    if (player.Data.IsDead || player.Data.Disconnected || Owner._Object == player || player.Data.IsImpostor)
-                        continue;
-
-                    if (!player.myRend.bounds.Intersects(crucioRender.bounds))
-                        continue;
-
-                    if (!Owner._Object.AmOwner)
-                        yield break;
-                    
-                    RpcDestroyCrucio();
-                    
-                    if (ModdedPlayerById(player.PlayerId).Immortal)
-                        yield break;
-                    
+                spell.gameObject.Destroy();
+                if (player == null) return;
+                if (!ModdedPlayerById(player.PlayerId).Immortal) 
                     RpcCrucioBlind(player);
-                    yield break;
-                }
-
-                if (now.AddSeconds(5) >= DateTime.UtcNow && !MeetingHud.Instance && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
-                    continue;
-                
-                RpcDestroyCrucio();
-                yield break;
-            }
+            };
         }
         
-        public void DestroyCrucio()
+        public void RpcCreateCrucio(Vector2 pos, ModdedPlayerClass owner)
         {
-            System.Console.WriteLine("Trying to destroy CrucioObject");
-            CrucioObject?.SetActive(false);
-            CrucioObject?.GetComponent<SpriteRenderer>().Destroy();
-            CrucioObject?.Destroy();
-        }
-
-        public void RpcDestroyCrucio()
-        {
-            DestroyCrucio();
-            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCrucio, SendOption.Reliable);
-            writer.EndMessage();
-        }
-        
-        public void CreateCrucio(Vector2 pos, ModdedPlayerClass Owner)
-        {
-            Reactor.Coroutines.Start(CoCastCrucio(pos, Owner));
-        }
-        
-        public void RpcCreateCrucio(Vector2 pos, ModdedPlayerClass Owner)
-        {
-            CreateCrucio(pos, Owner);
+            CreateCrucio(pos, owner);
 
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCrucio, SendOption.Reliable);
-            writer.Write(Owner._Object.PlayerId);
+            writer.Write(owner._Object.PlayerId);
             writer.Write(pos.x);
             writer.Write(pos.y);
             writer.EndMessage();
         }
-        
-        public System.Collections.IEnumerator CoCastCurse(Vector3 mousePosition, ModdedPlayerClass Owner)
+
+        public void CreateCurse(Vector2 pos, ModdedPlayerClass owner)
         {
-            DateTime now = DateTime.UtcNow;
-            int curseindex = 0;
+            GameObject curseObject = new GameObject();
+            curseObject.name = "_curse";
             
-            CurseObject?.Destroy();
-            CurseObject = new GameObject();
-            SpriteRenderer curseRender = CurseObject.AddComponent<SpriteRenderer>();
-            Rigidbody2D curseRigid = CurseObject.AddComponent<Rigidbody2D>();
-            CurseObject.SetActive(true);
-            BoxCollider2D curseCollider = CurseObject.AddComponent<BoxCollider2D>();
-            curseRender.enabled = true;
-            curseRigid.transform.position = Owner._Object.myRend.bounds.center;
-            curseRender.transform.localScale = new Vector2(1f, 1f);
-
-            Vector3 v = mousePosition - Owner._Object.myRend.bounds.center;
-            float dist = Vector2.Distance(mousePosition, Owner._Object.myRend.bounds.center);
-            Vector3 d = v * 3f * (2f / dist);
-            float AngleRad = Mathf.Atan2(mousePosition.y - Owner._Object.myRend.bounds.center.y, mousePosition.x - Owner._Object.myRend.bounds.center.x);
-            float AngleDeg = (180 / (float)Math.PI) * AngleRad;
-            
-            curseCollider.autoTiling = false;
-            curseCollider.edgeRadius = 0;
-            curseCollider.size = Owner._Object.Collider.bounds.size * 2;
-            curseRigid.velocity = new Vector2(d.x, d.y);
-            CurseObject.layer = 8;
-
-            while (true)
+            Spell curse = curseObject.AddComponent<Spell>();
+            curse.Owner = owner;
+            curse.MousePostition = pos;
+            curse.SpellSprites = Assets.CurseSprite.ToArray();
+            curse.OnHit += (spell, player) =>
             {
-                if (CurseObject == null)
-                    yield break;
-
-                if (curseindex <= 5)
-                    curseRender.sprite = Assets.CurseSprite[0];
-                else
-                    curseRender.sprite = Assets.CurseSprite[1];
-
-                if (curseindex >= 10)
-                    curseindex = 0;
-
-                curseindex++;
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCurse, SendOption.Reliable);
+                writer.EndMessage();
                 
-                curseRigid.rotation = AngleDeg;
-                curseRigid.drag = 0;
-                curseRigid.angularDrag = 0;
-                curseRigid.inertia = 0;
-                curseRigid.gravityScale = 0;
-
-                Vector2 oldVelocity = curseRigid.velocity;
+                spell.gameObject.Destroy();
                 
-                yield return null;
-                
-                if (CurseObject == null)
-                    yield break;
+                if (player == null) return;
+                if (ModdedPlayerById(player.PlayerId).Immortal) return;
 
-                if (curseRigid.velocity != oldVelocity && Owner._Object.AmOwner)
-                {
-                    RpcDestroyCurse();
-                    yield break;
-                }
-                
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                {
-                    if (player.Data.IsDead || player.Data.Disconnected || Owner._Object == player || player.Data.IsImpostor)
-                        continue;
-
-                    if (!player.myRend.bounds.Intersects(curseRender.bounds))
-                        continue;
-
-                    if (!Owner._Object.AmOwner)
-                        yield break;
-                    
-                    RpcDestroyCurse();
-
-                    if (ModdedPlayerById(player.PlayerId).Immortal)
-                        yield break;
-
-                    if (GetPlayerRoleName(ModdedPlayerById(player.PlayerId)) == "Harry")
-                        RpcKillPlayer(Owner._Object, Owner._Object);
-                    else
-                        RpcKillPlayer(Owner._Object, player);
-
-                    yield break;
-                }
-
-                if (now.AddSeconds(5) >= DateTime.UtcNow && !MeetingHud.Instance && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
-                    continue;
-                
-                RpcDestroyCurse();
-                yield break;
-            }
+                if (GetPlayerRoleName(ModdedPlayerById(player.PlayerId)) == "Harry") RpcKillPlayer(owner._Object, owner._Object);
+                else RpcKillPlayer(owner._Object, player);
+            };
         }
         
-        public void DestroyCurse()
+        public void RpcCreateCurse(Vector2 pos, ModdedPlayerClass owner)
         {
-            CurseObject?.SetActive(false);
-            CurseObject?.GetComponent<SpriteRenderer>().Destroy();
-            CurseObject?.Destroy();
-        }
-
-        public void RpcDestroyCurse()
-        {
-            DestroyCurse();
-            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCurse, SendOption.Reliable);
-            writer.EndMessage();
-        }
-        
-        public void CreateCurse(Vector2 pos, ModdedPlayerClass Owner)
-        {
-            Reactor.Coroutines.Start(CoCastCurse(pos, Owner));
-            Owner._Object.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
-        }
-        
-        public void RpcCreateCurse(Vector2 pos, ModdedPlayerClass Owner)
-        {
-            CreateCurse(pos, Owner);
+            CreateCurse(pos, owner);
 
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCurse, SendOption.Reliable);
-            writer.Write(Owner._Object.PlayerId);
+            writer.Write(owner._Object.PlayerId);
             writer.Write(pos.x);
             writer.Write(pos.y);
             writer.EndMessage();

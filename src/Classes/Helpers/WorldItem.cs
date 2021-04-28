@@ -36,7 +36,6 @@ namespace HarryPotter.Classes
         {
             if (ItemWorldObject == null)
             {
-                System.Console.WriteLine("Creating new Item: " + Name);
                 ItemWorldObject = new GameObject();
                 ItemWorldObject.AddComponent<SpriteRenderer>();
                 ItemWorldObject.SetActive(true);

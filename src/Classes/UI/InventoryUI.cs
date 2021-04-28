@@ -60,6 +60,11 @@ namespace HarryPotter.Classes.Helpers.UI
             
             if (Minigame.Instance) Minigame.Instance.ForceClose();
             if (Input.GetKeyDown(KeyCode.Escape)) Close();
+            if (MeetingHud.Instance) Close();
+            if (ExileController.Instance) Close();
+            if (!AmongUsClient.Instance.IsGameStarted) Close();
+            if (HudManager.Instance?.UseButton?.isActiveAndEnabled == false) Close();
+            if (DestroyableSingleton<IntroCutscene>.InstanceExists) Close();
         }
 
         public void Open()

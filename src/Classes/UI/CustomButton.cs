@@ -59,6 +59,7 @@ namespace HarryPotter.Classes.Helpers.UI
         {
             if (!Enabled)
             {
+                TooltipObj.active = false;
                 Renderer.material.SetFloat("_Outline", 0f);
                 return;
             }

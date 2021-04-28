@@ -28,6 +28,8 @@ namespace HarryPotter.Patches
             writer.Write(controlledPlayer.myPlayer.PlayerId);
             writer.Write(vel.x);
             writer.Write(vel.y);
+            writer.Write(controlledPlayer.body.position.x);
+            writer.Write(controlledPlayer.body.position.y);
             writer.EndMessage();
             return false;
         }

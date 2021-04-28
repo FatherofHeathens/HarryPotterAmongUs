@@ -67,10 +67,11 @@ namespace HarryPotter
         }
     }
     
-    //TODO: add tooltips to all the ability buttons
+    //TODO: add setting to turn off pop-ups
+    //TODO: add tooltips to all the ability buttons and lobby settings
     //TODO: bellatrix nerfs (make it so they have to mark players to crucio them)
-    
     //TODO: add new items
     //TODO: add system that lets users select 3 items to make available for quick-use without opening inventory
     //TODO: fix specific hats being blurry for no reason
+    //TODO: fix the hat icons going outside of the box (center them and set them to only draw inside a mask? not sure)
 }

@@ -61,6 +61,9 @@ namespace HarryPotter.Classes.Roles
             if (Owner._Object.Data.IsDead)
                 return;
 
+            if (Owner.ControllerOverride != null)
+                return;
+
             Main.Instance.UseHourglass(Owner._Object);
         }
         

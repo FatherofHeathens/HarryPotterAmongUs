@@ -58,6 +58,9 @@ namespace HarryPotter.Classes.Roles
 
             if (Owner._Object.Data.IsDead)
                 return;
+            
+            if (Owner.ControllerOverride != null)
+                return;
 
             ResetCooldowns();
             Main.Instance.RpcDefensiveDuelist(Owner._Object);

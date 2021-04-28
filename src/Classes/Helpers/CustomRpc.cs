@@ -87,11 +87,10 @@ namespace HarryPotter.Classes
                     Main.Instance.CreateCrucio(crucioDirection, Main.Instance.ModdedPlayerById(blinderId));
                     break;
                 case (byte)Packets.DestroyCurse:
-                    Main.Instance.DestroyCurse();
+                    GameObject.Find("_curse")?.Destroy();
                     break;
                 case (byte)Packets.DestroyCrucio:
-                    System.Console.WriteLine("Received DestroyCrucio packet");
-                    Main.Instance.DestroyCrucio();
+                    GameObject.Find("_crucio")?.Destroy();
                     break;
                 case (byte)Packets.KillPlayerUnsafe:
                     byte killerId = reader.ReadByte();
@@ -116,8 +115,13 @@ namespace HarryPotter.Classes
                 case (byte)Packets.MoveControlledPlayer:
                     byte moveId = reader.ReadByte();
                     Vector3 newVel = new Vector3(reader.ReadSingle(), reader.ReadSingle());
+                    Vector3 newPos = new Vector3(reader.ReadSingle(), reader.ReadSingle());
                     PlayerControl movePlayer = Main.Instance.ModdedPlayerById(moveId)._Object;
-                    if (movePlayer.AmOwner) movePlayer.MyPhysics.body.velocity = newVel;
+                    if (movePlayer.AmOwner)
+                    {
+                        movePlayer.MyPhysics.body.position = newPos;
+                        movePlayer.MyPhysics.body.velocity = newVel;
+                    }
                     break;
                 case (byte)Packets.InvisPlayer:
                     byte invisId = reader.ReadByte();

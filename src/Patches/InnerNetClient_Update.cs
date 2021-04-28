@@ -27,6 +27,7 @@ using HarryPotter.Classes;
                 MaraudersMapWorld.HasSpawned = false;
                 PortKeyWorld.HasSpawned = false;
                 TheGoldenSnitchWorld.HasSpawned = false;
+                GhostStoneWorld.HasSpawned = false;
                 Main.Instance.CurrentStage = 0;
                 Main.Instance.AllItems.Clear();
                 Main.Instance.AllPlayers.Clear();
