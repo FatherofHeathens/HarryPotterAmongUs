@@ -1,26 +1,24 @@
-﻿﻿﻿using System;
-  using HarmonyLib;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HarryPotter.Classes;
-  using HarryPotter.Classes.Items;
-  using HarryPotter.Classes.UI;
-  using HarryPotter.Classes.WorldItems;
-  using InnerNet;
-  using UnityEngine;
+using HarryPotter.Classes.WorldItems;
+using Reactor;
+using UnityEngine;
 
-  namespace HarryPotter.Patches
+namespace HarryPotter.Classes.Helpers
 {
-    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.LateUpdate))]
-    class InnerNetClient_Update
+    [RegisterInIl2Cpp]
+    class UpdateHandler : MonoBehaviour
     {
-        static void Postfix(PlayerPhysics __instance)
+        public UpdateHandler(IntPtr ptr) : base(ptr)
         {
-            if (!__instance?.AmOwner == true) return;
-
+        }
+        
+        private void LateUpdate()
+        {
             Main.Instance?.Config?.ReloadSettings();
             
-            if ((AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started || PlayerControl.LocalPlayer == null) && Main.Instance != null)
+            if ((!AmongUsClient.Instance.IsGameStarted || PlayerControl.LocalPlayer == null) && Main.Instance != null)
             {
                 foreach (WorldItem wItem in Main.Instance.AllItems) wItem.Delete();
                 DeluminatorWorld.HasSpawned = false;

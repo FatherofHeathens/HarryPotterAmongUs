@@ -3,9 +3,11 @@ using Reactor.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HarryPotter.Classes.Helpers;
 using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.UI;
 using HarryPotter.Classes.WorldItems;
+using HarryPotter.Patches;
 using InnerNet;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -22,8 +24,7 @@ namespace HarryPotter.Classes
         public CustomRpc Rpc { get; set; }
         public Asset Assets { get; set; }
         public int CurrentStage { get; set; }
-        private GameObject CurseObject { get; set; }
-        private GameObject CrucioObject { get; set; }
+        public GameObject UpdateHandler { get; set; }
         public List<Tuple<byte, Vector2>> PossibleItemPositions { get; set; }
         public List<Tuple<byte, Vector2>> DefaultItemPositons { get; } = new List<Tuple<byte, Vector2>>
         {
@@ -184,6 +185,17 @@ namespace HarryPotter.Classes
             new Tuple<byte, Vector2>(4, new Vector2(4.531908f, 15.29855f)),
             new Tuple<byte, Vector2>(4, new Vector2(16.36781f, 15.21838f)),
         };
+
+        public Main()
+        {
+            Config = new Config();
+            Rpc = new CustomRpc();
+            Assets = new Asset();
+            AllPlayers = new List<ModdedPlayerClass>();
+            AllItems = new List<WorldItem>(); 
+            UpdateHandler = new GameObject().DontDestroy();
+            UpdateHandler.AddComponent<UpdateHandler>();
+        }
         
         public List<Vector2> GetAllApplicableItemPositions()
         {
@@ -806,8 +818,13 @@ namespace HarryPotter.Classes
                 if (player == null) return;
                 if (ModdedPlayerById(player.PlayerId).Immortal) return;
 
-                if (GetPlayerRoleName(ModdedPlayerById(player.PlayerId)) == "Harry") RpcKillPlayer(owner._Object, owner._Object);
-                else RpcKillPlayer(owner._Object, player);
+                if (GetPlayerRoleName(ModdedPlayerById(player.PlayerId)) == "Harry")
+                {
+                    RpcKillPlayer(owner._Object, owner._Object);
+                    return;
+                }
+                
+                RpcKillPlayer(owner._Object, player);
             };
         }
         

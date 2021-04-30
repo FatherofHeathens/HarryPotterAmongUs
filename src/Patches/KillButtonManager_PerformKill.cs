@@ -11,6 +11,8 @@ namespace HarryPotter.Patches
     {
         static bool Prefix(KillButtonManager __instance)
         {
+            if (!PlayerControl.LocalPlayer.CanMove) return true;
+            
             if (PlayerControl.LocalPlayer.FindClosestTarget() != null)
             {
                 if (Main.Instance.ModdedPlayerById(PlayerControl.LocalPlayer.FindClosestTarget().PlayerId).Immortal)

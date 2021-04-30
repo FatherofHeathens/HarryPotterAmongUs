@@ -4,6 +4,8 @@ using HarmonyLib;
 using Reactor;
 using HarryPotter.Classes;
 using System.Collections.Generic;
+using HarryPotter.Classes.Helpers;
+using HarryPotter.Classes.Helpers.UI;
 using HarryPotter.Classes.UI;
 using hunterlib;
 using InnerNet;
@@ -26,14 +28,16 @@ namespace HarryPotter
 
         public override void Load()
         {
-            //I'm too lazy to move these unnecessary assignments to the actual classes I am creating
-            Main.Instance = new Main { Config = new Config(), Rpc = new CustomRpc(), Assets = new Asset(), AllPlayers = new List<ModdedPlayerClass>(), AllItems = new List<WorldItem>() };
+            RegisterInIl2CppAttribute.Register();
+            
+            Main.Instance = new Main();
+
             TaskInfoHandler.Instance = new TaskInfoHandler { AllInfo = new List<ImportantTextTask>() };
             PopupTMPHandler.Instance = new PopupTMPHandler { AllPopups = new List<TextMeshPro>() };
 
             HunterPlugin.DrawHudString = true;
             HunterPlugin.HudScale = 0.8f;
-            RegisterInIl2CppAttribute.Register();
+            
             Harmony.PatchAll();
         }
     }

@@ -76,6 +76,9 @@ namespace HarryPotter.Classes.Roles
             if (Owner._Object.inVent && !Main.Instance.Config.SpellsInVents)
                 return;
             
+            if (!Owner._Object.CanMove)
+                return;
+            
             ResetCooldowns();
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Main.Instance.RpcCreateCurse(mouseWorld, Owner);
