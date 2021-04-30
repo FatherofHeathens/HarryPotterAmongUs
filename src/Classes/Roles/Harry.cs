@@ -1,4 +1,5 @@
 ﻿using System;
+using HarryPotter.Classes.UI;
 using UnityEngine;
 
 namespace HarryPotter.Classes.Roles
@@ -21,6 +22,8 @@ namespace HarryPotter.Classes.Roles
             
             InvisCloakButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             InvisCloakButton.renderer.enabled = true;
+            Tooltip tt = InvisCloakButton.gameObject.AddComponent<Tooltip>();
+            tt.TooltipText = $"Cloak:\nWill make you invisible for {Main.Instance.Config.InvisCloakDuration}s";
         }
 
         public override void ResetCooldowns()

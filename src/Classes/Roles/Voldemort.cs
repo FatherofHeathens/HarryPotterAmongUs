@@ -1,4 +1,5 @@
 ﻿using System;
+using HarryPotter.Classes.UI;
 using UnityEngine;
 
 namespace HarryPotter.Classes.Roles
@@ -21,6 +22,9 @@ namespace HarryPotter.Classes.Roles
             
             CurseButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton);
             CurseButton.renderer.enabled = true;
+            
+            Tooltip tt = CurseButton.gameObject.AddComponent<Tooltip>();
+            tt.TooltipText = "The Killing Curse:\nA spell which will kill any target it hits, except Harry\nIf the spell hits Harry, you will die instead\n<#FF0000FF>Right click to shoot this spell in the direction of your mouse";
         }
 
         public override void Update()
@@ -50,7 +54,7 @@ namespace HarryPotter.Classes.Roles
             }
             
             if (Input.GetMouseButtonDown(1))
-                PerformKill(CurseButton);
+                ShootCurse();
         }
 
         public override void ResetCooldowns()
@@ -58,27 +62,23 @@ namespace HarryPotter.Classes.Roles
             LastCurse = DateTime.UtcNow;
         }
 
-        public override bool PerformKill(KillButtonManager __instance)
+        public void ShootCurse()
         {
-            if (__instance != CurseButton)
-                return true;
-
             if (CurseButton.isCoolingDown)
-                return false;
+                return;
 
             if (!CurseButton.isActiveAndEnabled)
-                return false;
+                return;
             
             if (Owner._Object.Data.IsDead)
-                return false;
+                return;
             
             if (Owner._Object.inVent && !Main.Instance.Config.SpellsInVents)
-                return false;
-
+                return;
+            
             ResetCooldowns();
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Main.Instance.RpcCreateCurse(mouseWorld, Owner);
-            return false;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using HarryPotter.Classes.UI;
 using UnityEngine;
 
 namespace HarryPotter.Classes.Roles
@@ -21,6 +22,9 @@ namespace HarryPotter.Classes.Roles
             
             DDButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             DDButton.renderer.enabled = true;
+            
+            Tooltip tt = DDButton.gameObject.AddComponent<Tooltip>();
+            tt.TooltipText = $"Defensive Duelist:\nWill make you invulnerable to spells and kills for {Main.Instance.Config.DefensiveDuelistDuration}s\nWhile this ability is active, you cannot move";
         }
 
         public override void ResetCooldowns()

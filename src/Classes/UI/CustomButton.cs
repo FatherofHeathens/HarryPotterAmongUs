@@ -59,10 +59,11 @@ namespace HarryPotter.Classes.Helpers.UI
         {
             if (!Enabled)
             {
-                TooltipObj.active = false;
                 Renderer.material.SetFloat("_Outline", 0f);
                 return;
             }
+
+            if (!Enabled || !Main.Instance.Config.ShowPopups) TooltipObj.active = false;
 
             TooltipTMP.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
             TooltipTMP.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
@@ -88,7 +89,7 @@ namespace HarryPotter.Classes.Helpers.UI
             
             Renderer.material.SetFloat("_Outline", 1f);
             
-            if (!TooltipEnabled) return;
+            if (!TooltipEnabled || !Main.Instance.Config.ShowPopups) return;
             
             TooltipObj.active = true;
         }

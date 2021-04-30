@@ -67,7 +67,7 @@ namespace HarryPotter
         }
     }
     
-    //TODO: add tooltips to all the ability buttons and lobby settings
+    //TODO: add tooltips to all the lobby settings
     //TODO: add new items
     //TODO: add system that lets users select 3 items to make available for quick-use without opening inventory
     //TODO: fix specific hats being blurry for no reason

@@ -29,17 +29,17 @@ namespace HarryPotter.Patches
                 ModdedPlayerClass rolePlayer = allImp.Random();
                 allImp.Remove(rolePlayer);
 
-                if (impRolesToAssign.Contains("Bellatrix"))
-                {
-                    impRolesToAssign.Remove("Bellatrix");
-                    Main.Instance.RpcAssignRole(rolePlayer, new Bellatrix(rolePlayer));
-                    continue;
-                }
-                
                 if (impRolesToAssign.Contains("Voldemort"))
                 {
                     impRolesToAssign.Remove("Voldemort");
                     Main.Instance.RpcAssignRole(rolePlayer, new Voldemort(rolePlayer));
+                    continue;
+                }
+                
+                if (impRolesToAssign.Contains("Bellatrix"))
+                {
+                    impRolesToAssign.Remove("Bellatrix");
+                    Main.Instance.RpcAssignRole(rolePlayer, new Bellatrix(rolePlayer));
                     continue;
                 }
             }

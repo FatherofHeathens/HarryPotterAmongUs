@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using HarryPotter.Classes.UI;
 using Reactor.Extensions;
 
 namespace HarryPotter.Classes.Roles
@@ -31,11 +32,20 @@ namespace HarryPotter.Classes.Roles
             CrucioButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton);
             CrucioButton.renderer.enabled = true;
             
+            Tooltip tt = CrucioButton.gameObject.AddComponent<Tooltip>();
+            tt.TooltipText = "Crucio:\nA spell which will blind and stun any target it hits\n<#FF0000FF>The hit player MUST be previously 'marked'\nRight click to shoot this spell in the direction of your mouse";
+            
             MindControlButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton);
             MindControlButton.renderer.enabled = true;
             
+            Tooltip tt2 = MindControlButton.gameObject.AddComponent<Tooltip>();
+            tt2.TooltipText = "Imperio:\nOpens a menu which allows you to choose a player to mind-control";
+            
             MarkButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton);
             MarkButton.renderer.enabled = true;
+            
+            Tooltip tt3 = MarkButton.gameObject.AddComponent<Tooltip>();
+            tt3.TooltipText = "Mark:\nWill 'mark' the target player to make them vulnerable to 'Crucio'";
 
             ControlMenu = new MindControlMenu();
         }
@@ -80,8 +90,7 @@ namespace HarryPotter.Classes.Roles
                 return;
             
             ControlMenu.Update();
-            if (Input.GetMouseButtonDown(1))
-                PerformKill(CrucioButton);
+            if (Input.GetMouseButtonDown(1)) CastCrucio();
         }
 
         public override bool ShouldDrawCustomButtons()
@@ -92,8 +101,9 @@ namespace HarryPotter.Classes.Roles
         public override bool PerformKill(KillButtonManager __instance)
         {
             if (__instance == CrucioButton)
-                CastCrucio();
-            else if (__instance == MindControlButton)
+                return false;
+            
+            if (__instance == MindControlButton)
                 ToggleMindControlMenu();
             else if (__instance == MarkButton)
                 MarkPlayer();

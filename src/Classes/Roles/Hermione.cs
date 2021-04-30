@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using HarryPotter.Classes.UI;
 using UnityEngine;
 
 namespace HarryPotter.Classes.Roles
@@ -23,6 +24,9 @@ namespace HarryPotter.Classes.Roles
             
             HourglassButton = KillButtonManager.Instantiate(HudManager.Instance.KillButton);
             HourglassButton.renderer.enabled = true;
+            
+            Tooltip tt = HourglassButton.gameObject.AddComponent<Tooltip>();
+            tt.TooltipText = $"Time Turner:\nOn a delay of {Main.Instance.Config.HourglassTimer}s, you will teleport back to your starting position\nThis will bring you back to life, unless you were killed by a spell";
         }
 
         public override void ResetCooldowns()

@@ -6,7 +6,7 @@ namespace HarryPotter.Classes
     {
         private CustomToggleOption Option1 = CustomToggleOption.Create("Order of the Impostors", false);
         private CustomToggleOption Option3 = CustomToggleOption.Create("Can Spells be Used In Vents", false);
-        private CustomToggleOption Option4 = CustomToggleOption.Create("Show Info Popups");
+        private CustomToggleOption Option4 = CustomToggleOption.Create("Show Info Popups/Tooltips");
         private CustomNumberOption Option9 = CustomNumberOption.Create("Defensive Duelist Cooldown", 20f, 40f, 10, 2.5f);
         private CustomNumberOption Option10 = CustomNumberOption.Create("Invisibility Cloak Cooldown", 20f, 40f, 10, 2.5f);
         private CustomNumberOption Option11 = CustomNumberOption.Create("Time Turner Cooldown", 20f, 40f, 10f, 2.5f);
