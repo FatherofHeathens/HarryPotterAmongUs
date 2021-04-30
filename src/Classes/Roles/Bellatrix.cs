@@ -50,6 +50,12 @@ namespace HarryPotter.Classes.Roles
             ControlMenu = new MindControlMenu();
         }
 
+        public override void SoftResetCooldowns()
+        {
+            LastCrucio = DateTime.UtcNow;
+            LastMark = DateTime.UtcNow;
+        }
+        
         public override void ResetCooldowns()
         {
             LastCrucio = DateTime.UtcNow;

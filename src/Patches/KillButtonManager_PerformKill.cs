@@ -17,10 +17,11 @@ namespace HarryPotter.Patches
             {
                 if (Main.Instance.ModdedPlayerById(PlayerControl.LocalPlayer.FindClosestTarget().PlayerId).Immortal)
                 {
-                    if (HudManager.Instance.KillButton == __instance)
+                    if (HudManager.Instance.KillButton == __instance && !HudManager.Instance.KillButton.isCoolingDown)
                     {
                         PopupTMPHandler.Instance.CreatePopup("When using his ability, Ron cannot be killed.\nYour cooldown was reset.", Color.white, Color.black);
                         PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
+                        Main.Instance.GetLocalModdedPlayer()?.Role?.SoftResetCooldowns();
                         return false;
                     }
                 }

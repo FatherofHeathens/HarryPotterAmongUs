@@ -57,6 +57,11 @@ namespace HarryPotter.Classes.Roles
                 ShootCurse();
         }
 
+        public override void SoftResetCooldowns()
+        {
+            ResetCooldowns();
+        }
+        
         public override void ResetCooldowns()
         {
             LastCurse = DateTime.UtcNow;

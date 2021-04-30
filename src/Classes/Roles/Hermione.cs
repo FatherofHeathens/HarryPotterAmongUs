@@ -29,6 +29,11 @@ namespace HarryPotter.Classes.Roles
             tt.TooltipText = $"Time Turner:\nOn a delay of {Main.Instance.Config.HourglassTimer}s, you will teleport back to your starting position\nThis will bring you back to life, unless you were killed by a spell";
         }
 
+        public override void SoftResetCooldowns()
+        {
+            ResetCooldowns();
+        }
+        
         public override void ResetCooldowns()
         {
             LastHourglass = DateTime.UtcNow;
