@@ -159,10 +159,7 @@ namespace HarryPotter.Classes
                     var itemId = reader.ReadInt32();
                     var itemPosition = new Vector2(reader.ReadSingle(), reader.ReadSingle());
                     var velocity = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-                    if (itemId == 3)
-                        Main.Instance.SpawnItem(itemId, itemPosition, velocity);
-                    else
-                        Main.Instance.SpawnItem(itemId, itemPosition);
+                    Main.Instance.SpawnItem(itemId, itemPosition, velocity);
                     break;
                 case (byte)Packets.TryPickupItem:
                     if (!AmongUsClient.Instance.AmHost)
@@ -218,6 +215,9 @@ namespace HarryPotter.Classes
                             break;
                         case 2:
                             PortKeyWorld.HasSpawned = false;
+                            break;
+                        case 5:
+                            ButterBeerWorld.HasSpawned = false;
                             break;
                     }
                     break;

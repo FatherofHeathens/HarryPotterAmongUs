@@ -19,17 +19,13 @@ namespace HarryPotter.Classes
 
         public void Update()
         {
-            if (ItemWorldObject == null)
-                return;
-
-            if (PlayerControl.LocalPlayer.Data.IsDead)
-                return;
-
-            if (PlayerControl.LocalPlayer.Data.Disconnected)
-                return;
-
-            if (ItemWorldObject.GetComponent<SpriteRenderer>().bounds.Intersects(PlayerControl.LocalPlayer.myRend.bounds))
-                PickUp();
+            if (ItemWorldObject == null) return;
+            if (PlayerControl.LocalPlayer.Data.IsDead) return;
+            if (PlayerControl.LocalPlayer.Data.Disconnected) return;
+            if (Main.Instance.GetLocalModdedPlayer().HasItem(Id)) return;
+            if (!ItemWorldObject.GetComponent<SpriteRenderer>().bounds.Intersects(PlayerControl.LocalPlayer.myRend.bounds)) return;
+            
+            PickUp();
         }
 
         public virtual void DrawWorldIcon()

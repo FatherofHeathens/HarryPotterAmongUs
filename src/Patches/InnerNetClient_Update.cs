@@ -28,6 +28,7 @@ using HarryPotter.Classes;
                 PortKeyWorld.HasSpawned = false;
                 TheGoldenSnitchWorld.HasSpawned = false;
                 GhostStoneWorld.HasSpawned = false;
+                ButterBeerWorld.HasSpawned = false;
                 Main.Instance.CurrentStage = 0;
                 Main.Instance.AllItems.Clear();
                 Main.Instance.AllPlayers.Clear();

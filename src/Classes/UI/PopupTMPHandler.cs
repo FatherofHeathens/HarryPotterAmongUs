@@ -15,6 +15,7 @@ namespace HarryPotter.Classes.UI
 
         public void CreatePopup(string message, Color color, Color outlineColor, float delay = 0)
         {
+            if (!Main.Instance.Config.ShowPopups) return;
             Reactor.Coroutines.Start(CoCreatePopup(message, color, outlineColor, delay));
         }
 

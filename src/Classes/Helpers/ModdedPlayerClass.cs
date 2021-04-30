@@ -24,7 +24,7 @@ namespace HarryPotter.Classes
             if (_Object.Data.IsDead)
                 ClearItems();
 
-            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 5; i++) GiveItem(i);
+            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 6; i++) GiveItem(i);
             
             if (HasItem(4))
             {
@@ -139,6 +139,9 @@ namespace HarryPotter.Classes
                 case 4:
                     Inventory.Add(new GhostStone(this));
                     break;
+                case 5:
+                    Inventory.Add(new ButterBeer(this));
+                    break;
             }
             
             PopupTMPHandler.Instance.CreatePopup("You picked up an item! Press 'C' to open your Inventory.", Color.white, Color.black);
@@ -158,5 +161,7 @@ namespace HarryPotter.Classes
         public bool KilledByCurse { get; set; }
         public bool CanUseConsoles { get; set; } = true;
         public bool CanSeeAllRolesOveridden { get; set; }
+        public bool ReverseDirectionalControls { get; set; }
+        public float SpeedMultiplier { get; set; } = 1f;
     }
 }

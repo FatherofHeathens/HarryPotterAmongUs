@@ -6,6 +6,7 @@ namespace HarryPotter.Classes
     {
         private CustomToggleOption Option1 = CustomToggleOption.Create("Order of the Impostors", false);
         private CustomToggleOption Option3 = CustomToggleOption.Create("Can Spells be Used In Vents", false);
+        private CustomToggleOption Option4 = CustomToggleOption.Create("Show Info Popups");
         private CustomNumberOption Option9 = CustomNumberOption.Create("Defensive Duelist Cooldown", 20f, 40f, 10, 2.5f);
         private CustomNumberOption Option10 = CustomNumberOption.Create("Invisibility Cloak Cooldown", 20f, 40f, 10, 2.5f);
         private CustomNumberOption Option11 = CustomNumberOption.Create("Time Turner Cooldown", 20f, 40f, 10f, 2.5f);
@@ -16,6 +17,7 @@ namespace HarryPotter.Classes
         public float DefensiveDuelistDuration { get { return 10; } }
         public float InvisCloakDuration { get { return 10; } }
         public float HourglassTimer { get { return 10; } }
+        public float BeerDuration { get { return 10; } }
         public float CrucioDuration { get { return 10; } }
         public float DefensiveDuelistCooldown { get; private set; }
         public float InvisCloakCooldown { get; private set; }
@@ -23,6 +25,7 @@ namespace HarryPotter.Classes
         public float CrucioCooldown { get; private set; }
         public bool SpellsInVents { get; private set; }
         public float ImperioDuration { get { return 10; } }
+        public bool ShowPopups { get; private set; }
 
         public void ReloadSettings()
         {
@@ -32,6 +35,7 @@ namespace HarryPotter.Classes
             InvisCloakCooldown = Option10.Value;
             HourglassCooldown = Option11.Value;
             CrucioCooldown = Option12.Value;
+            ShowPopups = Option4.Value;
         }
     }
 }

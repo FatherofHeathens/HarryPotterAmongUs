@@ -199,7 +199,40 @@ namespace HarryPotter.Classes
             List<ModdedPlayerClass> matches = AllPlayers.FindAll(player => player._Object.PlayerId == id);
             return matches.FirstOrDefault();
         }
-        
+
+        public System.Collections.IEnumerator CoActivateButterBeer(PlayerControl player)
+        {
+            DateTime now = DateTime.UtcNow;
+            ImportantTextTask durationText = TaskInfoHandler.Instance.AddNewItem(1, "");;
+            ModdedPlayerById(player.PlayerId).ReverseDirectionalControls = true;
+            ModdedPlayerById(player.PlayerId).SpeedMultiplier = 2f;
+            
+            while (true)
+            {
+                bool isMeeting = MeetingHud.Instance;
+                bool isGameEnded = !AmongUsClient.Instance.IsGameStarted;
+                bool hasTimeExpired = now.AddSeconds(Config.BeerDuration) < DateTime.UtcNow;
+                
+                if (player.AmOwner)
+                {
+                    double remainingTime = Math.Ceiling(Config.HourglassTimer - (float) (DateTime.UtcNow - now).TotalSeconds);
+                    string roleColorHex = TaskInfoHandler.Instance.GetRoleHexColor(player);
+                    durationText.Text = $"{roleColorHex}You are drunk on Butter Beer! {remainingTime}s remaining</color></color>";
+                }
+
+                if (isMeeting || isGameEnded || hasTimeExpired)
+                {
+                    TaskInfoHandler.Instance.RemoveItem(durationText);
+                    
+                    ModdedPlayerById(player.PlayerId).ReverseDirectionalControls = false;
+                    ModdedPlayerById(player.PlayerId).SpeedMultiplier = 1f;
+                    yield break;
+                }
+
+                yield return null;
+            }
+        }
+
         public System.Collections.IEnumerator CoActivateHourglass(PlayerControl player)
         {
             DateTime now = DateTime.UtcNow;
@@ -240,7 +273,7 @@ namespace HarryPotter.Classes
             }
         }
         
-        public void SpawnItem(int id, Vector2 pos, Vector2? vel = null)
+        public void SpawnItem(int id, Vector2 pos, Vector2 vel)
         {
             switch (id)
             {
@@ -257,12 +290,16 @@ namespace HarryPotter.Classes
                     AllItems.Add(key);
                     break;
                 case 3:
-                    TheGoldenSnitchWorld snitch = new TheGoldenSnitchWorld(pos, vel.Value);
+                    TheGoldenSnitchWorld snitch = new TheGoldenSnitchWorld(pos, vel);
                     AllItems.Add(snitch);
                     break;
                 case 4:
                     GhostStoneWorld ghostStone = new GhostStoneWorld(pos);
                     AllItems.Add(ghostStone);
+                    break;
+                case 5:
+                    ButterBeerWorld butterBeer = new ButterBeerWorld(pos);
+                    AllItems.Add(butterBeer);
                     break;
             }
         }
@@ -294,11 +331,8 @@ namespace HarryPotter.Classes
             float x = UnityEngine.Random.Range(-1.2f, 1.2f);
             float y = UnityEngine.Random.Range(-1.2f, 1.2f);
             Vector2 velocity = new Vector2(x, y);
-            if (id == 3)
-                SpawnItem(id, pos, velocity);
-            else
-                SpawnItem(id, pos);
-            
+            SpawnItem(id, pos, velocity);
+
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.SpawnItem, SendOption.Reliable);
             writer.Write(id);
             writer.Write(pos.x);
@@ -733,9 +767,12 @@ namespace HarryPotter.Classes
                 writer.EndMessage();
                 
                 spell.gameObject.Destroy();
+                
                 if (player == null) return;
-                if (!ModdedPlayerById(player.PlayerId).Immortal) 
-                    RpcCrucioBlind(player);
+                if (( (Bellatrix) owner.Role ).MarkedPlayers.All(x => x.PlayerId != player.PlayerId)) return;
+                ModdedPlayerClass moddedPlayer = ModdedPlayerById(player.PlayerId);
+                if (moddedPlayer.Immortal) return;
+                RpcCrucioBlind(player);
             };
         }
         
@@ -822,6 +859,37 @@ namespace HarryPotter.Classes
         public string GetPlayerRoleName(ModdedPlayerClass player)
         {
             return player?.Role?.RoleName;
+        }
+
+        public PlayerControl GetClosestTarget(PlayerControl player, bool onlyImp, PlayerControl[] exclusions)
+        {
+            PlayerControl result = null;
+            float num = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
+            if (!ShipStatus.Instance)
+            {
+                return null;
+            }
+            Vector2 truePosition = player.GetTruePosition();
+            List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers.ToArray().ToList();
+            for (int i = 0; i < allPlayers.Count; i++)
+            {
+                GameData.PlayerInfo playerInfo = allPlayers[i];
+                if (!playerInfo.Disconnected && playerInfo.PlayerId != player.PlayerId && !playerInfo.IsDead && (!playerInfo.IsImpostor || !onlyImp) && exclusions.All(x => x.PlayerId != playerInfo.PlayerId))
+                {
+                    PlayerControl @object = playerInfo.Object;
+                    if (@object && @object.Collider.enabled)
+                    {
+                        Vector2 vector = @object.GetTruePosition() - truePosition;
+                        float magnitude = vector.magnitude;
+                        if (magnitude <= num && !PhysicsHelpers.AnyNonTriggersBetween(truePosition, vector.normalized, magnitude, Constants.ShipAndObjectsMask))
+                        {
+                            result = @object;
+                            num = magnitude;
+                        }
+                    }
+                }
+            }
+            return result;
         }
     }
 }

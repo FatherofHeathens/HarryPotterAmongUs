@@ -46,7 +46,8 @@ namespace HarryPotter.Classes
             Vector3 d = v * 3f * (2f / dist);
             float AngleRad = Mathf.Atan2(MousePostition.y - Owner._Object.myRend.bounds.center.y, MousePostition.x - Owner._Object.myRend.bounds.center.x);
             ShootDeg = (180 / (float)Math.PI) * AngleRad;
-
+            
+            SpellRigid.rotation = ShootDeg;
             SpellCollider.isTrigger = true;
             SpellCollider.radius = 0.2f;
             SpellRigid.velocity = new Vector2(d.x, d.y);
