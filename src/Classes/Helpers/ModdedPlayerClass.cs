@@ -44,6 +44,7 @@ namespace HarryPotter.Classes
                 PortKeyWorld.WorldSpawn();
                 TheGoldenSnitchWorld.WorldSpawn();
                 GhostStoneWorld.WorldSpawn();
+                ButterBeerWorld.WorldSpawn();
 
                 if (Main.Instance.Config.OrderOfTheImp)
                 {
