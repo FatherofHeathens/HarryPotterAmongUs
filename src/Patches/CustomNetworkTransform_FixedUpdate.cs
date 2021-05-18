@@ -24,7 +24,11 @@ namespace HarryPotter.Patches
                         vector.y *= num;
                         if (PlayerControl.LocalPlayer)
                         {
-                            vector = Vector2.ClampMagnitude(vector, PlayerControl.LocalPlayer.MyPhysics.TrueSpeed);
+                            float multiplier = 1f;
+                            var foundPlayers = Main.Instance.AllPlayers.FindAll(x => x._Object.NetTransform == __instance);
+                            if (foundPlayers.Count > 0)
+                                multiplier = foundPlayers.First().SpeedMultiplier;
+                            vector = Vector2.ClampMagnitude(vector, PlayerControl.LocalPlayer.MyPhysics.TrueSpeed * multiplier);
                         }
                         __instance.body.velocity = vector;
                     }

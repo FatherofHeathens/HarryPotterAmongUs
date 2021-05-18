@@ -24,8 +24,17 @@ namespace HarryPotter.Classes
             if (_Object.Data.IsDead)
                 ClearItems();
 
-            //if (Input.GetKeyDown(KeyCode.I)) for (var i = 0; i < 6; i++) GiveItem(i);
+            /*if (Input.GetKeyDown(KeyCode.I))
+            {
+                for (var i = 0; i < 5; i++) GiveItem(i);
+                GiveItem(6);
+                GiveItem(8);
+                GiveItem(9);
+            }
             
+            if (Input.GetKeyDown(KeyCode.O)) GiveItem(5);
+            if (Input.GetKeyDown(KeyCode.P)) GiveItem(7);*/
+
             if (HasItem(4))
             {
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -33,9 +42,20 @@ namespace HarryPotter.Classes
                         player.Visible = true;
             }
             
+            ShouldRevive = HasItem(9);
+            
             TaskInfoHandler.Instance.Update();
             HandleNameColors();
             Role?.Update();
+
+            if (VigilanteShotEnabled)
+            {
+                HudManager.Instance.KillButton.gameObject.SetActive(true);
+                HudManager.Instance.KillButton.SetTarget(Main.Instance.GetClosestTarget(_Object, false));
+                HudManager.Instance.KillButton.SetCoolDown(0f, 1f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q) && VigilanteShotEnabled) HudManager.Instance.KillButton.PerformKill();
 
             if (AmongUsClient.Instance.AmHost)
             {
@@ -45,6 +65,10 @@ namespace HarryPotter.Classes
                 TheGoldenSnitchWorld.WorldSpawn();
                 GhostStoneWorld.WorldSpawn();
                 ButterBeerWorld.WorldSpawn();
+                ElderWandWorld.WorldSpawn();
+                BasWorldItem.WorldSpawn();
+                SortingHatWorld.WorldSpawn();
+                PhiloStoneWorld.WorldSpawn();
 
                 if (Main.Instance.Config.OrderOfTheImp)
                 {
@@ -60,7 +84,7 @@ namespace HarryPotter.Classes
 
         public void HandleNameColors()
         {
-            if (_Object.Data.IsDead && !CanSeeAllRolesOveridden)
+            /*if (_Object.Data.IsDead && !CanSeeAllRolesOveridden)
             {
                 foreach (ModdedPlayerClass moddedPlayer in Main.Instance.AllPlayers)
                 {
@@ -74,11 +98,11 @@ namespace HarryPotter.Classes
                     moddedPlayer._Object.nameText.text =
                         moddedPlayer._Object.Data.PlayerName + "\n" + moddedPlayer.Role.RoleName;
                 }
-            }
+            }*/
 
             if (Role == null)
             {
-                _Object.nameText.text = _Object.Data.PlayerName + "\n" + (_Object.Data.IsImpostor ? "Impostor" : "Crewmate");
+                _Object.nameText.text = _Object.Data.PlayerName + "\n" + (_Object.Data.IsImpostor ? "Impostor" : "Muggle");
                 _Object.nameText.transform.position = new Vector3(
                     _Object.nameText.transform.position.x, 
                     _Object.transform.position.y + 0.8f, 
@@ -123,29 +147,59 @@ namespace HarryPotter.Classes
 
         public void GiveItem(int id)
         {
+            Item item = null;
+            
             switch (id)
             {
                 case 0:
-                    Inventory.Add(new Deluminator(this));
+                    item = new Deluminator(this);
+                    Inventory.Add(item);
                     break;
-                case 1: 
-                    Inventory.Add(new MaraudersMap(this));
+                case 1:
+                    item = new MaraudersMap(this);
+                    Inventory.Add(item);
                     break;
-                case 2: 
-                    Inventory.Add(new PortKey(this));
+                case 2:
+                    item = new PortKey(this);
+                    Inventory.Add(item);
                     break;
-                case 3: 
-                    Inventory.Add(new TheGoldenSnitch(this));
+                case 3:
+                    item = new TheGoldenSnitch(this);
+                    Inventory.Add(item);
                     break;
                 case 4:
-                    Inventory.Add(new GhostStone(this));
+                    item = new GhostStone(this);
+                    Inventory.Add(item);
                     break;
                 case 5:
-                    Inventory.Add(new ButterBeer(this));
+                    item = new ButterBeer(this); 
+                    Inventory.Add(item);
+                    break;
+                case 6:
+                    item = new ElderWand(this);
+                    Inventory.Add(item);
+                    break;
+                case 7:
+                    item = new BasItem(this);
+                    Inventory.Add(item);
+                    break;
+                case 8:
+                    item = new SortingHat(this);
+                    Inventory.Add(item);
+                    break;
+                case 9:
+                    item = new PhiloStone(this);
+                    Inventory.Add(item);
                     break;
             }
+
+            if (item == null) return;
+            if (item.IsTrap) item.Use();
+
+            string trapText = "You picked up a trap item! Unpredictable effects have been activated!";
+            string normalText = "You picked up an item! Press 'C' to open your Inventory.";
             
-            PopupTMPHandler.Instance.CreatePopup("You picked up an item! Press 'C' to open your Inventory.", Color.white, Color.black);
+            PopupTMPHandler.Instance.CreatePopup(item.IsTrap ? trapText : normalText, Color.white, Color.black);
         }
 
         public void ClearItems()
@@ -164,5 +218,7 @@ namespace HarryPotter.Classes
         public bool CanSeeAllRolesOveridden { get; set; }
         public bool ReverseDirectionalControls { get; set; }
         public float SpeedMultiplier { get; set; } = 1f;
+        public bool VigilanteShotEnabled { get; set; }
+        public bool ShouldRevive { get; set; }
     }
 }

@@ -31,7 +31,6 @@ namespace HarryPotter.Classes.Items
                 writer.Write(Id);
                 writer.EndMessage();
             }
-            System.Console.WriteLine("Used Marauders Map");
             this.Delete();
 
             Reactor.Coroutines.Start(ZoomOut());

@@ -40,6 +40,7 @@ namespace HarryPotter.Classes.WorldItems
             if (MeetingHud.Instance) return false;
             if (!AmongUsClient.Instance.IsGameStarted) return false;
             if (ItemRandom.Next(0, 100000) > ItemSpawnChance) return false;
+            if (Main.Instance.CurrentStage != 0) return false;
             if (HasSpawned) return false;
 
             return true;

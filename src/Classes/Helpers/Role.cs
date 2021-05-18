@@ -17,8 +17,9 @@ namespace HarryPotter.Classes
         }
         
         public virtual void ResetCooldowns() { }
-        public virtual void SoftResetCooldowns() { }
-
+        
+        public virtual void RemoveCooldowns() { }
+        
         public virtual bool ShouldDrawCustomButtons() 
         {
             return false;

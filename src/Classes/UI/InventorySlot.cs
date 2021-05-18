@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using HarryPotter.Classes.UI;
 using Reactor;
 using UnityEngine;
 
@@ -18,15 +20,17 @@ namespace HarryPotter.Classes.Helpers.UI
             
             GameObject itemButtonObj = gameObject.transform.GetChild(1).gameObject;
             ItemButton = itemButtonObj.gameObject.AddComponent<CustomButton>();
-            ItemButton.TooltipEnabled = true;
             ItemButton.OnClick += TryUseTargetedItem;
+            ItemButton.OnRightClick += TryFavoriteTargetedItem;
+            
+            ItemTooltip = itemButtonObj.gameObject.AddComponent<Tooltip>();
         }
 
         public void LateUpdate()
         {
             TargetedItem = null;
             ItemButton.Enabled = false;
-            ItemButton.Tooltip = "";
+            ItemTooltip.TooltipText = "";
             ItemSpriteRenderer.sprite = null;
             
             ModdedPlayerClass localPlayer = Main.Instance.GetLocalModdedPlayer();
@@ -37,7 +41,7 @@ namespace HarryPotter.Classes.Helpers.UI
             TargetedItem = localPlayer.Inventory[InventoryIndex];
             ItemSpriteRenderer.sprite = TargetedItem.Icon;
 
-            ItemButton.Tooltip = TargetedItem.Tooltip;
+            ItemTooltip.TooltipText = TargetedItem.Tooltip;
             ItemButton.SetColor(TargetedItem.IsSpecial ? Color.gray : Color.yellow);
         }
 
@@ -51,8 +55,20 @@ namespace HarryPotter.Classes.Helpers.UI
             InventoryUI.Instance.Close();
         }
 
+        public void TryFavoriteTargetedItem()
+        {
+            if (!InventoryUI.Instance.IsOpen) return;
+            if (TargetedItem == null) return;
+            if (TargetedItem.IsSpecial) return;
+
+            if (InventoryUI.Instance.FavouritedItems.RemoveAll(x => x.Id == TargetedItem.Id) == 0)
+                if (InventoryUI.Instance.FavouritedItems.Count < 3)
+                    InventoryUI.Instance.FavouritedItems.Add(TargetedItem);
+        }
+
         public SpriteRenderer ItemSpriteRenderer { get; set; }
         public CustomButton ItemButton { get; set; }
+        public Tooltip ItemTooltip { get; set; }
         public int InventoryIndex { get; set; }
         public Item TargetedItem { get; set; }
     }

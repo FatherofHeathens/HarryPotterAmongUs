@@ -2,7 +2,9 @@
 using HarryPotter.Classes;
 using InnerNet;
 using System.Linq;
+using HarryPotter.Classes.Helpers;
 using HarryPotter.Classes.Helpers.UI;
+using Reactor.Extensions;
 using UnityEngine;
 
 namespace HarryPotter.Patches
@@ -14,16 +16,20 @@ namespace HarryPotter.Patches
         {
             SoundManager.Instance.PlaySound(Main.Instance.Assets.HPTheme, false, 1f);
 
-            foreach (Sprite customHat in Main.Instance.Assets.AllCustomHats)
+            foreach (Hat customHat in Hat.AllHats)
             {
-                HatBehaviour newHat = UnityEngine.Object.Instantiate(HatManager.Instance.AllHats.ToArray().First());
-                newHat.MainImage = customHat;
-                System.Console.WriteLine(customHat.name);
-                if (customHat.name != "hat (6)") newHat.NoBounce = true;
+                HatBehaviour newHat = Object.Instantiate(HatManager.Instance.AllHats.ToArray().First());
+                newHat.MainImage = customHat.MainSprite;
+                newHat.NoBounce = !customHat.Bounce;
+                newHat.ChipOffset = customHat.ChipOffset;
                 HatManager.Instance.AllHats.Insert(1, newHat);
             }
             
             new GameObject().AddComponent<InventoryUI>();
+            new GameObject().AddComponent<MindControlMenu>();
+            new GameObject().AddComponent<HotbarUI>();
+
+            Main.Instance.ResetCustomOptions();
         }
     }
 }

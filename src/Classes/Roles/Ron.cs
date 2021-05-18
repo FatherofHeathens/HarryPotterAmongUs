@@ -27,11 +27,6 @@ namespace HarryPotter.Classes.Roles
             tt.TooltipText = $"Defensive Duelist:\nWill make you invulnerable to spells and kills for {Main.Instance.Config.DefensiveDuelistDuration}s\nWhile this ability is active, you cannot move";
         }
 
-        public override void SoftResetCooldowns()
-        {
-            ResetCooldowns();
-        }
-        
         public override void ResetCooldowns()
         {
             LastCloak = DateTime.UtcNow;
@@ -54,7 +49,8 @@ namespace HarryPotter.Classes.Roles
                 ActivateDefensiveDuelist();
             else
                 return true;
-            return true;
+            
+            return false;
         }
 
         public void ActivateDefensiveDuelist()

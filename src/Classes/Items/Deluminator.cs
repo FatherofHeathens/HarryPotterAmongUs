@@ -25,7 +25,6 @@ namespace HarryPotter.Classes.Items
                 writer.Write(Id);
                 writer.EndMessage();
             }
-            System.Console.WriteLine("Used Deluminator");
             this.Delete();
             
             switch (Main.Instance.IsLightsSabotaged())

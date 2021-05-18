@@ -20,9 +20,9 @@ namespace HarryPotter.Classes
                     ? (PlayerControl.LocalPlayer.Data.IsImpostor ? "Impostor" : "Muggle")
                     : Main.Instance.GetLocalModdedPlayer().Role.RoleName;
                 AddNewItem(0, $"{GetRoleHexColor(PlayerControl.LocalPlayer)}Role: {roleName}</color></color>");
-
-                if (Main.Instance.GetLocalModdedPlayer().Role?.RoleName == "Voldemort" || Main.Instance.GetLocalModdedPlayer().Role?.RoleName == "Bellatrix")
-                    AddNewItem(1, $"{GetRoleHexColor(PlayerControl.LocalPlayer)}Right-click to shoot a spell in the direction of your cursor.</color></color>");
+                if (Main.Instance.GetLocalModdedPlayer().Role == null) return;
+                if (!Main.Instance.Config.ShowPopups) return;
+                AddNewItem(1, $"{GetRoleHexColor(PlayerControl.LocalPlayer)}Hover over ability buttons for more information.</color></color>");
             }
         }
 

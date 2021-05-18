@@ -1,125 +1,147 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using HarryPotter.Classes.Helpers.UI;
 using HarryPotter.Classes.Roles;
+using HarryPotter.Classes.UI;
 using InnerNet;
+using Reactor;
 using Reactor.Extensions;
 using UnityEngine;
 
 namespace HarryPotter.Classes
 {
-    public class MindControlMenu
+    [RegisterInIl2Cpp]
+    public class MindControlMenu: MonoBehaviour
     {
-        public ChatController MenuObject { get; set; }
+        public MindControlMenu(IntPtr ptr) : base(ptr)
+        {
+        }
         
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Instance.Destroy();
+                Instance = null;
+            }
+
+            Instance = this;
+            
+            gameObject.DontDestroy();
+            Panel = Instantiate(PanelPrefab).DontDestroy();
+            Panel.transform.SetParent(null);
+            
+            Transform closeButtonObj = Panel.transform.FindChild("CloseButton");
+            
+            CustomButton closeButton = closeButtonObj.gameObject.AddComponent<CustomButton>();
+            closeButton.HoverColor = Color.green;
+            closeButton.OnClick += CloseMenu;
+
+            Tooltip closeTooltip = closeButtonObj.gameObject.AddComponent<Tooltip>();
+            closeTooltip.TooltipText = "Close Menu";
+            
+            for (var i = 0; i < Panel.transform.FindChild("Players").childCount; i++)
+            {
+                Transform inventoryButton = Panel.transform.FindChild("Players").GetChild(i);
+                PlayerSlot slot = inventoryButton.gameObject.AddComponent<PlayerSlot>();
+                slot.PlayerIndex = i;
+            }
+
+            IsOpen = false;
+            Panel.active = false;
+        }
+        
+        private void LateUpdate()
+        {
+            Panel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2));
+            IsOpen = Panel.active;
+
+            if (!IsOpen) return;
+
+            if (Minigame.Instance) Minigame.Instance.ForceClose();
+            if (Main.Instance.GetPlayerRoleName(Main.Instance.GetLocalModdedPlayer()) != "Bellatrix") CloseMenu();
+            if (Input.GetKeyDown(KeyCode.Escape)) CloseMenu();
+            if (MeetingHud.Instance) CloseMenu();
+            if (ExileController.Instance) CloseMenu();
+            if (!AmongUsClient.Instance.IsGameStarted) CloseMenu();
+            if (HudManager.Instance?.UseButton?.isActiveAndEnabled == false) CloseMenu();
+            if (DestroyableSingleton<IntroCutscene>.InstanceExists) CloseMenu();
+        }
+
         public void OpenMenu()
         {
-            MenuObject = ChatController.Instantiate(HudManager.Instance.Chat);
-
-            MenuObject.transform.SetParent(Camera.main.transform);
-            MenuObject.SetVisible(true);
-            MenuObject.Toggle();
-
-            MenuObject.TextBubble.enabled = false;
-            MenuObject.TextBubble.gameObject.SetActive(false);
-
-            MenuObject.TextArea.enabled = false;
-            MenuObject.TextArea.gameObject.SetActive(false);
-
-            MenuObject.BanButton.enabled = false;
-            MenuObject.BanButton.gameObject.SetActive(false);
-
-            MenuObject.CharCount.enabled = false;
-            MenuObject.CharCount.gameObject.SetActive(false);
-
-            MenuObject.BackgroundImage.enabled = false;
-
-            foreach (SpriteRenderer rend in MenuObject.Content.GetComponentsInChildren<SpriteRenderer>())
-            {
-                if (rend.name == "SendButton" || rend.name == "QuickChatButton" || rend.name == "QuickChatIcon")
-                {
-                    rend.enabled = false;
-                    rend.gameObject.SetActive(false);
-                }
-            }
-
-            foreach (PoolableBehavior bubble in MenuObject.chatBubPool.activeChildren)
-            {
-                bubble.enabled = false;
-                bubble.gameObject.SetActive(false);
-            }
-            MenuObject.chatBubPool.activeChildren.Clear();
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.ToArray().Where(x => x != PlayerControl.LocalPlayer && !x.Data.IsDead && !x.Data.IsImpostor))
-                MenuObject.AddChat(player, "");
+            Coroutines.Start(CoOpen());
         }
 
         public void CloseMenu()
         {
-            MenuObject?.ForceClosed();
-            MenuObject?.SetVisible(false);
-            MenuObject?.Destroy();
-            MenuObject = null;
+            Coroutines.Start(CoClose());
+        }
+        
+        public IEnumerator CoOpen()
+        {
+            if (IsOpeningOrClosing) yield break;
+            
+            IsOpeningOrClosing = true;
+            IsOpen = true;
+            Panel.active = true;
+            Vector2 initalScale = Panel.transform.localScale;
+            float perc = 0.2f;
+            
+            while (perc < 1f)
+            {
+                Panel.transform.localScale = new Vector2( initalScale.x * perc, initalScale.y * perc);
+                perc += 0.2f;
+                yield return null;
+            }
+
+            Panel.transform.localScale = initalScale;
+            IsOpeningOrClosing = false;
+        }
+
+        public IEnumerator CoClose()
+        {
+            if (IsOpeningOrClosing) yield break;
+            
+            IsOpeningOrClosing = true;
+            Vector2 initalScale = Panel.transform.localScale;
+            float perc = 1f;
+            
+            while (perc > 0f)
+            {
+                Panel.transform.localScale = new Vector2( initalScale.x * perc, initalScale.y * perc);
+                perc -= 0.2f;
+                yield return null;
+            }
+            
+            IsOpen = false;
+            Panel.active = false;
+            Panel.transform.localScale = initalScale;
+            IsOpeningOrClosing = false;
         }
 
         public void ToggleMenu()
         {
-            if (MenuObject != null && MenuObject.IsOpen)
-                CloseMenu();
-            else
-                OpenMenu();
+            if (Main.Instance.GetPlayerRoleName(Main.Instance.GetLocalModdedPlayer()) != "Bellatrix") return;
+            if (!AmongUsClient.Instance.IsGameStarted) return;
+            if (HudManager.Instance?.UseButton?.isActiveAndEnabled == false) return;
+            if (DestroyableSingleton<IntroCutscene>.InstanceExists) return;
+            if (MeetingHud.Instance) return;
+            if (Minigame.Instance) return;
+            if (ExileController.Instance) return;
+            if (InventoryUI.Instance.IsOpeningOrClosing) return;
+            if (InventoryUI.Instance.IsOpen) return;
+            if (!PlayerControl.LocalPlayer.CanMove) return;
+
+            if (IsOpen) CloseMenu();
+            else OpenMenu();
         }
-
-        public void ClickPlayer(PlayerControl target)
-        {
-            if (((Bellatrix) Main.Instance.GetLocalModdedPlayer().Role).MindControlledPlayer != null)
-                return;
-
-            if (((Bellatrix) Main.Instance.GetLocalModdedPlayer().Role).MindControlButton.isCoolingDown)
-                return;
-
-            if (Main.Instance.ModdedPlayerById(target.PlayerId).Immortal)
-                return;
-                
-            if (target.Data.IsDead)
-                return;
-
-            if (Main.Instance.GetLocalModdedPlayer()._Object.Data.IsDead)
-                return;
-            
-            if (Main.Instance.GetLocalModdedPlayer()._Object.inVent)
-                return;
-
-            CloseMenu();
-            Main.Instance.RpcControlPlayer(PlayerControl.LocalPlayer, target);
-        }
-
-        public void Update()
-        {
-            if (MenuObject == null || !MenuObject.IsOpen || MeetingHud.Instance || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
-            {
-                CloseMenu();
-                return;
-            }
-
-            if (Minigame.Instance)
-                Minigame.Instance.Close();
-            
-            foreach (PoolableBehavior bubble in MenuObject.chatBubPool.activeChildren)
-            {
-                Vector2 ScreenMin = Camera.main.WorldToScreenPoint(bubble.Cast<ChatBubble>().Background.bounds.min);
-                Vector2 ScreenMax = Camera.main.WorldToScreenPoint(bubble.Cast<ChatBubble>().Background.bounds.max);
-                
-                if (Input.mousePosition.x < ScreenMin.x || Input.mousePosition.x > ScreenMax.x)
-                    continue;
-                
-                if (Input.mousePosition.y < ScreenMin.y || Input.mousePosition.y > ScreenMax.y)
-                    continue;
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    ClickPlayer(PlayerControl.AllPlayerControls.ToArray().Where(x => x.Data.PlayerName == bubble.Cast<ChatBubble>().NameText.text).FirstOrDefault());
-                    break;
-                }
-            }
-        }
+        
+        public bool IsOpen { get; set; }
+        public bool IsOpeningOrClosing { get; set; }
+        public GameObject Panel { get; set; }
+        public static GameObject PanelPrefab { get; set; }
+        public static MindControlMenu Instance { get; set; }
     }
 }

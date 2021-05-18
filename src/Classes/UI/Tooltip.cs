@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Reactor;
+using Reactor.Extensions;
 using TMPro;
 using UnityEngine;
 
@@ -19,13 +20,12 @@ namespace HarryPotter.Classes.UI
         public MeshRenderer TooltipRenderer { get; set; }
         public bool Enabled { get; set; }
         public string TooltipText { get; set; }
-        
+
         private void Start()
         {
             Enabled = true;
 
-            TooltipObj = new GameObject();
-            TooltipObj.transform.SetParent(Camera.main.transform);
+            TooltipObj = new GameObject().DontDestroy();
             TooltipObj.layer = 5;
 
             TooltipTMP = TooltipObj.AddComponent<TextMeshPro>();
@@ -33,42 +33,47 @@ namespace HarryPotter.Classes.UI
             TooltipTMP.alignment = TextAlignmentOptions.BottomLeft;
             TooltipTMP.overflowMode = TextOverflowModes.Overflow;
             TooltipTMP.maskable = false;
+            TooltipTMP.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
+            TooltipTMP.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
             
             TooltipRenderer = TooltipObj.GetComponent<MeshRenderer>();
             TooltipRenderer.sortingOrder = 1000;
-            TooltipRenderer.rendererPriority = 1000;
 
             TooltipTransform = TooltipObj.GetComponent<RectTransform>();
             TooltipObj.active = false;
         }
 
+        public void OnDisable()
+        {
+            if (TooltipObj == null) return;
+            TooltipObj.active = false;
+        }
+
+        public void OnDestroy()
+        {
+            if (TooltipObj == null) return;
+            TooltipObj.active = false;
+            TooltipObj.Destroy();
+        }
+
         public void LateUpdate()
         {
-            if (!Enabled || !Main.Instance.Config.ShowPopups)
-            {
-                TooltipObj.active = false;
-                return;
-            }
-
-            TooltipTMP.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
-            TooltipTMP.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
-
             TooltipTransform.sizeDelta = TooltipTMP.GetPreferredValues(TooltipText);
-            TooltipTMP.text = TooltipText;
+            TooltipTMP.text = "<#EEFFB3FF>" + TooltipText;
             
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             TooltipObj.transform.position = new Vector3(mousePosition.x + (TooltipTMP.renderedWidth / 2) + 0.1f, mousePosition.y);
         }
+
+        public void FixedUpdate()
+        {
+            TooltipObj.active = false;
+        }
         
-        private void OnMouseEnter()
+        private void OnMouseOver()
         {
             if (!Enabled || !Main.Instance.Config.ShowPopups) return;
             TooltipObj.active = true;
-        }
-
-        private void OnMouseExit()
-        {
-            TooltipObj.active = false;
         }
     }
 }

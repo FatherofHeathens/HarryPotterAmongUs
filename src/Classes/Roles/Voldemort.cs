@@ -1,4 +1,5 @@
 ﻿using System;
+using HarryPotter.Classes.Helpers.UI;
 using HarryPotter.Classes.UI;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace HarryPotter.Classes.Roles
             CurseButton.renderer.enabled = true;
             
             Tooltip tt = CurseButton.gameObject.AddComponent<Tooltip>();
-            tt.TooltipText = "The Killing Curse:\nA spell which will kill any target it hits, except Harry\nIf the spell hits Harry, you will die instead\n<#FF0000FF>Right click to shoot this spell in the direction of your mouse";
+            tt.TooltipText = "The Killing Curse:\nA spell which will kill any target it hits, except Harry\nIf the spell hits Harry, you will die instead\n<#FF0000FF>Right click to shoot this spell in the direction of your cursor";
         }
 
         public override void Update()
@@ -41,8 +42,11 @@ namespace HarryPotter.Classes.Roles
             CurseButton.renderer.sprite = Main.Instance.Assets.AbilityIcons[0];
             CurseButton.transform.position = new Vector2(bottomLeft.x + 0.75f, bottomLeft.y + 0.75f);
             CurseButton.SetTarget(null);
-            CurseButton.SetCoolDown(PlayerControl.GameOptions.KillCooldown - (float)(DateTime.UtcNow - LastCurse).TotalSeconds, PlayerControl.GameOptions.KillCooldown);
-
+            if (Main.Instance.Config.SeparateCooldowns)
+                CurseButton.SetCoolDown(PlayerControl.GameOptions.KillCooldown - (float)(DateTime.UtcNow - LastCurse).TotalSeconds, PlayerControl.GameOptions.KillCooldown);
+            else
+                CurseButton.SetCoolDown(Owner._Object.killTimer, PlayerControl.GameOptions.KillCooldown);
+            
             bool isDead = Owner._Object.Data.IsDead;
             if (isDead)
                 CurseButton.SetCoolDown(0, 1);
@@ -56,15 +60,24 @@ namespace HarryPotter.Classes.Roles
             if (Input.GetMouseButtonDown(1))
                 ShootCurse();
         }
-
-        public override void SoftResetCooldowns()
-        {
-            ResetCooldowns();
-        }
         
+        public override void RemoveCooldowns()
+        {
+            //LastCurse = DateTime.UtcNow.AddSeconds(PlayerControl.GameOptions.KillCooldown * -1);
+            //Owner._Object.SetKillTimer(0);
+            
+            if (Main.Instance.Config.SeparateCooldowns)
+                LastCurse = DateTime.UtcNow.AddSeconds(PlayerControl.GameOptions.KillCooldown * -1);
+            else
+                Owner._Object.SetKillTimer(0);
+        }
+
         public override void ResetCooldowns()
         {
-            LastCurse = DateTime.UtcNow;
+            if (Main.Instance.Config.SeparateCooldowns)
+                LastCurse = DateTime.UtcNow;
+            else
+                Owner._Object.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
         }
 
         public void ShootCurse()
@@ -81,12 +94,17 @@ namespace HarryPotter.Classes.Roles
             if (Owner._Object.inVent && !Main.Instance.Config.SpellsInVents)
                 return;
             
-            if (!Owner._Object.CanMove)
+            if (InventoryUI.Instance.IsOpen || InventoryUI.Instance.IsOpeningOrClosing)
                 return;
-            
+
             ResetCooldowns();
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Main.Instance.RpcCreateCurse(mouseWorld, Owner);
+        }
+
+        public override bool PerformKill(KillButtonManager __instance)
+        {
+            return __instance != CurseButton;
         }
     }
 }

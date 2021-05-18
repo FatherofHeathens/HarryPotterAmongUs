@@ -10,22 +10,13 @@ namespace HarryPotter.Classes.Items
             this.Owner = owner;
             this.ParentInventory = owner.Inventory;
             this.Id = 5;
-            this.Icon = Main.Instance.Assets.ItemIcons[Id];
             this.Name = "Butter Beer";
-            this.Tooltip = "Butter Beer:\nMakes the user very fast, but also\nreverses their directional controls.";
+            this.Tooltip = "";
+            this.IsTrap = true;
         }
 
         public override void Use()
         {
-            if (AmongUsClient.Instance.AmHost)
-                ButterBeerWorld.HasSpawned = false;
-            else
-            {
-                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem, SendOption.Reliable);
-                writer.Write(Id);
-                writer.EndMessage();
-            }
-            System.Console.WriteLine("Used Butter Beer");
             this.Delete();
             Reactor.Coroutines.Start(Main.Instance.CoActivateButterBeer(Owner._Object));
         }

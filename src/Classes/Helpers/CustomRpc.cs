@@ -37,6 +37,11 @@ namespace HarryPotter.Classes
         GiveItem = 87,
         DestroyItem = 88,
         UseItem = 89,
+        UpdateSpeedMultiplier = 90,
+        RevealRole = 91,
+        FakeKill = 92,
+        FinallyDie = 93,
+        RequestRole = 94,
     }
 
     public class CustomRpc
@@ -68,6 +73,24 @@ namespace HarryPotter.Classes
                             break;
                     }
                     break;
+                case (byte)Packets.RequestRole:
+                    if (AmongUsClient.Instance.AmHost)
+                    {
+                        byte requesterId = reader.ReadByte();
+                        string requestedRole = reader.ReadString();
+
+                        if (Main.Instance.PlayersWithRequestedRoles.All(x => x.Item1.PlayerId != requesterId))
+                            Main.Instance.PlayersWithRequestedRoles.Add(new Pair<PlayerControl, string>(GameData.Instance.GetPlayerById(requesterId).Object, requestedRole));
+                    }
+                    break;
+                case (byte)Packets.FinallyDie:
+                    byte finallyDeadId = reader.ReadByte();
+                    Main.Instance.PlayerDie(Main.Instance.ModdedPlayerById(finallyDeadId)._Object);
+                    break;
+                case (byte)Packets.FakeKill:
+                    byte fakeKilledId = reader.ReadByte();
+                    Reactor.Coroutines.Start(Main.Instance.CoFakeKill(Main.Instance.ModdedPlayerById(fakeKilledId)._Object));
+                    break;
                 case (byte)Packets.FixLightsRpc:
                     var switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
@@ -87,18 +110,19 @@ namespace HarryPotter.Classes
                     Main.Instance.CreateCrucio(crucioDirection, Main.Instance.ModdedPlayerById(blinderId));
                     break;
                 case (byte)Packets.DestroyCurse:
-                    GameObject.Find("_curse")?.Destroy();
+                    Main.Instance.DestroySpell("_curse");
                     break;
                 case (byte)Packets.DestroyCrucio:
-                    GameObject.Find("_crucio")?.Destroy();
+                    Main.Instance.DestroySpell("_crucio");
                     break;
                 case (byte)Packets.KillPlayerUnsafe:
                     byte killerId = reader.ReadByte();
                     byte targetId = reader.ReadByte();
                     bool isCurseKill = reader.ReadBoolean();
+                    bool forceAnim = reader.ReadBoolean();
                     ModdedPlayerClass target = Main.Instance.ModdedPlayerById(targetId);
                     ModdedPlayerClass killer = Main.Instance.ModdedPlayerById(killerId);
-                    Main.Instance.KillPlayer(killer._Object, target._Object, isCurseKill);
+                    Main.Instance.KillPlayer(killer._Object, target._Object, isCurseKill, forceAnim);
                     break;
                 case (byte)Packets.DeactivatePlayer:
                     byte blindId = reader.ReadByte();
@@ -119,8 +143,10 @@ namespace HarryPotter.Classes
                     PlayerControl movePlayer = Main.Instance.ModdedPlayerById(moveId)._Object;
                     if (movePlayer.AmOwner)
                     {
+                        movePlayer.transform.position = newPos;
                         movePlayer.MyPhysics.body.position = newPos;
                         movePlayer.MyPhysics.body.velocity = newVel;
+                        System.Console.WriteLine("MoveControlledPlayer");
                     }
                     break;
                 case (byte)Packets.InvisPlayer:
@@ -220,6 +246,15 @@ namespace HarryPotter.Classes
                             ButterBeerWorld.HasSpawned = false;
                             break;
                     }
+                    break;
+                case (byte)Packets.UpdateSpeedMultiplier:
+                    byte readerId = reader.ReadByte();
+                    float newSpeed = reader.ReadSingle();
+                    Main.Instance.ModdedPlayerById(readerId).SpeedMultiplier = newSpeed;
+                    break;
+                case (byte)Packets.RevealRole:
+                    byte revealId = reader.ReadByte();
+                    Main.Instance.RevealRole(revealId);
                     break;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using Hazel;
 using Reactor.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HarryPotter.Classes.Helpers;
@@ -8,13 +9,27 @@ using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.UI;
 using HarryPotter.Classes.WorldItems;
 using HarryPotter.Patches;
+using hunterlib.Classes;
 using InnerNet;
+using TMPro;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 namespace HarryPotter.Classes
 {
+    public class Pair<T1, T2>
+    {
+        public Pair(T1 first, T2 second)
+        {
+            Item1 = first;
+            Item2 = second;
+        }
+
+        public T1 Item1 { get; set; }
+        public T2 Item2 { get; set; }
+    }
+    
     class Main
     {
         public static Main Instance { get; set; }
@@ -24,7 +39,7 @@ namespace HarryPotter.Classes
         public CustomRpc Rpc { get; set; }
         public Asset Assets { get; set; }
         public int CurrentStage { get; set; }
-        public GameObject UpdateHandler { get; set; }
+        public List<Pair<PlayerControl, string>> PlayersWithRequestedRoles { get; set; }
         public List<Tuple<byte, Vector2>> PossibleItemPositions { get; set; }
         public List<Tuple<byte, Vector2>> DefaultItemPositons { get; } = new List<Tuple<byte, Vector2>>
         {
@@ -192,9 +207,24 @@ namespace HarryPotter.Classes
             Rpc = new CustomRpc();
             Assets = new Asset();
             AllPlayers = new List<ModdedPlayerClass>();
-            AllItems = new List<WorldItem>(); 
-            UpdateHandler = new GameObject().DontDestroy();
-            UpdateHandler.AddComponent<UpdateHandler>();
+            AllItems = new List<WorldItem>();
+            PlayersWithRequestedRoles = new List<Pair<PlayerControl, string>>();
+        }
+        
+        public void RpcRequestRole(string roleName)
+        {
+            if (AmongUsClient.Instance.AmHost)
+            {
+                if (PlayersWithRequestedRoles.All(x => x.Item1 != PlayerControl.LocalPlayer))
+                    PlayersWithRequestedRoles.Add(new Pair<PlayerControl, string>(PlayerControl.LocalPlayer, roleName));
+            }
+            else
+            {
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.RequestRole, SendOption.Reliable);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                writer.Write(roleName);
+                writer.EndMessage();
+            }
         }
         
         public List<Vector2> GetAllApplicableItemPositions()
@@ -212,12 +242,41 @@ namespace HarryPotter.Classes
             return matches.FirstOrDefault();
         }
 
-        public System.Collections.IEnumerator CoActivateButterBeer(PlayerControl player)
+        public IEnumerator CoStunPlayer(PlayerControl player)
+        {
+            ImportantTextTask durationText = TaskInfoHandler.Instance.AddNewItem(1, "");;
+            
+            while (true)
+            {
+                bool isMeeting = MeetingHud.Instance;
+                bool isGameEnded = !AmongUsClient.Instance.IsGameStarted;
+
+                if (player.AmOwner)
+                {
+                    string roleColorHex = TaskInfoHandler.Instance.GetRoleHexColor(player);
+                    durationText.Text = $"{roleColorHex}You are stunned until the next meeting.</color></color>";
+                    player.myLight.LightRadius = Mathf.Lerp(ShipStatus.Instance.MinLightRadius, ShipStatus.Instance.MaxLightRadius, 0) * PlayerControl.GameOptions.CrewLightMod;
+                    player.moveable = false;
+                    player.MyPhysics.body.velocity = Vector2.zero;
+                }
+                
+                if (isMeeting || isGameEnded)
+                {
+                    TaskInfoHandler.Instance.RemoveItem(durationText);
+                    player.moveable = true;
+                    yield break;
+                }
+
+                yield return null;
+            }
+        }
+
+        public IEnumerator CoActivateButterBeer(PlayerControl player)
         {
             DateTime now = DateTime.UtcNow;
             ImportantTextTask durationText = TaskInfoHandler.Instance.AddNewItem(1, "");;
+            SetSpeedMultiplier(player.PlayerId, 2f);
             ModdedPlayerById(player.PlayerId).ReverseDirectionalControls = true;
-            ModdedPlayerById(player.PlayerId).SpeedMultiplier = 2f;
             
             while (true)
             {
@@ -235,9 +294,8 @@ namespace HarryPotter.Classes
                 if (isMeeting || isGameEnded || hasTimeExpired)
                 {
                     TaskInfoHandler.Instance.RemoveItem(durationText);
-                    
+                    SetSpeedMultiplier(player.PlayerId, 1f);
                     ModdedPlayerById(player.PlayerId).ReverseDirectionalControls = false;
-                    ModdedPlayerById(player.PlayerId).SpeedMultiplier = 1f;
                     yield break;
                 }
 
@@ -245,7 +303,7 @@ namespace HarryPotter.Classes
             }
         }
 
-        public System.Collections.IEnumerator CoActivateHourglass(PlayerControl player)
+        public IEnumerator CoActivateHourglass(PlayerControl player)
         {
             DateTime now = DateTime.UtcNow;
             Vector2 startPosition = player.transform.position;
@@ -313,6 +371,22 @@ namespace HarryPotter.Classes
                     ButterBeerWorld butterBeer = new ButterBeerWorld(pos);
                     AllItems.Add(butterBeer);
                     break;
+                case 6:
+                    ElderWandWorld elderWand = new ElderWandWorld(pos);
+                    AllItems.Add(elderWand);
+                    break;
+                case 7:
+                    BasWorldItem basItem = new BasWorldItem(pos);
+                    AllItems.Add(basItem);
+                    break;
+                case 8:
+                    SortingHatWorld sortingHat = new SortingHatWorld(pos);
+                    AllItems.Add(sortingHat);
+                    break;
+                case 9:
+                    PhiloStoneWorld philoStone = new PhiloStoneWorld(pos);
+                    AllItems.Add(philoStone);
+                    break;
             }
         }
 
@@ -327,6 +401,51 @@ namespace HarryPotter.Classes
                 foreach (PlayerVoteArea voteArea in MeetingHud.Instance.playerStates)
                     if (voteArea.TargetPlayerId == player.PlayerId)
                         voteArea.NameText.color = color;
+        }
+
+        public void RpcFakeKill(PlayerControl target)
+        {
+            Reactor.Coroutines.Start(CoFakeKill(target));
+            
+            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FakeKill, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.EndMessage();
+        }
+
+        public IEnumerator CoFakeKill(PlayerControl target)
+        {
+            DateTime now = DateTime.UtcNow;
+            GameObject bodyObject = GameObject.Find("body_" + target.PlayerId);
+
+            while (true)
+            {
+                bool isMeeting = MeetingHud.Instance;
+                bool isGameEnded = !AmongUsClient.Instance.IsGameStarted;
+                bool hasTimeExpired = now.AddSeconds(4) < DateTime.UtcNow;
+                
+                target.MyPhysics.body.velocity = Vector2.zero;
+                target.moveable = false;
+                target.Visible = false;
+                target.Collider.enabled = false;
+
+                if (isMeeting || isGameEnded || hasTimeExpired)
+                {
+                    if (target.AmOwner)
+                    {
+                        GetLocalModdedPlayer().Inventory.Find(x => x.Id == 9).Delete();
+                        PopupTMPHandler.Instance.CreatePopup("You were revived by The Philosopher's Stone!", Color.white, Color.black);
+                    }
+                    target.moveable = true;
+                    target.Visible = true;
+                    target.Collider.enabled = true;
+                    
+                    bodyObject.Destroy();
+                    
+                    yield break;
+                }
+
+                yield return null;
+            }
         }
         
         public void GiveGrabbedItem(int id)
@@ -352,6 +471,43 @@ namespace HarryPotter.Classes
             writer.Write(velocity.x);
             writer.Write(velocity.y);
             writer.EndMessage();
+        }
+
+        public void RpcRevealRole(byte playerId)
+        {
+            if (!MeetingHud.Instance) return;
+
+            foreach (PlayerVoteArea voteArea in MeetingHud.Instance.playerStates)
+            {
+                Transform child = voteArea.Buttons.transform.GetChild(voteArea.Buttons.transform.childCount - 1);
+                if (child.gameObject.name != "SortButton") child.gameObject.Destroy();
+            }
+            GetLocalModdedPlayer().Inventory.Find(x => x.Id == 8).Delete();
+            RevealRole(playerId);
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.RevealRole, SendOption.Reliable);
+            writer.Write(playerId);
+            writer.EndMessage();
+        }
+        
+        public void RevealRole(byte playerId)
+        {
+            if (!MeetingHud.Instance) return;
+
+            foreach (PlayerVoteArea voteArea in MeetingHud.Instance.playerStates)
+            {
+                if (voteArea.TargetPlayerId != playerId) continue;
+                ModdedPlayerClass targetPlayer = ModdedPlayerById(playerId);
+                
+                PopupTMPHandler.Instance.CreatePopup(targetPlayer._Object.Data.PlayerName + " has had their role revealed!", Color.white, Color.black);
+                
+                string roleHex = TaskInfoHandler.Instance.GetRoleHexColor(targetPlayer._Object);
+                string playerName = targetPlayer._Object.Data.PlayerName;
+                string roleName = GetPlayerRoleName(targetPlayer);
+                voteArea.NameText.text = $"{roleHex}{playerName}\n{roleName}";
+                voteArea.NameText.fontSize = 1.8f;
+                voteArea.NameText.enableAutoSizing = false;
+            }
         }
 
         public void RpcRevivePlayer(PlayerControl player)
@@ -384,7 +540,7 @@ namespace HarryPotter.Classes
             Reactor.Coroutines.Start(CoActivateHourglass(player));
         }
         
-        public System.Collections.IEnumerator CoDefensiveDuelist(PlayerControl player)
+        public IEnumerator CoDefensiveDuelist(PlayerControl player)
         {
             DateTime now = DateTime.UtcNow;
             Vector3 startingPosition = player.transform.position;
@@ -429,7 +585,7 @@ namespace HarryPotter.Classes
             writer.EndMessage();
         }
 
-        public System.Collections.IEnumerator CoInvisPlayer(PlayerControl target)
+        public IEnumerator CoInvisPlayer(PlayerControl target)
         {
             DateTime now = DateTime.UtcNow;
             ImportantTextTask durationText = new ImportantTextTask();
@@ -482,7 +638,7 @@ namespace HarryPotter.Classes
             }
         }
 
-        public System.Collections.IEnumerator CoBlindPlayer(PlayerControl target)
+        public IEnumerator CoBlindPlayer(PlayerControl target)
         {
             DateTime now = DateTime.UtcNow;
             float num = 0f;
@@ -516,39 +672,42 @@ namespace HarryPotter.Classes
         }
 
         public bool ControlKillUsed;
-        public System.Collections.IEnumerator CoControlPlayer(PlayerControl controller, PlayerControl target)
+
+        public IEnumerator CoControlPlayer(PlayerControl controller, PlayerControl target)
         {
             DateTime now = DateTime.UtcNow;
             ControlKillUsed = false;
-            
+
             Instance.ModdedPlayerById(target.PlayerId).ControllerOverride =
                 Instance.ModdedPlayerById(controller.PlayerId);
-            
+
             ((Bellatrix) Instance.ModdedPlayerById(controller.PlayerId).Role).MindControlledPlayer =
                 Instance.ModdedPlayerById(target.PlayerId);
 
-            ImportantTextTask durationText = new ImportantTextTask();
-            
+            ImportantTextTask durationText = null;
+
             if (controller.AmOwner)
             {
                 target.MyPhysics.body.interpolation = RigidbodyInterpolation2D.Interpolate;
                 Camera.main.GetComponent<FollowerCamera>().Target = target;
                 Camera.main.GetComponent<FollowerCamera>().shakeAmount = 0;
-                durationText = TaskInfoHandler.Instance.AddNewItem(1, $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Config.ImperioDuration}s remaining</color></color>");
+                durationText = TaskInfoHandler.Instance.AddNewItem(1,
+                    $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Config.ImperioDuration}s remaining</color></color>");
             }
 
-            if (target.AmOwner) PopupTMPHandler.Instance.CreatePopup("You are being mind-controlled!", Color.white, Color.black);
+            if (target.AmOwner)
+                PopupTMPHandler.Instance.CreatePopup("You are being mind-controlled!", Color.white, Color.black);
 
             target.moveable = true;
             controller.moveable = true;
-            
+
             if (target.AmOwner || controller.AmOwner)
                 PlayerControl.LocalPlayer.MyPhysics.body.velocity = new Vector2(0, 0);
 
             while (true)
             {
-                if (target.Data.IsDead || 
-                    MeetingHud.Instance || 
+                if (target.Data.IsDead ||
+                    MeetingHud.Instance ||
                     AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started ||
                     now.AddSeconds(Config.ImperioDuration) < DateTime.UtcNow)
                 {
@@ -565,11 +724,12 @@ namespace HarryPotter.Classes
                         controller.myLight.transform.position = controller.transform.position;
                         PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
                     }
+
                     Instance.ModdedPlayerById(target.PlayerId).ControllerOverride = null;
                     ((Bellatrix) Instance.ModdedPlayerById(controller.PlayerId).Role).MindControlledPlayer = null;
                     yield break;
                 }
-                
+
                 if (controller.AmOwner || target.AmOwner)
                 {
                     if (Minigame.Instance)
@@ -581,6 +741,16 @@ namespace HarryPotter.Classes
                             $"{TaskInfoHandler.Instance.GetRoleHexColor(controller)}You are mind-controlling \"{target.Data.PlayerName}\"! {Math.Ceiling(Config.ImperioDuration - (float) (DateTime.UtcNow - now).TotalSeconds)}s remaining</color></color>";
                         controller.myLight.transform.position = target.transform.position;
                         HudManager.Instance.KillButton.SetCoolDown(0f, PlayerControl.GameOptions.KillCooldown);
+
+                        if (Input.GetKeyDown(KeyCode.Q))
+                        {
+                            if (target.FindClosestTarget() != null && !ControlKillUsed)
+                            {
+                                ControlKillUsed = true;
+                                RpcKillPlayer(target, target.FindClosestTarget(), false);
+                            }
+                        }
+
                         if (ControlKillUsed)
                             HudManager.Instance.KillButton.SetTarget(null);
                         else
@@ -589,6 +759,100 @@ namespace HarryPotter.Classes
                 }
 
                 yield return null;
+            }
+        }
+
+        public void SetSpeedMultiplier(byte playerId, float newSpeed)
+        {
+            ModdedPlayerById(playerId).SpeedMultiplier = newSpeed;
+            
+            MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UpdateSpeedMultiplier, SendOption.Reliable);
+            writer.Write(playerId);
+            writer.Write(newSpeed);
+            writer.EndMessage();
+        }
+        
+        public List<TextMeshPro> CustomOptions { get; set; }
+                
+        public string GetOptionTextByName(string name)
+        {
+            foreach (CustomNumberOption numberOption in CustomNumberOption.AllNumberOptions)
+                if (numberOption.Name == name) return $"{numberOption.Name}: {numberOption.Value}";
+
+            foreach (CustomToggleOption toggleOption in CustomToggleOption.AllToggleOptions)
+                if (toggleOption.Name == name) return $"{toggleOption.Name}: {(toggleOption.Value ? "On" : "Off")}";
+
+            return "no option text found (ERR)";
+        }
+
+        public void ResetCustomOptions()
+        {
+            if (CustomOptions != null)
+            {
+                foreach (TextMeshPro meshPro in CustomOptions)
+                {
+                    meshPro.gameObject.Destroy();
+                }
+            }
+            
+            CustomOptions = new List<TextMeshPro>();
+            
+            foreach (CustomNumberOption numberOption in CustomNumberOption.AllNumberOptions)
+            {
+                string optionString = $"{numberOption.Name}: {numberOption.Value}";
+                
+                GameObject lobbyTextObj = new GameObject(numberOption.Name).DontDestroy();
+                lobbyTextObj.layer = 5;
+                
+                Tooltip lobbyTextTooltip = lobbyTextObj.AddComponent<Tooltip>();
+                lobbyTextTooltip.TooltipText = Main.Instance.GetTooltipByOptionName(numberOption.Name);
+
+                TextMeshPro lobbyTextMesh = lobbyTextObj.AddComponent<TextMeshPro>();
+                lobbyTextMesh.fontSize = 1.6f;
+                lobbyTextMesh.alignment = TextAlignmentOptions.BottomLeft;
+                lobbyTextMesh.overflowMode = TextOverflowModes.Overflow;
+                lobbyTextMesh.maskable = false;
+                lobbyTextMesh.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
+                lobbyTextMesh.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
+                
+                RectTransform lobbyTextTrans = lobbyTextObj.GetComponent<RectTransform>();
+                lobbyTextTrans.sizeDelta = lobbyTextMesh.GetPreferredValues(optionString);
+
+                BoxCollider2D lobbyTextCollider = lobbyTextObj.AddComponent<BoxCollider2D>();
+                lobbyTextCollider.size = lobbyTextTrans.sizeDelta;
+                
+                lobbyTextMesh.text = optionString;
+                
+                CustomOptions.Add(lobbyTextMesh);
+            }
+            
+            foreach (CustomToggleOption toggleOption in CustomToggleOption.AllToggleOptions)
+            {
+                string optionString = $"{toggleOption.Name}: {(toggleOption.Value ? "On" : "Off")}";
+                
+                GameObject lobbyTextObj = new GameObject(toggleOption.Name).DontDestroy();
+                lobbyTextObj.layer = 5;
+
+                Tooltip lobbyTextTooltip = lobbyTextObj.AddComponent<Tooltip>();
+                lobbyTextTooltip.TooltipText = Main.Instance.GetTooltipByOptionName(toggleOption.Name);
+                
+                TextMeshPro lobbyTextMesh = lobbyTextObj.AddComponent<TextMeshPro>();
+                lobbyTextMesh.fontSize = 1.6f;
+                lobbyTextMesh.alignment = TextAlignmentOptions.BottomLeft;
+                lobbyTextMesh.overflowMode = TextOverflowModes.Overflow;
+                lobbyTextMesh.maskable = false;
+                lobbyTextMesh.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
+                lobbyTextMesh.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
+
+                RectTransform lobbyTextTrans = lobbyTextObj.GetComponent<RectTransform>();
+                lobbyTextTrans.sizeDelta = lobbyTextMesh.GetPreferredValues(optionString);
+                
+                BoxCollider2D lobbyTextCollider = lobbyTextObj.AddComponent<BoxCollider2D>();
+                lobbyTextCollider.size = lobbyTextTrans.sizeDelta;
+
+                lobbyTextMesh.text = optionString;
+                
+                CustomOptions.Add(lobbyTextMesh);
             }
         }
         
@@ -611,7 +875,6 @@ namespace HarryPotter.Classes
             writer.Write(target.PlayerId);
             writer.EndMessage();
         }
-        
         
         public void InvisPlayer(PlayerControl target)
         {
@@ -639,28 +902,33 @@ namespace HarryPotter.Classes
             writer.Write(target.PlayerId);
             writer.EndMessage();
         }
-
-        public void RpcKillPlayer(PlayerControl killer, PlayerControl target, bool isCurseKill = true)
+        
+        public void RpcKillPlayer(PlayerControl killer, PlayerControl target, bool isCurseKill = true, bool forceShowAnim = false)
         {
-            KillPlayer(killer, target, isCurseKill);
+            KillPlayer(killer, target, isCurseKill, forceShowAnim);
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.KillPlayerUnsafe, SendOption.Reliable);
             writer.Write(killer.PlayerId);
             writer.Write(target.PlayerId);
             writer.Write(isCurseKill);
+            writer.Write(forceShowAnim);
             writer.EndMessage();
         }
         
-        public void KillPlayer(PlayerControl killer, PlayerControl target, bool isCurseKill)
+        public void KillPlayer(PlayerControl killer, PlayerControl target, bool isCurseKill, bool forceShowAnim)
         {
             if (MeetingHud.Instance || AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
                 return;
 
+            if (!target.Collider.enabled)
+                return;
+            
             if (ModdedPlayerById(target.PlayerId).Immortal)
             {
                 if (killer.AmOwner)
                 {
-                    PopupTMPHandler.Instance.CreatePopup("When using his ability, Ron cannot be killed.\nYour cooldown was reset.", Color.white, Color.black);
+                    PopupTMPHandler.Instance.CreatePopup("When using his ability, Ron cannot be killed.\nYour cooldowns were reset.", Color.white, Color.black);
                     killer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
+                    ModdedPlayerById(killer.PlayerId).Role?.ResetCooldowns();
                 }
                 
                 return;
@@ -672,16 +940,6 @@ namespace HarryPotter.Classes
                 SoundManager.Instance.StopSound(PlayerControl.LocalPlayer.KillSfx);
                 SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 0.8f);
             }
-
-            if (target.AmOwner)
-            {
-                HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
-                AmongUsClient.Instance.gameObject.layer = LayerMask.NameToLayer("Ghost");
-            }
-            
-            target.Data.IsDead = true;
-            target.nameText.GetComponent<MeshRenderer>().material.SetInt("_Mask", 0);
-            target.gameObject.layer = LayerMask.NameToLayer("Ghost");
 
             if (!isCurseKill)
                 killer.MyPhysics.body.transform.position = target.transform.position;
@@ -698,13 +956,48 @@ namespace HarryPotter.Classes
                     PopupTMPHandler.Instance.CreatePopup("You were hit by a spell!", Color.white, Color.black);
                 }
             }
-
+            
             DeadBody deadBody = DeadBody.Instantiate(target.KillAnimations[0].bodyPrefab);
+            deadBody.gameObject.name = "body_" + target.PlayerId;
             Vector3 vector = target.transform.position + target.KillAnimations[0].BodyOffset;
             vector.z = vector.y / 1000f;
             deadBody.transform.position = vector;
             deadBody.ParentId = target.PlayerId;
             target.SetPlayerMaterialColors(deadBody.GetComponent<Renderer>());
+
+            if (target.AmOwner)
+            {
+                if (forceShowAnim)
+                    HudManager.Instance.KillOverlay.ShowOne(killer.Data, target.Data);
+                
+                if (ModdedPlayerById(target.PlayerId).ShouldRevive)
+                    RpcFakeKill(target);
+                else
+                {
+                    PlayerDie(target);
+                    
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FinallyDie, SendOption.Reliable);
+                    writer.Write(target.PlayerId);
+                    writer.EndMessage();
+                }
+            }
+        }
+
+        public void PlayerDie(PlayerControl target)
+        {
+            if (target.AmOwner)
+            {
+                HudManager.Instance.Chat.SetVisible(true);
+                HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+                AmongUsClient.Instance.gameObject.layer = LayerMask.NameToLayer("Ghost");
+            }
+            
+            if (target.CurrentPet)
+                target.CurrentPet.SetMourning();
+
+            target.Data.IsDead = true;
+            target.nameText.GetComponent<MeshRenderer>().material.SetInt("_Mask", 0);
+            target.gameObject.layer = LayerMask.NameToLayer("Ghost");
         }
 
         public void RpcForceAllVotes(sbyte playerId)
@@ -742,7 +1035,7 @@ namespace HarryPotter.Classes
                     GameObject snitchIco = new GameObject();
                     SpriteRenderer snitchIcoR = snitchIco.AddComponent<SpriteRenderer>();
                     snitchIco.layer = 5;
-                    snitchIcoR.sprite = Main.Instance.Assets.SmallSnitchSprite;
+                    snitchIcoR.sprite = Assets.SmallSnitchSprite;
                     snitchIco.transform.SetParent(playerVoteArea.transform);
                     snitchIco.transform.localPosition = new Vector3(2.8f, 0.01f);
                     snitchIco.transform.localScale = confirmButton.transform.localScale;
@@ -778,7 +1071,7 @@ namespace HarryPotter.Classes
                 MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCrucio, SendOption.Reliable);
                 writer.EndMessage();
                 
-                spell.gameObject.Destroy();
+                crucioObject.Destroy();
                 
                 if (player == null) return;
                 if (( (Bellatrix) owner.Role ).MarkedPlayers.All(x => x.PlayerId != player.PlayerId)) return;
@@ -813,7 +1106,7 @@ namespace HarryPotter.Classes
                 MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCurse, SendOption.Reliable);
                 writer.EndMessage();
                 
-                spell.gameObject.Destroy();
+                curseObject.Destroy();
                 
                 if (player == null) return;
                 if (ModdedPlayerById(player.PlayerId).Immortal) return;
@@ -838,7 +1131,12 @@ namespace HarryPotter.Classes
             writer.Write(pos.y);
             writer.EndMessage();
         }
-        
+
+        public void DestroySpell(string name)
+        {
+            GameObject.Find(name)?.Destroy();
+        }
+
         public void RpcAssignRole(ModdedPlayerClass player, Role role)
         {
             AssignRole(player, role);
@@ -875,10 +1173,12 @@ namespace HarryPotter.Classes
 
         public string GetPlayerRoleName(ModdedPlayerClass player)
         {
-            return player?.Role?.RoleName;
+            if (player == null) return "Null";
+            if (player.Role == null) return player._Object.Data.IsImpostor ? "Impostor" : "Muggle";
+            return player.Role.RoleName;
         }
 
-        public PlayerControl GetClosestTarget(PlayerControl player, bool onlyImp, PlayerControl[] exclusions)
+        public PlayerControl GetClosestTarget(PlayerControl player, bool excludeImp, PlayerControl[] exclusions = null)
         {
             PlayerControl result = null;
             float num = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
@@ -891,7 +1191,7 @@ namespace HarryPotter.Classes
             for (int i = 0; i < allPlayers.Count; i++)
             {
                 GameData.PlayerInfo playerInfo = allPlayers[i];
-                if (!playerInfo.Disconnected && playerInfo.PlayerId != player.PlayerId && !playerInfo.IsDead && (!playerInfo.IsImpostor || !onlyImp) && exclusions.All(x => x.PlayerId != playerInfo.PlayerId))
+                if (!playerInfo.Disconnected && playerInfo.PlayerId != player.PlayerId && !playerInfo.IsDead && (!playerInfo.IsImpostor || !excludeImp) && (exclusions == null || !exclusions.Any(x => x.PlayerId == playerInfo.PlayerId)))
                 {
                     PlayerControl @object = playerInfo.Object;
                     if (@object && @object.Collider.enabled)
@@ -907,6 +1207,30 @@ namespace HarryPotter.Classes
                 }
             }
             return result;
+        }
+
+        public string GetTooltipByOptionName(string name)
+        {
+            switch (name)
+            {
+                case "Order of the Impostors":
+                    return "If 'On', when Harry, Ron, and Hermione are dead, Impostors will win";
+                case "Can Spells be Used In Vents":
+                    return "When 'On', spells can be casted from inside vents";
+                case "Show Info Popups/Tooltips":
+                    return "When 'On', informational popups/tooltips will be shown";
+                case "Defensive Duelist Cooldown":
+                    return "The cooldown for Ron's main ability";
+                case "Invisibility Cloak Cooldown":
+                    return "The cooldown for Harry's main ability";
+                case "Time Turner Cooldown":
+                    return "The cooldown for Hermione's main ability";
+                case "Crucio Cooldown":
+                    return "The cooldown for Bellatrix's secondary ability";
+                case "Shared Voldemort Cooldowns":
+                    return "When 'On', the Kill button and the Curse button will share a cooldown";
+            }
+            return "no tooltip supplied. (error code: the dev is brain-dead)";
         }
     }
 }

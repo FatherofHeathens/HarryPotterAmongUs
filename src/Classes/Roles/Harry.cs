@@ -26,11 +26,6 @@ namespace HarryPotter.Classes.Roles
             tt.TooltipText = $"Cloak:\nWill make you invisible for {Main.Instance.Config.InvisCloakDuration}s";
         }
 
-        public override void SoftResetCooldowns()
-        {
-            ResetCooldowns();
-        }
-        
         public override void ResetCooldowns()
         {
             LastCloak = DateTime.UtcNow;
@@ -53,7 +48,8 @@ namespace HarryPotter.Classes.Roles
                 TryBecomeInvisible();
             else
                 return true;
-            return true;
+            
+            return false;
         }
 
         public void TryBecomeInvisible()

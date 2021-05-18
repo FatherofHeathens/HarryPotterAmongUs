@@ -82,7 +82,11 @@ namespace HarryPotter.Classes
                     if (!player.myRend.bounds.Intersects(SpellRender.bounds))
                         continue;
 
+                    if (!player.Collider.enabled)
+                        continue;
+                        
                     OnHit?.Invoke(this, player);
+                    return;
                 }
             }
 

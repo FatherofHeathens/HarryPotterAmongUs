@@ -39,7 +39,7 @@ namespace HarryPotter.Classes.UI
             AllPopups.Add(popupTMP);
 
             MeshRenderer tooltipRenderer = popupObj.GetComponent<MeshRenderer>();
-            tooltipRenderer.sortingOrder = 5;
+            tooltipRenderer.sortingOrder = 1000;
 
             float perc = 0f;
             float offsetCount = AllPopups.Count - 1;

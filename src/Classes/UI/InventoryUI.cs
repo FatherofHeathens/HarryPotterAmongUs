@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using HarryPotter.Classes.UI;
 using Reactor.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -34,9 +35,10 @@ namespace HarryPotter.Classes.Helpers.UI
             
             CustomButton closeButton = closeButtonObj.gameObject.AddComponent<CustomButton>();
             closeButton.HoverColor = Color.green;
-            closeButton.TooltipEnabled = true;
-            closeButton.Tooltip = "Close Menu";
             closeButton.OnClick += Close;
+
+            Tooltip closeTooltip = closeButtonObj.gameObject.AddComponent<Tooltip>();
+            closeTooltip.TooltipText = "Close Menu";
 
             for (var i = 0; i < Panel.transform.FindChild("Inventory").childCount; i++)
             {
@@ -47,17 +49,18 @@ namespace HarryPotter.Classes.Helpers.UI
             
             IsOpen = false;
             Panel.active = false;
+            FavouritedItems = new List<Item>();
         }
 
         private void LateUpdate()
         {
+            if (!AmongUsClient.Instance.IsGameStarted) FavouritedItems.Clear();
+            FavouritedItems.RemoveAll(x => x.ParentInventory == null);
+            
             Panel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2));
-
             IsOpen = Panel.active;
             if (Input.GetKeyDown(KeyCode.C)) Toggle();
-            
             if (!IsOpen) return;
-            
             if (Minigame.Instance) Minigame.Instance.ForceClose();
             if (Input.GetKeyDown(KeyCode.Escape)) Close();
             if (MeetingHud.Instance) Close();
@@ -65,6 +68,7 @@ namespace HarryPotter.Classes.Helpers.UI
             if (!AmongUsClient.Instance.IsGameStarted) Close();
             if (HudManager.Instance?.UseButton?.isActiveAndEnabled == false) Close();
             if (DestroyableSingleton<IntroCutscene>.InstanceExists) Close();
+            if (!PlayerControl.LocalPlayer.CanMove) Close();
         }
 
         public void Open()
@@ -127,6 +131,9 @@ namespace HarryPotter.Classes.Helpers.UI
             if (MeetingHud.Instance) return;
             if (Minigame.Instance) return;
             if (ExileController.Instance) return;
+            if (MindControlMenu.Instance.IsOpeningOrClosing) return;
+            if (MindControlMenu.Instance.IsOpen) return;
+            if (!PlayerControl.LocalPlayer.CanMove) return;
 
             if (IsOpen) Close();
             else Open();
@@ -137,5 +144,6 @@ namespace HarryPotter.Classes.Helpers.UI
         public GameObject Panel { get; set; }
         public static GameObject PanelPrefab { get; set; }
         public static InventoryUI Instance { get; set; }
+        public List<Item> FavouritedItems { get; set; }
     }
 }

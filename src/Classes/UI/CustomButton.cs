@@ -12,13 +12,8 @@ namespace HarryPotter.Classes.Helpers.UI
     public class CustomButton : MonoBehaviour
     {
         public event ClickEvent OnClick;
+        public event ClickEvent OnRightClick;
         public Color HoverColor { get; set; }
-        public bool TooltipEnabled { get; set; }
-        public string Tooltip { get; set; }
-        public GameObject TooltipObj { get; set; }
-        public TextMeshPro TooltipTMP { get; set; }
-        public RectTransform TooltipTransform { get; set; }
-        public MeshRenderer TooltipRenderer { get; set; }
         public bool Enabled { get; set; }
         public SpriteRenderer Renderer { get; set; }
         
@@ -39,67 +34,36 @@ namespace HarryPotter.Classes.Helpers.UI
             Renderer.material.shader = Shader.Find("Sprites/Outline");
             Renderer.material.SetColor("_OutlineColor", HoverColor);
             gameObject.AddComponent<BoxCollider2D>().isTrigger = true;
-            
-            TooltipObj = new GameObject();
-            TooltipObj.transform.SetParent(InventoryUI.Instance.Panel.transform);
-            TooltipObj.layer = 5;
-
-            TooltipTMP = TooltipObj.AddComponent<TextMeshPro>();
-            TooltipTMP.fontSize = 1.5f;
-            TooltipTMP.alignment = TextAlignmentOptions.BottomLeft;
-
-            TooltipRenderer = TooltipObj.GetComponent<MeshRenderer>();
-            TooltipRenderer.sortingOrder = 5;
-
-            TooltipTransform = TooltipObj.GetComponent<RectTransform>();
-            TooltipObj.active = false;
         }
 
-        public void LateUpdate()
+        public void Update()
         {
-            if (!Enabled)
-            {
-                Renderer.material.SetFloat("_Outline", 0f);
-                return;
-            }
-
-            if (!Enabled || !Main.Instance.Config.ShowPopups) TooltipObj.active = false;
-
-            TooltipTMP.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
-            TooltipTMP.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
-
-            TooltipTransform.sizeDelta = TooltipTMP.GetPreferredValues(Tooltip);
-            TooltipTMP.text = Tooltip;
-
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            TooltipObj.transform.position = new Vector3(mousePosition.x, mousePosition.y - TooltipTMP.renderedHeight);
-            TooltipObj.transform.localScale = new Vector3(0.85f, 1.2f);
+            if (!Enabled) Renderer.material.SetFloat("_Outline", 0f);
         }
 
         private void OnMouseDown()
         {
             if (!Enabled) return;
-            
             OnClick?.Invoke();
+        }
+
+        public void OnMouseOver()
+        {
+            if (!Input.GetMouseButtonDown(1)) return;
+            if (!Enabled) return;
+            OnRightClick?.Invoke();
         }
 
         private void OnMouseEnter()
         {
             if (!Enabled) return;
-            
             Renderer.material.SetFloat("_Outline", 1f);
-            
-            if (!TooltipEnabled || !Main.Instance.Config.ShowPopups) return;
-            
-            TooltipObj.active = true;
         }
 
         private void OnMouseExit()
         {
             if (!Enabled) return;
-            
             Renderer.material.SetFloat("_Outline", 0f);
-            TooltipObj.active = false;
         }
     }
 }
