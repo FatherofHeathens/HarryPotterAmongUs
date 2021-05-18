@@ -3,21 +3,29 @@ A theme-based Among Us mod that adds items and roles related to the Harry Potter
 
 https://www.youtube.com/watch?v=b22hzt0sPhE&lc=UgwfTwSKfYn_ASfQxL14AaABAg
 
-# Important Notice
+# Installation Instructions (Launcher)
+This mod comes packaged with an easy to use launcher.
 
-## When updating the mod to a new version, do it on a fresh install of the latest version of Among Us!
+- Verify you have installed the [C++ Redist](https://aka.ms/vs/16/release/vc_redist.x86.exe).
+- Click on the tab labeled "Releases" on the right of this page.
+- Download the "HPLauncher.exe" from "Assets" section.
+- Once it is downloaded, launch the exe file.
+- Click on the "Install" button and wait for the mod to finish installing.
+- Once it is installed, press the "Play" button.
+- Once the game is loaded, check the top left corner to verify it says "Mods: 2".
+- The mod is installed. Hooray!
 
-# Installation Instructions
+# Installation Instructions (Traditional)
 For a video installation tutorial, go [here](https://www.youtube.com/watch?v=MN-prLtBrcQ).
 
 - Verify you have installed the [C++ Redist](https://aka.ms/vs/16/release/vc_redist.x86.exe).
 - Click on the tab labeled "Releases" on the right of this page.
-- Click on the zip file inside the latest release window.
+- Click on the zip file inside the latest release window (either "latest.zip", or "HPMod.zip").
 - Once it is downloaded, open the zip file.
 - Open steam, right click on Among Us, hover over "Manage", and then press "Browse Local Files".
 - Drag all the files inside the downloaded zip file into your Among Us folder (if it prompts you to replace any files, do it).
 - Open the game and wait; the first start may take a few minutes.
-- Once the game is open, check the top left corner to verify it says "Mods: 3".
+- Once the game is open, check the top left corner to verify it says "Mods: 2".
 - The mod is installed. Hooray!
 
 # Roles
