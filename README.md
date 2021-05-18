@@ -46,6 +46,12 @@ Deluminator  |  Toggles the status of the lights.
 Port Key  | Teleports the user to the emergency meeting button.
 Marauder’s Map  |  Zooms out the player's vision so they can see almost the entire map.
 The Golden Snitch  |  Can be used during meetings to force all the votes onto a single player.
+Resurrection Stone  |  Allows the holder to see ghosts.
+Elder Wand  |  If the holder is a crewmate, it grants them a one-time kill button, and if they're an Impostor, it refreshes all their cooldowns.
+Sorting Hat  |  Target a player during the meeting phase to reveal their role to the entire lobby.
+Philosopher Stone  |  Revives the holder if they are killed or voted off.
+Butter Beer (Trap Item)  |  For 10 seconds the user’s controls are reversed and their speed is increased (immediately used on pick-up).
+Basilisk (Trap Item)  |  Stuns the player who touches the item and lowers their vision until the next meeting is called (immediately used on pick-up).
 
 # Game Options
 
