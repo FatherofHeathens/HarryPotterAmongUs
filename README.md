@@ -12,7 +12,7 @@ This mod comes packaged with an easy to use launcher.
 - Once it is downloaded, launch the exe file.
 - Click on the "Install" button and wait for the mod to finish installing.
 - Once it is installed, press the "Play" button.
-- Once the game is loaded, check the top left corner to verify it says "Mods: 2".
+- Once the game is open, start a local game and check for the watermark at the right of the screen.
 - The mod is installed. Hooray!
 
 # Installation Instructions (Traditional)
@@ -25,7 +25,7 @@ For a video installation tutorial, go [here](https://www.youtube.com/watch?v=MN-
 - Open steam, right click on Among Us, hover over "Manage", and then press "Browse Local Files".
 - Drag all the files inside the downloaded zip file into your Among Us folder (if it prompts you to replace any files, do it).
 - Open the game and wait; the first start may take a few minutes.
-- Once the game is open, check the top left corner to verify it says "Mods: 2".
+- Once the game is open, start a local game and check for the watermark at the right of the screen.
 - The mod is installed. Hooray!
 
 # Roles
