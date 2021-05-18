@@ -70,4 +70,4 @@ Shared Voldemort Cooldowns  |  When 'On', the Kill button and the Curse button w
 For general help with issues, feature suggestions, or bugs, join the [Discord Server](https://discord.gg/chGrxw8mJk).
 
 # License
-This software is distributed under the <a href="https://github.com/NotHunter101/ExtraRolesAmongUs/blob/main/LICENSE">`GNU GPLv3 License`</a>.
+This software is distributed under the <a href="./LICENSE">`GNU GPLv3 License`</a>.
