@@ -4,7 +4,7 @@ A theme-based Among Us mod that adds items and roles related to the Harry Potter
 https://www.youtube.com/watch?v=b22hzt0sPhE&lc=UgwfTwSKfYn_ASfQxL14AaABAg
 
 # Installation Instructions (Launcher)
-This mod comes packaged with an easy to use launcher.
+This mod comes packaged with an easy to use launcher. NOTE: The launcher sometimes gets flagged as a virus/unsafe. If you have any problems with the Launcher or concerns with it's safety, you can install the mod tradationally. (see below)
 
 - Verify you have installed the [C++ Redist](https://aka.ms/vs/16/release/vc_redist.x86.exe).
 - Click on the tab labeled "Releases" on the right of this page.
