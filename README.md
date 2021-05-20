@@ -23,6 +23,7 @@ For a video installation tutorial, go [here](https://www.youtube.com/watch?v=MN-
 - Click on the zip file inside the latest release window (either "latest.zip", or "HPMod.zip").
 - Once it is downloaded, open the zip file.
 - Open steam, right click on Among Us, hover over "Manage", and then press "Browse Local Files".
+- If you see a folder called "BepInEx", delete it before installing the mod. This is to verify you don't accidentally install multiple incompatible mods. 
 - Drag all the files inside the downloaded zip file into your Among Us folder (if it prompts you to replace any files, do it).
 - Open the game and wait; the first start may take a few minutes.
 - Once the game is open, start a local game and check for the watermark at the right of the screen.
