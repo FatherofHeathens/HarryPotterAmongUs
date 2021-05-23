@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using HarryPotter.Classes.Helpers.UI;
 using HarryPotter.Classes.UI;
-using Reactor.Extensions;
 
 namespace HarryPotter.Classes.Roles
 {
@@ -181,7 +180,7 @@ namespace HarryPotter.Classes.Roles
             MindControlButton.SetCoolDown(Owner._Object.killTimer, PlayerControl.GameOptions.KillCooldown);
             
             MarkButton.gameObject.SetActive(ShouldDrawCustomButtons());
-            MarkButton.renderer.sprite = Main.Instance.Assets.AbilityIcons[2];
+            MarkButton.renderer.sprite = Main.Instance.Assets.AbilityIcons[6];
             MarkButton.transform.position = new Vector2(bottomLeft.x + MindControlButton.renderer.size.x + MarkButton.renderer.size.x + 0.75f, bottomLeft.y + 0.75f);
             MarkButton.SetTarget(Main.Instance.GetClosestTarget(Owner._Object, true, MarkedPlayers.ToArray()));
             MarkButton.SetCoolDown(10f - (float)(DateTime.UtcNow - LastMark).TotalSeconds, 10f);

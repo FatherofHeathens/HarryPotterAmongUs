@@ -4,11 +4,10 @@ using System.IO;
 using System.Text;
 using HarryPotter.Classes.Hats;
 using HarryPotter.Classes.Helpers.UI;
-using Reactor.Extensions;
-using Reactor.Unstrip;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Video;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes
 {
@@ -42,7 +41,8 @@ namespace HarryPotter.Classes
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("DDButton").DontUnload());
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("InvisButton").DontUnload());
             AbilityIcons.Add(bundle.LoadAsset<Sprite>("HourglassButton").DontUnload());
-            
+            AbilityIcons.Add(bundle.LoadAsset<Sprite>("MarkButton").DontUnload());
+
             ItemIcons.Add(bundle.LoadAsset<Sprite>("DelumIco").DontUnload());
             ItemIcons.Add(bundle.LoadAsset<Sprite>("MapIco").DontUnload());
             ItemIcons.Add(bundle.LoadAsset<Sprite>("KeyIco").DontUnload());

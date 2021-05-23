@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HP-NoReactor", "src\HP-NoReactor.csproj", "{703250B4-D958-4B36-9335-43B1C7C08D7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{703250B4-D958-4B36-9335-43B1C7C08D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{703250B4-D958-4B36-9335-43B1C7C08D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{703250B4-D958-4B36-9335-43B1C7C08D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{703250B4-D958-4B36-9335-43B1C7C08D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD3BF012-DCDE-4896-A79C-06FE93B96F2C}
+	EndGlobalSection
+EndGlobal

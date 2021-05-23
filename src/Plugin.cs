@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
-using Reactor;
 using HarryPotter.Classes;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,6 @@ using HarryPotter.Classes.UI;
 using hunterlib;
 using hunterlib.Classes;
 using InnerNet;
-using Reactor.Extensions;
 using TMPro;
 using UnityEngine;
 
@@ -20,7 +18,6 @@ namespace HarryPotter
 {
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
-    [BepInDependency(ReactorPlugin.Id)]
 
     //Imagine not having a custom options library? Couldn't be me
     [BepInDependency(HunterPlugin.Id)]

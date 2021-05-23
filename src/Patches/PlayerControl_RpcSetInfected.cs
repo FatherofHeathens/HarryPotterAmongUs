@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarryPotter.Classes;
-  using HarryPotter.Classes.Roles;
-  using Reactor.Extensions;
+using HarryPotter.Classes.Roles;
 using UnityEngine;
+using hunterlib.Classes;
 
 namespace HarryPotter.Patches
 {

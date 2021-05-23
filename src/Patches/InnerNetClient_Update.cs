@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using HarryPotter.Classes;
-using HarryPotter.Classes.UI;
 using HarryPotter.Classes.WorldItems;
-using hunterlib.Classes;
 using InnerNet;
-using Reactor.Extensions;
 using TMPro;
+using UnhollowerBaseLib;
 using UnityEngine;
 
 namespace HarryPotter.Patches
@@ -17,9 +15,9 @@ namespace HarryPotter.Patches
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.Update))]
     class InnerNetClient_Update
     {
-        static void Postfix()
+        static void Postfix(InnerNetClient __instance)
         {
-            Reactor.Coroutines.Start(LateUpdate());
+            hunterlib.Classes.Coroutines.Start(LateUpdate());
         }
 
         static IEnumerator LateUpdate()
@@ -53,7 +51,7 @@ namespace HarryPotter.Patches
             {
                 if (!HudManager.InstanceExists || HudManager.Instance.GameSettings == null)
                 {
-                    lobbySettingTMP.gameObject.active = false;
+                    lobbySettingTMP.gameObject.SetActive(false);
                     continue;
                 }
 
@@ -65,9 +63,14 @@ namespace HarryPotter.Patches
                 pos.y -= lobbySettingTMP.renderedHeight * Main.Instance.CustomOptions.IndexOf(lobbySettingTMP);
                 
                 lobbySettingTMP.gameObject.transform.position = pos;
-                lobbySettingTMP.gameObject.active = HudManager.Instance.GameSettings.isActiveAndEnabled;
+                lobbySettingTMP.gameObject.SetActive(HudManager.Instance.GameSettings.isActiveAndEnabled);
 
-                lobbySettingTMP.text = Main.Instance.GetOptionTextByName(lobbySettingTMP.gameObject.name);
+                string optionText = Main.Instance.GetOptionTextByName(lobbySettingTMP.gameObject.name);
+
+                RectTransform lobbyTextTrans = lobbySettingTMP.gameObject.GetComponent<RectTransform>();
+                lobbyTextTrans.sizeDelta = lobbySettingTMP.GetPreferredValues(optionText);
+
+                lobbySettingTMP.text = optionText;
             }
 
             if (!AmongUsClient.Instance.IsGameStarted && Main.Instance != null)

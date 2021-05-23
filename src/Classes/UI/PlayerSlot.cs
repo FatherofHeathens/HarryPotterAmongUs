@@ -2,9 +2,8 @@
 using System.Linq;
 using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.UI;
-using Reactor;
-using Reactor.Extensions;
 using UnityEngine;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes.Helpers.UI
 {

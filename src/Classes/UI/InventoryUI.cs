@@ -1,12 +1,11 @@
-﻿using Reactor;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using HarryPotter.Classes.UI;
-using Reactor.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes.Helpers.UI
 {
@@ -73,12 +72,12 @@ namespace HarryPotter.Classes.Helpers.UI
 
         public void Open()
         {
-            Coroutines.Start(CoOpen());
+            hunterlib.Classes.Coroutines.Start(CoOpen());
         }
         
         public void Close()
         {
-            Coroutines.Start(CoClose());
+            hunterlib.Classes.Coroutines.Start(CoClose());
         }
         
         public IEnumerator CoOpen()

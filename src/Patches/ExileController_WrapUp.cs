@@ -20,6 +20,7 @@ namespace HarryPotter.Patches
                 ShipStatus.Instance.EmergencyCooldown = (float)PlayerControl.GameOptions.EmergencyCooldown;
                 Camera.main.GetComponent<FollowerCamera>().Locked = false;
                 DestroyableSingleton<HudManager>.Instance.SetHudActive(true);
+                ControllerManager.Instance.ResetAll();
             }
             Object.Destroy(__instance.gameObject);
 

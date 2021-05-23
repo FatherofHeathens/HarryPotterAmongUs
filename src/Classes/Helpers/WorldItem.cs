@@ -2,9 +2,9 @@
 using System.Linq;
 using HarryPotter.Classes.Items;
 using Hazel;
-using Reactor.Extensions;
 using Rewired;
 using UnityEngine;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes
 {

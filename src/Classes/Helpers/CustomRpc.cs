@@ -10,8 +10,8 @@ using HarryPotter.Classes.WorldItems;
 using Hazel.Udp;
 using Il2CppSystem.Diagnostics;
 using Il2CppSystem.Net;
-using Reactor.Extensions;
 using UnityEngine;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes
 {
@@ -89,7 +89,7 @@ namespace HarryPotter.Classes
                     break;
                 case (byte)Packets.FakeKill:
                     byte fakeKilledId = reader.ReadByte();
-                    Reactor.Coroutines.Start(Main.Instance.CoFakeKill(Main.Instance.ModdedPlayerById(fakeKilledId)._Object));
+                    Coroutines.Start(Main.Instance.CoFakeKill(Main.Instance.ModdedPlayerById(fakeKilledId)._Object));
                     break;
                 case (byte)Packets.FixLightsRpc:
                     var switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using HarryPotter.Classes.Helpers.UI;
-using Reactor.Extensions;
 using TMPro;
 using UnityEngine;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes.UI
 {
@@ -16,7 +15,7 @@ namespace HarryPotter.Classes.UI
         public void CreatePopup(string message, Color color, Color outlineColor, float delay = 0)
         {
             if (!Main.Instance.Config.ShowPopups) return;
-            Reactor.Coroutines.Start(CoCreatePopup(message, color, outlineColor, delay));
+            Coroutines.Start(CoCreatePopup(message, color, outlineColor, delay));
         }
 
         public IEnumerator CoCreatePopup(string message, Color color, Color outlineColor, float delay = 0)

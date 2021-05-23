@@ -4,7 +4,6 @@ using InnerNet;
 using System.Linq;
 using HarryPotter.Classes.Helpers;
 using HarryPotter.Classes.Helpers.UI;
-using Reactor.Extensions;
 using UnityEngine;
 
 namespace HarryPotter.Patches
@@ -14,7 +13,7 @@ namespace HarryPotter.Patches
     { 
         static void Postfix()
         {
-            SoundManager.Instance.PlaySound(Main.Instance.Assets.HPTheme, false, 1f);
+            //SoundManager.Instance.PlaySound(Main.Instance.Assets.HPTheme, false, 1f);
 
             foreach (Hat customHat in Hat.AllHats)
             {

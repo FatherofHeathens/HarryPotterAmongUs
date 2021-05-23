@@ -23,17 +23,8 @@ namespace HarryPotter.Classes.Items
         }
         public override void Use()
         {
-            if (AmongUsClient.Instance.AmHost)
-                MaraudersMapWorld.HasSpawned = false;
-            else
-            {
-                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem, SendOption.Reliable);
-                writer.Write(Id);
-                writer.EndMessage();
-            }
             this.Delete();
-
-            Reactor.Coroutines.Start(ZoomOut());
+            hunterlib.Classes.Coroutines.Start(ZoomOut());
         }
 
         public IEnumerator ZoomOut()

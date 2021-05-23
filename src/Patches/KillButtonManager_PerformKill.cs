@@ -17,7 +17,7 @@ namespace HarryPotter.Patches
                 if (HudManager.Instance.KillButton.CurrentTarget != null && !Main.Instance.ControlKillUsed)
                 {
                     Main.Instance.ControlKillUsed = true;
-                    Main.Instance.RpcKillPlayer(killer, HudManager.Instance.KillButton.CurrentTarget, false);
+                    Main.Instance.RpcKillPlayer(killer, HudManager.Instance.KillButton.CurrentTarget, true);
                 }
                 return false;
             }

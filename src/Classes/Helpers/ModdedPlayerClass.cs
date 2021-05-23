@@ -50,7 +50,7 @@ namespace HarryPotter.Classes
 
             if (VigilanteShotEnabled)
             {
-                HudManager.Instance.KillButton.gameObject.SetActive(true);
+                HudManager.Instance.KillButton.gameObject.SetActive(HudManager.Instance.UseButton.isActiveAndEnabled);
                 HudManager.Instance.KillButton.SetTarget(Main.Instance.GetClosestTarget(_Object, false));
                 HudManager.Instance.KillButton.SetCoolDown(0f, 1f);
             }

@@ -15,7 +15,7 @@
         public override void Use()
         {
             Delete();
-            Reactor.Coroutines.Start(Main.Instance.CoStunPlayer(Owner._Object));
+            hunterlib.Classes.Coroutines.Start(Main.Instance.CoStunPlayer(Owner._Object));
         }
     }
 }

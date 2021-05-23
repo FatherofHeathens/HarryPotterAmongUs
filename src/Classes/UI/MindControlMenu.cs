@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Linq;
 using HarryPotter.Classes.Helpers.UI;
+using hunterlib.Classes;
 using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.UI;
 using InnerNet;
-using Reactor;
-using Reactor.Extensions;
 using UnityEngine;
 
 namespace HarryPotter.Classes
@@ -71,12 +70,12 @@ namespace HarryPotter.Classes
 
         public void OpenMenu()
         {
-            Coroutines.Start(CoOpen());
+            hunterlib.Classes.Coroutines.Start(CoOpen());
         }
 
         public void CloseMenu()
         {
-            Coroutines.Start(CoClose());
+            hunterlib.Classes.Coroutines.Start(CoClose());
         }
         
         public IEnumerator CoOpen()

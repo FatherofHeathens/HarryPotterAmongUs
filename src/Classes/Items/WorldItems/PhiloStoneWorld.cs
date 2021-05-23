@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Hazel;
-using Reactor.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes.WorldItems
 {

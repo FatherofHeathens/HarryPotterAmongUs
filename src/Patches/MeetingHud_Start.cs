@@ -3,7 +3,6 @@ using System.Linq;
 using HarmonyLib;
 using HarryPotter.Classes;
 using HarryPotter.Classes.Items;
-using Reactor.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;

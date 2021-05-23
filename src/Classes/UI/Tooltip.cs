@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Reactor;
-using Reactor.Extensions;
 using TMPro;
 using UnityEngine;
+using hunterlib.Classes;
 
 namespace HarryPotter.Classes.UI
 {
@@ -40,19 +39,19 @@ namespace HarryPotter.Classes.UI
             TooltipRenderer.sortingOrder = 1000;
 
             TooltipTransform = TooltipObj.GetComponent<RectTransform>();
-            TooltipObj.active = false;
+            TooltipObj.SetActive(false);
         }
 
         public void OnDisable()
         {
             if (TooltipObj == null) return;
-            TooltipObj.active = false;
+            TooltipObj.SetActive(false);
         }
 
         public void OnDestroy()
         {
             if (TooltipObj == null) return;
-            TooltipObj.active = false;
+            TooltipObj.SetActive(false);
             TooltipObj.Destroy();
         }
 
@@ -67,13 +66,13 @@ namespace HarryPotter.Classes.UI
 
         public void FixedUpdate()
         {
-            TooltipObj.active = false;
+            TooltipObj.SetActive(false);
         }
         
         private void OnMouseOver()
         {
             if (!Enabled || !Main.Instance.Config.ShowPopups) return;
-            TooltipObj.active = true;
+            TooltipObj.SetActive(true);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Hazel;
-using Reactor.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -405,7 +404,7 @@ namespace HarryPotter.Classes
 
         public void RpcFakeKill(PlayerControl target)
         {
-            Reactor.Coroutines.Start(CoFakeKill(target));
+            Coroutines.Start(CoFakeKill(target));
             
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FakeKill, SendOption.Reliable);
             writer.Write(target.PlayerId);
@@ -537,7 +536,7 @@ namespace HarryPotter.Classes
         
         public void UseHourglass(PlayerControl player)
         {
-            Reactor.Coroutines.Start(CoActivateHourglass(player));
+            Coroutines.Start(CoActivateHourglass(player));
         }
         
         public IEnumerator CoDefensiveDuelist(PlayerControl player)
@@ -574,7 +573,7 @@ namespace HarryPotter.Classes
 
         public void DefensiveDuelist(PlayerControl player)
         {
-            Reactor.Coroutines.Start(CoDefensiveDuelist(player));
+            Coroutines.Start(CoDefensiveDuelist(player));
         }
         
         public void RpcDefensiveDuelist(PlayerControl player)
@@ -747,7 +746,7 @@ namespace HarryPotter.Classes
                             if (target.FindClosestTarget() != null && !ControlKillUsed)
                             {
                                 ControlKillUsed = true;
-                                RpcKillPlayer(target, target.FindClosestTarget(), false);
+                                RpcKillPlayer(target, target.FindClosestTarget(), true);
                             }
                         }
 
@@ -805,14 +804,14 @@ namespace HarryPotter.Classes
                 lobbyTextObj.layer = 5;
                 
                 Tooltip lobbyTextTooltip = lobbyTextObj.AddComponent<Tooltip>();
-                lobbyTextTooltip.TooltipText = Main.Instance.GetTooltipByOptionName(numberOption.Name);
+                lobbyTextTooltip.TooltipText = GetTooltipByOptionName(numberOption.Name);
 
                 TextMeshPro lobbyTextMesh = lobbyTextObj.AddComponent<TextMeshPro>();
                 lobbyTextMesh.fontSize = 1.6f;
                 lobbyTextMesh.alignment = TextAlignmentOptions.BottomLeft;
                 lobbyTextMesh.overflowMode = TextOverflowModes.Overflow;
                 lobbyTextMesh.maskable = false;
-                lobbyTextMesh.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
+                lobbyTextMesh.fontMaterial = Assets.GenericOutlineMat;
                 lobbyTextMesh.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
                 
                 RectTransform lobbyTextTrans = lobbyTextObj.GetComponent<RectTransform>();
@@ -834,19 +833,19 @@ namespace HarryPotter.Classes
                 lobbyTextObj.layer = 5;
 
                 Tooltip lobbyTextTooltip = lobbyTextObj.AddComponent<Tooltip>();
-                lobbyTextTooltip.TooltipText = Main.Instance.GetTooltipByOptionName(toggleOption.Name);
+                lobbyTextTooltip.TooltipText = GetTooltipByOptionName(toggleOption.Name);
                 
                 TextMeshPro lobbyTextMesh = lobbyTextObj.AddComponent<TextMeshPro>();
                 lobbyTextMesh.fontSize = 1.6f;
                 lobbyTextMesh.alignment = TextAlignmentOptions.BottomLeft;
                 lobbyTextMesh.overflowMode = TextOverflowModes.Overflow;
                 lobbyTextMesh.maskable = false;
-                lobbyTextMesh.fontMaterial = Main.Instance.Assets.GenericOutlineMat;
+                lobbyTextMesh.fontMaterial = Assets.GenericOutlineMat;
                 lobbyTextMesh.fontMaterial.SetFloat("_UnderlayDilate", 0.75f);
 
                 RectTransform lobbyTextTrans = lobbyTextObj.GetComponent<RectTransform>();
                 lobbyTextTrans.sizeDelta = lobbyTextMesh.GetPreferredValues(optionString);
-                
+
                 BoxCollider2D lobbyTextCollider = lobbyTextObj.AddComponent<BoxCollider2D>();
                 lobbyTextCollider.size = lobbyTextTrans.sizeDelta;
 
@@ -864,7 +863,7 @@ namespace HarryPotter.Classes
             KillAnimation.SetMovement(controller, true);
             KillAnimation.SetMovement(target, false);
             KillAnimation.SetMovement(target, true);
-            Reactor.Coroutines.Start(CoControlPlayer(controller, target));
+            Coroutines.Start(CoControlPlayer(controller, target));
         }
         
         public void RpcControlPlayer(PlayerControl controller, PlayerControl target)
@@ -878,7 +877,7 @@ namespace HarryPotter.Classes
         
         public void InvisPlayer(PlayerControl target)
         {
-            Reactor.Coroutines.Start(CoInvisPlayer(target));
+            Coroutines.Start(CoInvisPlayer(target));
         }
         
         public void RpcInvisPlayer(PlayerControl target)
@@ -892,7 +891,7 @@ namespace HarryPotter.Classes
         public void CrucioBlind(PlayerControl target)
         {
             System.Console.WriteLine("Blinding " + target.Data.PlayerName);
-            Reactor.Coroutines.Start(CoBlindPlayer(target));
+            hunterlib.Classes.Coroutines.Start(CoBlindPlayer(target));
         }
 
         public void RpcCrucioBlind(PlayerControl target)

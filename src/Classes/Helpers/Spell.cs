@@ -1,7 +1,6 @@
 ﻿using System;
+using hunterlib.Classes;
 using InnerNet;
-using Reactor;
-using Reactor.Extensions;
 using UnityEngine;
 
 namespace HarryPotter.Classes
