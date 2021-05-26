@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using HarryPotter.Classes.UI;
 using UnityEngine;
-using UnityEngine.Events;
 using hunterlib.Classes;
 
 namespace HarryPotter.Classes.Helpers.UI
@@ -18,17 +13,12 @@ namespace HarryPotter.Classes.Helpers.UI
 
         private void Awake()
         {
-            if (Instance != null)
-            {
-                Instance.Destroy();
-                Instance = null;
-            }
+            if (Instance != null) Instance.Destroy();
 
             Instance = this;
             
             gameObject.DontDestroy();
             Panel = Instantiate(PanelPrefab).DontDestroy();
-            Panel.transform.SetParent(null);
 
             for (var i = 0; i < Panel.transform.FindChild("Buttons").childCount; i++)
             {
@@ -38,7 +28,7 @@ namespace HarryPotter.Classes.Helpers.UI
             }
         }
 
-        private void LateUpdate()
+        private void Update()
         {
             Panel.active = false;
             
@@ -52,10 +42,11 @@ namespace HarryPotter.Classes.Helpers.UI
             if (PlayerControl.LocalPlayer.Data.IsDead) return;
             if (HudManager.Instance?.shhhEmblem.isActiveAndEnabled == true) return;
 
+            Panel.active = true;
+
             Vector3 newPos = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth / 2f, Camera.main.pixelHeight / 2f));
             newPos.y -= 2f;
             Panel.transform.position = newPos;
-            Panel.active = true;
         }
 
         public GameObject Panel { get; set; }

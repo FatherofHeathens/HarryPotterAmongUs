@@ -3,17 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using HarryPotter.Classes.Helpers;
 using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.UI;
 using HarryPotter.Classes.WorldItems;
-using HarryPotter.Patches;
 using hunterlib.Classes;
 using InnerNet;
 using TMPro;
 using UnityEngine;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 namespace HarryPotter.Classes
 {
@@ -787,13 +783,9 @@ namespace HarryPotter.Classes
         public void ResetCustomOptions()
         {
             if (CustomOptions != null)
-            {
                 foreach (TextMeshPro meshPro in CustomOptions)
-                {
                     meshPro.gameObject.Destroy();
-                }
-            }
-            
+
             CustomOptions = new List<TextMeshPro>();
             
             foreach (CustomNumberOption numberOption in CustomNumberOption.AllNumberOptions)
@@ -891,7 +883,7 @@ namespace HarryPotter.Classes
         public void CrucioBlind(PlayerControl target)
         {
             System.Console.WriteLine("Blinding " + target.Data.PlayerName);
-            hunterlib.Classes.Coroutines.Start(CoBlindPlayer(target));
+            Coroutines.Start(CoBlindPlayer(target));
         }
 
         public void RpcCrucioBlind(PlayerControl target)
@@ -1229,7 +1221,7 @@ namespace HarryPotter.Classes
                 case "Shared Voldemort Cooldowns":
                     return "When 'On', the Kill button and the Curse button will share a cooldown";
             }
-            return "no tooltip supplied. (error code: the dev is brain-dead)";
+            return "No tooltip was supplied.";
         }
     }
 }
